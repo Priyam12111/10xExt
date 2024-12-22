@@ -1,0 +1,274 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+
+body {
+  background-color: #f4f4f4;
+  font-size: 16px;
+  font-family: "Open Sans", sans-serif;
+}
+
+#cmail-button {
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 18px;
+  background-color: indianred;
+  cursor: pointer;
+  width: fit-content;
+  top: 4px;
+}
+
+div#cmail-dropup {
+  display: block;
+  background-color: rgb(249, 249, 249);
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 8px 16px;
+  padding: 10px; /* Increased padding for better spacing */
+  border-radius: 4px;
+  position: fixed; /* Fixed position to prevent clipping in absolute layout */
+  bottom: 10%; /* Adjust bottom to ensure visibility */
+  left: 70%; /* Adjust left for centering */
+  min-height: 160px;
+  max-height: 400px; /* Limit max height to prevent overflow */
+  width: 350; /* Slightly increased width for better content fit */
+  font-family: "Google-sans", sans-serif;
+  overflow-y: auto; /* Enable scrolling for overflow content */
+  z-index: 10000; /* Ensure it appears above other elements */
+  width: 350px;
+}
+
+#connect {
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+  display: none;
+}
+
+#send-button {
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  height: 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  width: fit-content;
+  background-color: #0b57d0;
+  border-radius: 5px;
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 0;
+}
+
+#send-button:hover {
+  background-color: #0b57d0;
+}
+
+.template {
+  background: white;
+  flex-direction: column;
+  width: 500px;
+  margin: auto;
+  display: flex;
+  height: 400px;
+  margin-top: 15vh;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#email-body {
+  width: 100%;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease-in-out;
+}
+
+#email-body:focus,
+textarea:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.2);
+}
+
+#save-button {
+  background-color: #4caf50;
+  color: #fff;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+#save-button:hover {
+  background-color: #45a049;
+}
+
+#save-button:focus {
+  outline: none;
+}
+
+@media (max-width: 768px) {
+  .template {
+    padding: 20px;
+  }
+
+  #email-body {
+    font-size: 14px;
+  }
+
+  #save-button {
+    font-size: 16px;
+  }
+}
+
+.containerContent {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background: rgba(0, 0, 0, 0.6); /* Slightly darker overlay */
+  z-index: 99999;
+}
+
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.template .form-content {
+  width: 70%;
+  padding: 20px;
+}
+
+#close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  color: white;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 10px;
+  transition: 0.3s;
+}
+
+#close-button:focus {
+  outline: none;
+}
+
+#close-button:hover {
+  color: #ff5c5c;
+}
+
+#configure-button {
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.change-template {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+}
+
+.g2_settings_accordions {
+  font-size: 16px;
+  margin-top: 15px;
+  font-weight: 600;
+  border-top: 0.1px solid #0000004f;
+  padding: 10px;
+}
+
+.g2_tracking.g_accordian {
+  border: 1px solid #bebcbc;
+  background-color: #f6f6f6;
+  border-radius: 4px;
+  min-height: 38px;
+  position: relative;
+  max-width: 538px;
+  margin: 0px 9px 5px;
+}
+
+.g_accordian_title {
+  font-size: 13px;
+  color: rgb(43, 44, 46);
+  font-weight: bold;
+  padding: 10px 13px;
+  cursor: pointer;
+}
+
+.g_accordian_content {
+  padding: 10px; /* Adjust padding for better readability */
+  overflow-y: auto; /* Allow scrolling inside sections */
+  max-height: 250px; /* Limit max height to prevent overlapping */
+}
+
+.g_accordian {
+  border: 1px solid #bebcbc;
+  background-color: #f6f6f6;
+  border-radius: 4px;
+  min-height: 38px;
+  position: relative;
+  max-width: 538px;
+  margin: 0px 9px 5px;
+}
+
+.g_accordian {
+  margin-bottom: 10px; /* Add space between accordion sections */
+}
+
+.change-template,
+.g2_tracking,
+.g2_action {
+  margin: 15px 0; /* Uniform spacing between sections */
+}
+
+button#configure-button {
+  padding: 8px 12px;
+  font-size: 14px;
+  margin: 5px 0; /* Space around the button */
+}
+
+span {
+  font-size: 16px;
+}
+
+.g2_checkbox {
+  margin-right: 20px;
+}
+
+.g_hide_on_collapse {
+  padding-left: 10px;
+}
+
+.g2_action {
+  margin-top: 20px;
+}
+
+.blank-header {
+  height: 10px;
+  background: rgba(0, 0, 0, 0.534);
+}
+
+input#email-subject {
+  margin-bottom: 10px;
+  padding: 10px;
+}
+.gmass-bump {
+  margin: 12px;
+}

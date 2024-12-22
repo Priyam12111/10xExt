@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "CMail",
+  "version": "1.2",
+  "description": "A Chrome extension handle Gmail",
+  "permissions": ["activeTab", "scripting", "identity"],
+  "oauth2": {
+    "client_id": "767551193792-ccfl43s72b79o9mc5c80mld8t0emcaub.apps.googleusercontent.com",
+    "scopes": ["https://www.googleapis.com/auth/spreadsheets.readonly"]
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://mail.google.com/*"],
+      "css": ["styles.css"],
+      "js": ["content.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["dropupMenu.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
