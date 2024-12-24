@@ -5,16 +5,25 @@ body {
   font-size: 16px;
   font-family: "Open Sans", sans-serif;
 }
-
+.gU.Up {
+  display: flex;
+}
 #cmail-button {
   color: white;
-  padding: 10px 20px;
   border: none;
-  border-radius: 18px;
-  background-color: indianred;
+  border-radius: 5px;
+  background-color: rgb(160, 38, 38);
   cursor: pointer;
-  width: fit-content;
-  top: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+  margin-left: 0px;
+  position: relative;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 18px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 18px;
 }
 
 div#cmail-dropup {
@@ -25,14 +34,14 @@ div#cmail-dropup {
   border-radius: 4px;
   position: fixed; /* Fixed position to prevent clipping in absolute layout */
   bottom: 10%; /* Adjust bottom to ensure visibility */
-  left: 70%; /* Adjust left for centering */
-  min-height: 160px;
+  left: 68%; /* Adjust left for centering */
+  min-height: 360px;
   max-height: 400px; /* Limit max height to prevent overflow */
   width: 350; /* Slightly increased width for better content fit */
   font-family: "Google-sans", sans-serif;
   overflow-y: auto; /* Enable scrolling for overflow content */
   z-index: 10000; /* Ensure it appears above other elements */
-  width: 350px;
+  width: 390px;
 }
 
 #connect {
@@ -45,22 +54,19 @@ div#cmail-dropup {
 
 #send-button {
   color: white;
-  padding: 10px 20px;
+  padding: 10px 15px;
   border: none;
   height: 16px;
   font-size: 1rem;
   cursor: pointer;
   width: fit-content;
-  background-color: #0b57d0;
+  background-color: rgb(160, 38, 38);
   border-radius: 5px;
   border-bottom-left-radius: 18px;
   border-bottom-right-radius: 0;
   border-top-left-radius: 18px;
   border-top-right-radius: 0;
-}
-
-#send-button:hover {
-  background-color: #0b57d0;
+  margin-left: 7px;
 }
 
 .template {
@@ -263,6 +269,7 @@ span {
 .blank-header {
   height: 10px;
   background: rgba(0, 0, 0, 0.534);
+  margin-bottom: 10px;
 }
 
 input#email-subject {
@@ -271,4 +278,106 @@ input#email-subject {
 }
 .gmass-bump {
   margin: 12px;
+}
+.sending {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  display: flex;
+  justify-content: center;
+  color: white;
+  align-items: center;
+  z-index: 100000;
+  padding-left: 10px;
+}
+.sending::before {
+  content: "";
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.send-text {
+  padding: 5px;
+}
+
+input#days {
+  width: 10px;
+}
+.ending {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  display: flex;
+  justify-content: center;
+  color: black;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  padding: 10px;
+  align-items: center;
+  z-index: 100000;
+  padding-left: 10px;
+}
+
+.ending-text {
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.ending-text svg {
+  margin-right: 5px;
+  animation: spin 5s ease-in-out infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Arrow */
+.arrow-btn {
+  background-color: rgb(160, 38, 38);
+  cursor: pointer;
+  color: white;
+  transition: transform 0.3s;
+  padding: 1px 2px;
+  font-size: 14px;
+  border: none;
+  border-left: 1px solid black;
+}
+
+.arrow {
+  display: inline-block;
+  transition: transform 0.3s;
+}
+
+.arrow-btn:focus {
+  outline: none;
+}
+
+.rotate {
+  transform: rotate(-180deg);
+}
+
+/* Arrow */
+.active {
+  display: block;
 }

@@ -1,105 +1,166 @@
-<head>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<div id="cmail-dropup">
-  <div class="blank-header"></div>
-  <div class="g2_send_test">
-    <span>Send Test Email:</span>
-    <input type="text" id="test-input" value="priyamtomar012@gmail.com" />
-    <button id="test-send">Send</button>
-  </div>
-  <div class="change-template">
-    <span style="margin: 12px">Templates:</span>
-    <button id="configure-button">Template</button>
-  </div>
-  <div class="g2_settings_accordions">Settings:</div>
-  <div class="g2_tracking g_accordian">
-    <div class="g_accordian_title">
-      <span>
-        <img
-          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAtUExUReDh4p+jpouPk7S3usrMzklQV19la3V6f9/g4fb29vX19UpRWMnMzmBmbAAAANp0qb4AAAAPdFJOU///////////////////ANTcmKEAAAAJcEhZcwAADsIAAA7CARUoSoAAAAC6SURBVChTXZELbsMwDEP1MeU623L/45aUUhQYgQT2sygrjN0jc49cn02/HaPy3graBravlUH8GmhanhaPRQk3YhBljn0RJvZDjkWx1gmBNcgL9NhPXbYe8wzA841fS7hYgnXdyJEWSME/HE6h5YLzOrVk4TkFHSeCPWXn+LS3R3ZTo9Ql1c1P4EVYqwsHcSRcGr5OVDuljZzPfIqkmM/8FwgmEEVXwehcETbg8w2ZYUgDb7MM9/kd9/0GmTILpGn7b0QAAAAASUVORK5CYII="
-        />
-        <span style="padding: 3px">Tracking</span>
-      </span>
-      <span id="zjDCLmainspread" style="font-weight: normal"></span>
-    </div>
-    <div class="g_accordian_content">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Dropup Menu</title>
+    <style>
+      #cmail-dropup {
+        padding: 20px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        width: 100%;
+        max-width: 410px;
+        box-sizing: border-box;
+      }
+
+      .g_accordian_title {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+      }
+
+      .g_accordian_content {
+        display: none;
+      }
+
+      .g_accordian_content.active {
+        display: block;
+      }
+
+      .blank-header {
+        height: 10px;
+        background-color: #493838;
+        margin-bottom: 10px;
+      }
+
+      .g_accordian_title img {
+        width: 20px;
+        margin-right: 8px;
+      }
+
+      .g2_send_test,
+      .change-template {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+      }
+
+      .g2_send_test input,
+      .g2_send_test button,
+      .change-template button {
+        width: 100%;
+        margin-top: 8px;
+      }
+
+      @media (max-width: 768px) {
+        #cmail-dropup {
+          width: 95%;
+        }
+
+        .g_accordian_title {
+          font-size: 14px;
+        }
+
+        .g2_send_test input,
+        .g2_send_test button,
+        .change-template button {
+          width: 100%;
+        }
+      }
+
+      @media (max-width: 480px) {
+        #cmail-dropup {
+          width: 100%;
+          max-width: none;
+          padding: 10px;
+        }
+
+        .g_accordian_title {
+          font-size: 12px;
+        }
+
+        .g2_send_test input,
+        .g2_send_test button,
+        .change-template button {
+          width: 100%;
+        }
+
+        .g_accordian_content {
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="cmail-dropup">
+      <div class="blank-header"></div>
+      <div class="g2_send_test">
+        <span>Send Test Email:</span>
+        <input type="text" id="test-input" value="priyamtomar012@gmail.com" />
+        <button id="test-send">Send</button>
+      </div>
       <hr />
-      <div class="g_hide_on_collapse">
-        <label class="g2_checkbox">
-          <input
-            type="checkbox"
-            name="OpenTracking"
-            id="iyEIROpenTracking"
-            checked=""
-            data-oval="opens"
-          />
-          <span>Opens</span>
-        </label>
-        <!-- <label class="g2_checkbox">
-          <input
-            type="checkbox"
-            name="ClickTracking"
-            id="iyEIRClickTracking"
-            checked=""
-            data-oval="clicks"
-          />
-          <span>Clicks</span>
-        </label> -->
+      <div class="change-template">
+        <span style="margin: 12px">Templates:</span>
+        <button id="configure-button">Template</button>
+      </div>
+      <div class="g2_settings_accordions">Settings:</div>
+      <div class="g2_tracking g_accordian">
+        <div class="g_accordian_title">
+          <span>
+            <img
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAtUExUReDh4p+jpouPk7S3usrMzklQV19la3V6f9/g4fb29vX19UpRWMnMzmBmbAAAANp0qb4AAAAPdFJOU///////////////////ANTcmKEAAAAJcEhZcwAADsIAAA7CARUoSoAAAAC6SURBVChTXZELbsMwDEP1MeU623L/45aUUhQYgQT2sygrjN0jc49cn02/HaPy3graBravlUH8GmhanhaPRQk3YhBljn0RJvZDjkWx1gmBNcgL9NhPXbYe8wzA841fS7hYgnXdyJEWSME/HE6h5YLzOrVk4TkFHSeCPWXn+LS3R3ZTo9Ql1c1P4EVYqwsHcSRcGr5OVDuljZzPfIqkmM/8FwgmEEVXwehcETbg8w2ZYUgDb7MM9/kd9/0GmTILpGn7b0QAAAAASUVORK5CYII="
+            />
+            <span style="padding: 3px">Tracking</span>
+          </span>
+          <span id="zjDCLmainspread" style="font-weight: normal"></span>
+        </div>
+        <div class="g_accordian_content">
+          <hr />
+          <div class="g_hide_on_collapse">
+            <label class="g2_checkbox">
+              <input
+                type="checkbox"
+                name="OpenTracking"
+                id="iyEIROpenTracking"
+                data-oval="opens"
+              />
+              <span>Opens</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="g2_tracking g_accordian">
+        <div class="g_accordian_title">
+          <span>
+            <img src="https://cdn.gmass.us/Extension2019Images/fa-share.png" />
+            <span style="padding: 3px">Follow Ups</span>
+          </span>
+          <span id="zjDCLmainspread" style="font-weight: normal"></span>
+        </div>
+        <div class="g_accordian_content">
+          <hr />
+          <div class="g_hide_on_collapse">
+            <label class="g2_checkbox">
+              <input type="checkbox" name="followup" id="followup" />
+              <span>If</span>
+            </label>
+            <select name="condition" id="condition">
+              <option value="1">Not Opened</option>
+              <option value="2">Not Replied</option>
+              <option value="3">Not Opened or Replied</option>
+            </select>
+            <label class="g2_checkbox">
+              <span>after</span>
+              <input type="text" name="days" id="days" value="2" />
+              <span>days</span>
+            </label>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="g2_tracking g_accordian">
-    <div class="g_accordian_title">
-      <span>
-        <img src="https://cdn.gmass.us/Extension2019Images/fa-share.png" />
-        <span style="padding: 3px">Follow Ups</span>
-      </span>
-      <span id="zjDCLmainspread" style="font-weight: normal"></span>
-    </div>
-    <div
-      class="gmass-bump"
-      data-bump="1"
-      id="iyEIRfirstbump"
-      style="display: block"
-    >
-      <div class="gmass-bump-stage">Stage 1:</div>
-      <label
-        class="g2_checkbox"
-        style="float: left; margin-right: 3px; padding-top: 2px"
-      >
-        <input
-          type="checkbox"
-          class="gmass-enable-bump"
-          id="iyEIRFirstBumpBox"
-          data-oval="stage 1"
-        />
-        <span></span>
-      </label>
-      If
-      <select
-        class="g_bump_action"
-        name="FirstBumpAction"
-        id="iyEIRFirstBumpAction"
-        disabled=""
-      >
-        <option value="r">No Reply</option>
-        <option value="o">No Open</option>
-        <option value="c">No Click</option>
-        <option value="s">No Reply or Click</option>
-        <option value="a">Everyone</option>
-      </select>
-      <span>after</span>
-      <input
-        type="text"
-        size="2"
-        class="g_bump_days"
-        id="iyEIRFirstBumpDays"
-        name="FirstBumpDays"
-        value=""
-        disabled=""
-      />
-      days
-    </div>
-  </div>
-</div>
+  </body>
+</html>
