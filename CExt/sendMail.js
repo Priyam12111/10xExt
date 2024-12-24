@@ -105,7 +105,12 @@ async function sendMails() {
       body,
       track
     );
-    handleSendMailResponse(sendMailResponse, sendingAnimation);
+    console.log(sendMailResponse);
+    if ("error" in sendMailResponse["results"][0]) {
+      handleSendMailResponse({ status: "error" }, sendingAnimation);
+    } else {
+      handleSendMailResponse({ status: "success" }, sendingAnimation);
+    }
 
     const uploadResponse = await uploadMailData(
       sender,
@@ -120,7 +125,6 @@ async function sendMails() {
     console.error("Error:", error);
     alert("An error occurred!");
   } finally {
-    console.log("Removing sending animation");
     try {
       sendingAnimation.classList.remove("sending");
     } catch (e) {

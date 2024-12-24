@@ -161,7 +161,6 @@ def send_mails_helper_gcp(
     except Exception as e:
         print(f"An error occurred during Gmail API setup: {e}")
         results.append({"email": to_email, "status": "failed", "error": str(e)})
-    print(results)
     return results
 
 
@@ -175,7 +174,6 @@ def schedule():
             subject = f"Follow Up Mail Campaign {doc['uploadId']}"
             body = "Follow up body Mail to {name}"
             tracking = True
-            print("Sending Mail...", emails)
             send_mails_helper_gcp(
                 doc["uploadId"],
                 emails,
@@ -255,7 +253,6 @@ def send_mails():
         body_template = data.get("body")
         track = data.get("tracking")
         emails = data.get("emails", [])
-        print(data)
 
         if not sender or not subject or not body_template or not emails:
             return (

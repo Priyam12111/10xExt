@@ -54,7 +54,6 @@ function toggleDropupMenu(dropupMenu) {
 function createEmailForm() {
   const container = document.createElement("div");
   container.style.display = "none";
-  console.log("Email Created");
 
   const containerContent = document.createElement("div");
   containerContent.style.display = "none";
@@ -86,6 +85,16 @@ function createEmailForm() {
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
       console.log("ESC Key Pressed");
+      const trackingElement = document.querySelector("#iyEIROpenTracking");
+      const followUpElement = document.querySelector("#followup");
+
+      console.log(!trackingElement);
+      if (!trackingElement) {
+        sessionStorage.setItem("tracking", false);
+      }
+      if (!followUpElement) {
+        sessionStorage.setItem("followup", 0);
+      }
       try {
         container.style.display = "none";
         containerContent.style.display = "none";
@@ -97,7 +106,6 @@ function createEmailForm() {
 
   const saveButton = document.getElementById("save-button");
   saveButton.addEventListener("click", () => saveEmailForm(containerContent));
-  console.log("container2", container);
 
   return { containerbox: container, containerContentbox: containerContent };
 }
@@ -160,7 +168,6 @@ function dropupJs() {
   }
 
   const { containerbox, containerContentbox } = createEmailForm();
-  console.log("container", containerbox);
 
   const configureButton = document.getElementById("configure-button");
   if (configureButton) {
@@ -181,7 +188,6 @@ function emailFunctionalities() {
   const inputDays = document.querySelector("#days");
 
   if (trackingElement) {
-    console.log("trackingElement", trackingElement);
     trackingElement.addEventListener("change", () => {
       sessionStorage.setItem("tracking", trackingElement.checked);
     });
@@ -207,11 +213,11 @@ function emailFunctionalities() {
     });
   }
 }
-
+sessionStorage.removeItem("tracking");
+sessionStorage.removeItem("followup");
 const observer = new MutationObserver(() => {
   const composeToolbar = document.querySelector(".gU.Up");
-  sessionStorage.removeItem("tracking");
-  sessionStorage.removeItem("followup");
+
   if (composeToolbar && !document.getElementById("cmail-button")) {
     const { button, dropupMenu } = createButton("cmail-button");
 

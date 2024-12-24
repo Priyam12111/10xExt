@@ -43,6 +43,10 @@ div#cmail-dropup {
   z-index: 10000; /* Ensure it appears above other elements */
   width: 390px;
 }
+#cmail-dropup::-webkit-scrollbar {
+  width: 8px; /* Adjust width as needed */
+  background-color: #f1f1f1; /* Background color for the scrollbar */
+}
 
 #connect {
   background-color: #f4f4f4;
@@ -222,6 +226,8 @@ textarea:focus {
   padding: 10px; /* Adjust padding for better readability */
   overflow-y: auto; /* Allow scrolling inside sections */
   max-height: 250px; /* Limit max height to prevent overlapping */
+  margin-right: 10px;
+  font-size: 14px;
 }
 
 .g_accordian {
@@ -252,10 +258,6 @@ button#configure-button {
 
 span {
   font-size: 16px;
-}
-
-.g2_checkbox {
-  margin-right: 20px;
 }
 
 .g_hide_on_collapse {
@@ -314,6 +316,7 @@ input#email-subject {
 
 input#days {
   width: 10px;
+  font-size: 14px;
 }
 .ending {
   position: fixed;
