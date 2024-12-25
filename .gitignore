@@ -2,3 +2,5 @@
 /CExt/node_modules
 /CExt/mailvenv
 CExt/Mailhelper/.env
+/CExtension/mailvenv
+/CExtension/node_modules

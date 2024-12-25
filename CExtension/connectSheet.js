@@ -8,7 +8,6 @@ function createSheetList() {
     .then((html) => {
       sheetlist.innerHTML = html;
       document.body.appendChild(sheetlist);
-      console.log("Sheet List Injected");
     })
     .then(() => sheetListJs());
 }
@@ -45,6 +44,7 @@ function LoadsheetJS() {
   const dropdownList = document.getElementById("dropdown-list");
   const SpreadsheetSave = document.getElementById("SpreadsheetSave");
   const sheet_list = document.querySelector(".sheet-list-container");
+  const child_sheet_list = document.querySelector(".main");
 
   dropdown.addEventListener("click", () => {
     placeholder.style.display = "none";
@@ -88,33 +88,34 @@ function LoadsheetJS() {
   });
 
   SpreadsheetSave.addEventListener("click", () => {
-    console.log("Save button clicked!");
     sheet_list.classList.toggle("hidden");
+  });
+
+  sheet_list.addEventListener("click", () => {
+    sheet_list.classList.toggle("hidden");
+  });
+
+  child_sheet_list.addEventListener("click", (event) => {
+    event.stopPropagation();
   });
 }
 const sheetObserver = new MutationObserver(() => {
   const gmailSearch = document.querySelector("#aso_search_form_anchor");
 
   if (gmailSearch && !document.querySelector("#sheet-button")) {
-    console.log("Gmail search found:", gmailSearch);
     createSheetList();
-    const sheetButton = document.createElement("button");
-    sheetButton.id = "sheet-button";
-    sheetButton.className = "sheet-button";
+    const sheetButton = document.createElement("div");
     sheetButton.textContent = "Sheet";
-
+    sheetButton.innerHTML = `<div id="sheet-button" class="sheet-button" title="Connect to an email list in a Google Sheet." style="width: 20px; display: block; margin-left: 2px; color: white; padding: 9px 5px 0px 12px; font-weight: bold; font-size: 11px; background-position: center center; background-repeat: no-repeat; background-color: rgb(196, 35, 41); background-image: url(&quot;https://cdn.gmass.us/images/GMassSheetsIcon-tiny.png&quot;); cursor: pointer;">&nbsp;&nbsp;&nbsp;</div>`;
     gmailSearch.parentElement.insertAdjacentElement("afterend", sheetButton);
 
     sheetButton.addEventListener("click", () => {
-      console.log("Sheet button clicked!");
       document
         .querySelector(".sheet-list-container")
         .classList.toggle("hidden");
     });
 
     sheetObserver.disconnect();
-  } else if (!gmailSearch) {
-    console.log("Gmail search not found");
   }
 });
 

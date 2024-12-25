@@ -29,7 +29,8 @@ function createButton(id) {
   dropupMenu.style.display = "none";
 
   fetchAndInjectDropupMenu(dropupMenu);
-
+  const gmailSubject = document.querySelector(".aO7");
+  gmailSubject.onclick = () => (dropupMenu.style.display = "none");
   button.addEventListener("click", () => toggleDropupMenu(dropupMenu));
   return { button, dropupMenu };
 }
@@ -51,6 +52,7 @@ function toggleDropupMenu(dropupMenu) {
   dropupMenu.style.display =
     dropupMenu.style.display === "none" ? "block" : "none";
 }
+
 function createEmailForm() {
   const container = document.createElement("div");
   container.style.display = "none";
