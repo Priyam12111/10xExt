@@ -1,0 +1,86 @@
+<style>
+  #dropdown-container {
+    position: relative;
+    width: 65vw;
+    margin: auto;
+    margin-top: 60px;
+  }
+
+  #dropdown {
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 8px;
+    background-color: white;
+    cursor: pointer;
+    position: relative;
+  }
+
+  #dropdown-placeholder {
+    color: grey;
+  }
+
+  #dropdown-search {
+    display: none;
+    width: calc(100% - 20px);
+    padding: 5px;
+    border: none;
+    outline: none;
+  }
+
+  #dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid black;
+    border-radius: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  #dropdown-list li {
+    padding: 10px;
+    cursor: pointer;
+  }
+
+  #dropdown-list li:hover {
+    background-color: #f0f0f0;
+  }
+
+  .hidden {
+    display: none;
+  }
+  .main {
+    height: 70vh;
+    background: white;
+    width: 70vw;
+    border-radius: 20px;
+  }
+  .header {
+    text-align: center;
+  }
+  #SpreadsheetSave {
+    display: flex;
+    margin: 10px auto;
+    align-items: center;
+  }
+</style>
+<div class="main">
+  <div id="dropdown-container">
+    <h1 class="header">Choose a Spreadsheet</h1>
+    <div id="dropdown" class="dropdown">
+      <span id="dropdown-placeholder">Select Spreadsheet</span>
+      <input
+        type="search"
+        id="dropdown-search"
+        placeholder="Search sheets..."
+      />
+    </div>
+    <ul id="dropdown-list" class="hidden"></ul>
+    <button id="SpreadsheetSave" class="save-btn">Save</button>
+  </div>
+</div>

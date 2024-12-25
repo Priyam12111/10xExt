@@ -384,3 +384,17 @@ input#days {
 .active {
   display: block;
 }
+.sheet-list-container {
+  width: 100vw;
+  height: 100vh;
+  background: #00000073;
+  position: absolute;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 6;
+}
+.hidden {
+  display: none;
+}

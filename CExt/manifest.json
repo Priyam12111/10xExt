@@ -23,7 +23,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["dropupMenu.html"],
+      "resources": ["dropupMenu.html", "sheetList.html"],
       "matches": ["<all_urls>"]
     }
   ],

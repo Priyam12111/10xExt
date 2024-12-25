@@ -1,16 +1,16 @@
 function fetchDataFromSheet() {
-  const spreadsheetId =
-    sessionStorage.getItem("spreadsheetId") ||
-    prompt("Enter the Spreadsheet ID");
-  if (spreadsheetId) {
-    sessionStorage.setItem("spreadsheetId", spreadsheetId);
+  const sheetList = document.querySelector(".sheet-list-container");
+  const spreadsheetId = sessionStorage.getItem("spreadsheetId");
+
+  if (!spreadsheetId) {
+    sheetList.classList.remove("hidden");
+    return;
   }
-
+  const sender = document.title.split(" ")[3];
   const range = "Sheet1!A:Z";
-  const endpoint = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}`;
-  const apiKey = "AIzaSyC7Ubf5000J30CudwmIaxIgSz-vhJhe3-A";
+  const endpoint = `http://localhost:5000/sheet-data?sender=${sender}&spreadsheetId=${spreadsheetId}&range=${range}`;
 
-  fetch(`${endpoint}?key=${apiKey}`)
+  fetch(`${endpoint}`)
     .then((response) =>
       response.ok
         ? response.json()
@@ -91,7 +91,7 @@ async function sendMails() {
   try {
     const uploadId = await fetch("http://127.0.0.1:5000/latest_id")
       .then((res) => res.text())
-      .then((id) => parseInt(JSON.parse(id).Latest_id) + 1);
+      .then((id) => JSON.parse(id).Latest_id + 1);
     const sender = document.title.split(" ")[3];
     const subject = document.querySelector(".aoT").value;
     const body = document.querySelector(

@@ -41,8 +41,10 @@ def authenticate_gmail(token_file, credentials_file="credentials.json"):
     SCOPES = [
         "https://www.googleapis.com/auth/drive.metadata.readonly",
         "https://www.googleapis.com/auth/gmail.send",
+        "https://www.googleapis.com/auth/spreadsheets.readonly",
     ]
     token_file = f"{token_file}.json"
+    print("token_file", token_file)
     if os.path.exists(token_file):
         creds = Credentials.from_authorized_user_file(token_file)
         if not creds or not creds.has_scopes(SCOPES):
@@ -196,7 +198,7 @@ def authenticate():
     return jsonify({"status": f"{token_file} has been created"}), 200
 
 
-@app.route("/list_sheets", methods=["GET"])
+@app.route("/list-sheets", methods=["GET"])
 def list_google_sheets():
     sender = request.args.get("sender")
     try:
@@ -221,6 +223,42 @@ def list_google_sheets():
         for sheet in sheets:
             result.append(f"{sheet['name']} ({sheet['id']})")
     return jsonify({"status": "success", "result": result}), 200
+
+
+@app.route("/sheet-data", methods=["GET"])
+def get_sheet_data():
+    sender = request.args.get("sender")
+    spreadsheet_id = request.args.get("spreadsheetId")
+    range_name = request.args.get("range")
+
+    try:
+        cred = authenticate_gmail(sender.replace("@", "").replace(".com", ""))
+    except Exception as e:
+        print(f"Authentication error: {e}")
+        return jsonify({"error": "Authentication failed"}), 403
+
+    try:
+        service = build("sheets", "v4", credentials=cred)
+        sheet = service.spreadsheets()
+        result = (
+            sheet.values().get(spreadsheetId=spreadsheet_id, range=range_name).execute()
+        )
+        rows = result.get("values", [])
+    except Exception as e:
+        print(f"An error occurred while fetching data: {e}")
+        return jsonify({"error": "Failed to fetch sheet data"}), 500
+
+    if not rows or not isinstance(rows, list) or len(rows) < 1:
+        print("No data found or invalid sheet structure.")
+        return jsonify({"error": "No data found"}), 400
+
+    headers = rows[0]
+    print(rows)
+    if "Email" not in headers:
+        print("No 'Email' column found in the sheet.")
+        return jsonify({"error": "No 'Email' column in the sheet"}), 400
+
+    return jsonify({"values": rows}), 200
 
 
 @app.route("/send-mails", methods=["POST"])
