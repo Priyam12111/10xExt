@@ -215,6 +215,7 @@ function emailFunctionalities() {
 }
 sessionStorage.removeItem("tracking");
 sessionStorage.removeItem("followup");
+sessionStorage.setItem("sender", document.title.split(" ")[3]);
 const observer = new MutationObserver(() => {
   const composeToolbar = document.querySelector(".gU.Up");
 

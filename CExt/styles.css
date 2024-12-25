@@ -30,22 +30,22 @@ div#cmail-dropup {
   display: block;
   background-color: rgb(249, 249, 249);
   box-shadow: rgba(0, 0, 0, 0.2) 0px 8px 16px;
-  padding: 10px; /* Increased padding for better spacing */
+  padding: 10px;
   border-radius: 4px;
-  position: fixed; /* Fixed position to prevent clipping in absolute layout */
-  bottom: 10%; /* Adjust bottom to ensure visibility */
-  left: 68%; /* Adjust left for centering */
+  position: fixed;
+  bottom: 10%;
+  left: 68%;
   min-height: 360px;
-  max-height: 400px; /* Limit max height to prevent overflow */
-  width: 350; /* Slightly increased width for better content fit */
+  max-height: 400px;
+  width: 350;
   font-family: "Google-sans", sans-serif;
-  overflow-y: auto; /* Enable scrolling for overflow content */
-  z-index: 10000; /* Ensure it appears above other elements */
+  overflow-y: auto;
+  z-index: 10000;
   width: 390px;
 }
 #cmail-dropup::-webkit-scrollbar {
-  width: 8px; /* Adjust width as needed */
-  background-color: #f1f1f1; /* Background color for the scrollbar */
+  width: 8px;
+  background-color: #f1f1f1;
 }
 
 #connect {
@@ -144,7 +144,7 @@ textarea:focus {
   position: absolute;
   top: 0px;
   left: 0px;
-  background: rgba(0, 0, 0, 0.6); /* Slightly darker overlay */
+  background: rgba(0, 0, 0, 0.6);
   z-index: 99999;
 }
 
@@ -223,9 +223,9 @@ textarea:focus {
 }
 
 .g_accordian_content {
-  padding: 10px; /* Adjust padding for better readability */
-  overflow-y: auto; /* Allow scrolling inside sections */
-  max-height: 250px; /* Limit max height to prevent overlapping */
+  padding: 10px;
+  overflow-y: auto;
+  max-height: 250px;
   margin-right: 10px;
   font-size: 14px;
 }
@@ -241,19 +241,19 @@ textarea:focus {
 }
 
 .g_accordian {
-  margin-bottom: 10px; /* Add space between accordion sections */
+  margin-bottom: 10px;
 }
 
 .change-template,
 .g2_tracking,
 .g2_action {
-  margin: 15px 0; /* Uniform spacing between sections */
+  margin: 15px 0;
 }
 
 button#configure-button {
   padding: 8px 12px;
   font-size: 14px;
-  margin: 5px 0; /* Space around the button */
+  margin: 5px 0;
 }
 
 span {
@@ -267,7 +267,9 @@ span {
 .g2_action {
   margin-top: 20px;
 }
-
+.g2_checkbox {
+  padding-right: 10px;
+}
 .blank-header {
   height: 10px;
   background: rgba(0, 0, 0, 0.534);
@@ -355,7 +357,6 @@ input#days {
   }
 }
 
-/* Arrow */
 .arrow-btn {
   background-color: rgb(160, 38, 38);
   cursor: pointer;
@@ -380,7 +381,6 @@ input#days {
   transform: rotate(-180deg);
 }
 
-/* Arrow */
 .active {
   display: block;
 }

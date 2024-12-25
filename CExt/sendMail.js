@@ -1,8 +1,9 @@
 function fetchDataFromSheet() {
   const spreadsheetId =
-    localStorage.getItem("spreadsheetId") || prompt("Enter the Spreadsheet ID");
+    sessionStorage.getItem("spreadsheetId") ||
+    prompt("Enter the Spreadsheet ID");
   if (spreadsheetId) {
-    localStorage.setItem("spreadsheetId", spreadsheetId);
+    sessionStorage.setItem("spreadsheetId", spreadsheetId);
   }
 
   const range = "Sheet1!A:Z";
@@ -42,7 +43,6 @@ function fetchDataFromSheet() {
         "Failed to fetch data. Please check the console for errors.";
     });
 }
-
 function processData(headers, allData) {
   let storedData = { Email: [] };
   let variables = {};
@@ -91,7 +91,7 @@ async function sendMails() {
   try {
     const uploadId = await fetch("http://127.0.0.1:5000/latest_id")
       .then((res) => res.text())
-      .then((id) => JSON.parse(id).Latest_id + 1);
+      .then((id) => parseInt(JSON.parse(id).Latest_id) + 1);
     const sender = document.title.split(" ")[3];
     const subject = document.querySelector(".aoT").value;
     const body = document.querySelector(

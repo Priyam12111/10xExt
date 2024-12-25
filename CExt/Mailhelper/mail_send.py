@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, redirect
 from flask_cors import CORS
 import smtplib
 from datetime import datetime, timedelta
@@ -12,6 +12,7 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
 import base64, os
 from dotenv import load_dotenv
 
@@ -35,66 +36,31 @@ db = client[DATABASE_NAME]
 collection = db[COLLECTION_NAME]
 
 
-def send_mails_helper(idx, emails, subject, body_template, track, results=[]):
-    for email_data in emails:
-        try:
-
-            try:
-                to_email = email_data["email"]
-                variables = email_data.get("variables", {})
-            except Exception:
-                to_email = email_data
-                variables = {"name": "Test"}
-            url = "http://15.207.71.80"
-
-            if track:
-                tracking_pixel_url = f"{url}/track.png?name={to_email}&idx={idx}"
-                variables["tracking_pixel_url"] = tracking_pixel_url
-                body_template_plain = (
-                    body_template
-                    + """
-                <p>\n\nThis email is tracked by MailSend API<p>
-                <img src="{tracking_pixel_url}" alt="." width="1">
-                """
-                )
-                body = body_template_plain.format(**variables)
-            else:
-                body = body_template.format(**variables)
-
-            msg = MIMEMultipart()
-            msg["From"] = EMAIL_ADDRESS
-            msg["To"] = to_email
-            msg["Subject"] = subject
-
-            html_body = MIMEText(body, "html")
-            html_body.add_header("Content-Disposition", "inline")
-            msg.attach(html_body)
-
-            with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-                server.starttls()
-                server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-                server.sendmail(EMAIL_ADDRESS, to_email, msg.as_string())
-
-            results.append({"email": to_email, "status": "sent"})
-        except Exception as e:
-            results.append(
-                {"email": email_data["email"], "status": "failed", "error": str(e)}
-            )
-
-
-def authenticate_gmail(token_file, client_secrets_file="credentials.json"):
-    SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
+def authenticate_gmail(token_file, credentials_file="credentials.json"):
+    creds = None
+    SCOPES = [
+        "https://www.googleapis.com/auth/drive.metadata.readonly",
+        "https://www.googleapis.com/auth/gmail.send",
+    ]
     token_file = f"{token_file}.json"
     if os.path.exists(token_file):
-        creds = Credentials.from_authorized_user_file(token_file, SCOPES)
-    else:
+        creds = Credentials.from_authorized_user_file(token_file)
+        if not creds or not creds.has_scopes(SCOPES):
+            print(
+                "Existing token does not have the required scopes. Re-authenticating..."
+            )
+            creds = None
+        else:
+            print(creds.scopes)
 
-        flow = InstalledAppFlow.from_client_secrets_file(client_secrets_file, SCOPES)
-        creds = flow.run_local_server(port=0)
-
-        with open(f"{token_file}", "w") as token:
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(credentials_file, SCOPES)
+            creds = flow.run_local_server(port=0)
+        with open(token_file, "w") as token:
             token.write(creds.to_json())
-        print(f"Token created and saved to {token_file}")
 
     return creds
 
@@ -204,20 +170,6 @@ def schedule():
     return jsonify({"status": "No pending campaigns"})
 
 
-try:
-    scheduler = BackgroundScheduler()
-    scheduler.start()
-
-    scheduler.add_job(
-        func=schedule,
-        trigger=CronTrigger(hour=18, minute=32),
-        id="daily_job",
-        replace_existing=True,
-    )
-except Exception:
-    pass
-
-
 @app.route("/schedule", methods=["GET"])
 def schedule_job():
     try:
@@ -230,6 +182,7 @@ def schedule_job():
 @app.route("/authenticate", methods=["POST"])
 def authenticate():
     data = request.json
+
     token_file = data.get("token_file_name")
 
     if not token_file:
@@ -241,6 +194,33 @@ def authenticate():
         print(e)
 
     return jsonify({"status": f"{token_file} has been created"}), 200
+
+
+@app.route("/list_sheets", methods=["GET"])
+def list_google_sheets():
+    sender = request.args.get("sender")
+    try:
+        cred = authenticate_gmail(sender.replace("@", "").replace(".com", ""))
+    except Exception as e:
+        print(e)
+        return
+    service = build("drive", "v3", credentials=cred)
+    results = (
+        service.files()
+        .list(
+            q="mimeType='application/vnd.google-apps.spreadsheet'",
+            fields="nextPageToken, files(id, name)",
+        )
+        .execute()
+    )
+    sheets = results.get("files", [])
+    if not sheets:
+        print("No Google Sheets files found.")
+    else:
+        result = []
+        for sheet in sheets:
+            result.append(f"{sheet['name']} ({sheet['id']})")
+    return jsonify({"status": "success", "result": result}), 200
 
 
 @app.route("/send-mails", methods=["POST"])
@@ -318,6 +298,42 @@ def get_latest_id():
         return jsonify({"Latest_id": latest_document.get("uploadId", 0)})
     else:
         return jsonify({"Latest_id": 0})
+
+
+@app.route("/track", methods=["GET"])
+def track_url():
+    url = request.args.get("url")
+    idx = request.args.get("id")
+
+    if url and idx:
+        clean_url = url.strip('"')
+
+        collection.update_one(
+            {"uploadId": int(idx)},
+            {"$set": {"access_log": {"timestamp": datetime.now(), "url": clean_url}}},
+        )
+        print(idx)
+        return redirect(clean_url)
+    else:
+        return "Invalid parameters", 400
+
+
+@app.route("/timeSchedule", methods=["GET"])
+def timeSchedule():
+    hours = int(request.args.get("hours"))
+    minutes = int(request.args.get("minute"))
+    try:
+        scheduler = BackgroundScheduler()
+        scheduler.start()
+
+        scheduler.add_job(
+            func=schedule,
+            trigger=CronTrigger(hour=hours, minute=minutes),
+            id=f"Job_fixing_{hours}_{minutes}",
+            replace_existing=True,
+        )
+    except Exception:
+        pass
 
 
 if __name__ == "__main__":
