@@ -131,6 +131,7 @@ async function sendMails() {
     }
   } catch (error) {
     console.error("Error:", error);
+    setTimeout(() => sendingAnimation.remove(), 5000);
     alert("An error occurred!");
   } finally {
     try {
