@@ -155,20 +155,310 @@
         <div class="g_accordian_title">
           <span>
             <img src="https://cdn.gmass.us/Extension2019Images/fa-share.png" />
-            <span style="padding: 3px">Auto Follou</span>
+            <span style="padding: 3px">Auto Follow-Up</span>
           </span>
           <span id="zjDCLmainspread" style="font-weight: normal"></span>
+        </div>
+        <div class="g_accordian_content">
+          <hr />
+          <div class="g_hide_on_collapse">
+            <label class="g2_checkbox">
+              <input type="checkbox" name="followup" id="followup" />
+              <span>If</span>
+            </label>
+            <select name="condition" id="condition">
+              <option value="1">Not Opened</option>
+              <option value="2">Not Replied</option>
+              <option value="3">Not Opened or Replied</option>
+            </select>
+            <label class="g2_checkbox">
+              <span>after</span>
+              <input type="text" name="days" id="days" value="2" />
+              <span>days</span>
+            </label>
+          </div>
         </div>
       </div>
       <div class="g2_tracking g_accordian">
         <div class="g_accordian_title">
           <span>
-            <img
-              src="https://cdn.gmass.us/Extension2019Images/fa-calendar.png"
-            />
+            <img src="https://cdn.gmass.us/Extension2019Images/fa-share.png" />
             <span style="padding: 3px">Schedule</span>
           </span>
           <span id="zjDCLmainspread" style="font-weight: normal"></span>
+        </div>
+        <div class="g_accordian_content">
+          <hr />
+          <div style="display: flex">
+            <div class="g_col_label" style="float: none">Time:</div>
+            <div>
+              <select id="EUYaSGMassDateDropdown" style="margin-bottom: 5px">
+                <option selected="" disabled="" hidden="" value=""></option>
+                <option value="Now" selected="">Now</option>
+                <option value="FiveMinutes" [fiveminutes]="">
+                  In 5 minutes
+                </option>
+                <option value="OneHour" [onehour]="">In 1 hour</option>
+                <option value="ThreeHours" [threehours]="">In 3 hours</option>
+                <option value="TomorrowMor" [tomrrowmor]="">
+                  Tomorrow morning at 8am
+                </option>
+                <option value="TomorrowAft" [tomorrowaft]="">
+                  Tomorrow afternoon at 1pm
+                </option>
+                <option value="TomorrowEve" [tomorroweve]="">
+                  Tomorrow evening at 7pm
+                </option>
+                <option value="Custom" [custom]="">Custom date/time</option>
+              </select>
+              <div class="gmass-expand-field">
+                <input
+                  size="30"
+                  type="text"
+                  id="EUYaSGMassDateTime"
+                  value=""
+                  data-oval="schedule set"
+                />
+                <div class="gmass-calendar-icon" style="height: 30px"></div>
+              </div>
+              <div
+                style="margin-top: 5px; display: none"
+                id="EUYaSSkipWeekendsDiv"
+                class="not-inline-reply-form"
+              >
+                <label class="g2_checkbox">
+                  <input
+                    type="checkbox"
+                    name="SkipWeekends"
+                    id="EUYaSSkipWeekends"
+                    [skipweekendson]=""
+                    data-oval="skip weekends"
+                  />
+                  <span>Skip weekends</span>
+                </label>
+              </div>
+              <div style="margin-top: 5px" class="not-inline-reply-form">
+                <label class="g2_checkbox">
+                  <input
+                    type="checkbox"
+                    name="SkipHolidays"
+                    id="EUYaSSkipHolidays"
+                    [skipholidayson]=""
+                    data-oval="skip holidays"
+                  />
+                  <span>Skip holidays</span>
+                </label>
+              </div>
+              <div style="margin-top: 5px" class="not-inline-reply-form">
+                <label class="g2_checkbox">
+                  <input
+                    type="checkbox"
+                    [senddayson]=""
+                    style="position: relative"
+                    name="SendDaysOn"
+                    value="true"
+                    id="EUYaSSendDaysOn"
+                    data-oval="send days"
+                  />
+                  <span>Choose specific days</span>
+                </label>
+                <div class="g_senddays" style="margin-top: 1em; display: none">
+                  <select
+                    name="SendDays"
+                    id="EUYaSSendDays"
+                    multiple=""
+                    style="display: none"
+                  >
+                    <option value="weekdays" data-group="true">
+                      Select weekdays only
+                    </option>
+                    <option value="3">Monday</option>
+                    <option value="4">Tuesday</option>
+                    <option value="5">Wednesday</option>
+                    <option value="6">Thursday</option>
+                    <option value="7">Friday</option>
+                    <option value="1">Saturday</option>
+                    <option value="2">Sunday</option>
+                  </select>
+                  <div class="gmass-select-many">
+                    <div class="select-many-label">
+                      <span>Select sending days</span
+                      ><span class="select-arrow"></span>
+                    </div>
+                    <div class="gmass-select-many-list">
+                      <input type="text" />
+                      <ul>
+                        <li>
+                          <label class="g2_checkbox">
+                            <input type="checkbox" class="select-all" />
+                            <span>Select/Remove all days</span>
+                            <label> </label
+                          ></label>
+                        </li>
+                        <li data-group="true" data-value="weekdays">
+                          <div
+                            style="
+                              display: flex;
+                              width: 100%;
+                              justify-content: space-between;
+                            "
+                          >
+                            <label class="g2_checkbox">
+                              <input type="checkbox" value="weekdays" />
+                              <span>Select weekdays only</span>
+                            </label>
+                          </div>
+                        </li>
+                        <li data-value="3">
+                          <div
+                            style="
+                              display: flex;
+                              width: 100%;
+                              justify-content: space-between;
+                            "
+                          >
+                            <label class="g2_checkbox">
+                              <input type="checkbox" value="3" />
+                              <span>Monday</span>
+                            </label>
+                          </div>
+                        </li>
+                        <li data-value="4">
+                          <div
+                            style="
+                              display: flex;
+                              width: 100%;
+                              justify-content: space-between;
+                            "
+                          >
+                            <label class="g2_checkbox">
+                              <input type="checkbox" value="4" />
+                              <span>Tuesday</span>
+                            </label>
+                          </div>
+                        </li>
+                        <li data-value="5">
+                          <div
+                            style="
+                              display: flex;
+                              width: 100%;
+                              justify-content: space-between;
+                            "
+                          >
+                            <label class="g2_checkbox">
+                              <input type="checkbox" value="5" />
+                              <span>Wednesday</span>
+                            </label>
+                          </div>
+                        </li>
+                        <li data-value="6">
+                          <div
+                            style="
+                              display: flex;
+                              width: 100%;
+                              justify-content: space-between;
+                            "
+                          >
+                            <label class="g2_checkbox">
+                              <input type="checkbox" value="6" />
+                              <span>Thursday</span>
+                            </label>
+                          </div>
+                        </li>
+                        <li data-value="7">
+                          <div
+                            style="
+                              display: flex;
+                              width: 100%;
+                              justify-content: space-between;
+                            "
+                          >
+                            <label class="g2_checkbox">
+                              <input type="checkbox" value="7" />
+                              <span>Friday</span>
+                            </label>
+                          </div>
+                        </li>
+                        <li data-value="1">
+                          <div
+                            style="
+                              display: flex;
+                              width: 100%;
+                              justify-content: space-between;
+                            "
+                          >
+                            <label class="g2_checkbox">
+                              <input type="checkbox" value="1" />
+                              <span>Saturday</span>
+                            </label>
+                          </div>
+                        </li>
+                        <li data-value="2">
+                          <div
+                            style="
+                              display: flex;
+                              width: 100%;
+                              justify-content: space-between;
+                            "
+                          >
+                            <label class="g2_checkbox">
+                              <input type="checkbox" value="2" />
+                              <span>Sunday</span>
+                            </label>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div class="g_border_top not-inline-reply-form" style="display: flex">
+            <div class="g_col_label" style="float: none">Speed:</div>
+            <div>
+              <span style="padding-top: 0px">
+                <span>Send</span>
+                <input
+                  type="text"
+                  placeholder="max"
+                  size="4"
+                  id="bqpifMaxEmails"
+                  name="MaxEmails"
+                  value=""
+                  data-oval="daily limit"
+                />
+                <span>emails/day</span>
+                <button type="button" id="bqpifcheckusage">Show usage</button>
+              </span>
+              <div style="margin-top: 4px; margin-left: 32px">
+                <label class="g2_checkbox with-select">
+                  <input
+                    type="checkbox"
+                    id="bqpifDelayCheckbox"
+                    name="DelayCheckbox"
+                    [delayoff]=""
+                    data-oval="pause between emails"
+                  />
+                  <span>
+                    Pause
+                    <select
+                      id="bqpifPauseSeconds"
+                      name="PauseSeconds"
+                      disabled=""
+                    >
+                      <option value="1">5-10 seconds</option>
+                      <option value="2">10-60 seconds</option>
+                      <option value="3">1-5 minutes</option>
+                      <option value="5">5-10 minutes</option>
+                    </select>
+                    between emails
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

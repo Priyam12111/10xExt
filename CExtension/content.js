@@ -188,7 +188,85 @@ function emailFunctionalities() {
   const trackingElement = document.querySelector("#iyEIROpenTracking");
   const followUpElement = document.querySelector("#followup");
   const inputDays = document.querySelector("#days");
+  const schedule = document.querySelector("#EUYaSGMassDateDropdown");
+  const scheduleinput = document.querySelector("#EUYaSGMassDateTime");
+  if (schedule) {
+    schedule.addEventListener("change", function (event) {
+      const selectedValue = event.target.value;
+      console.log("Selected value:", selectedValue);
 
+      const now = new Date();
+      console.log(now);
+      let datetime;
+      switch (selectedValue) {
+        case "Now":
+          datetime = now;
+          scheduleinput.value = "Now";
+          return;
+        case "FiveMinutes":
+          datetime = new Date(now.getTime() + 5 * 60 * 1000); // Add 5 minutes
+          break;
+        case "OneHour":
+          datetime = new Date(now.getTime() + 60 * 60 * 1000); // Add 1 hour
+          break;
+        case "ThreeHours":
+          datetime = new Date(now.getTime() + 3 * 60 * 60 * 1000); // Add 3 hours
+          break;
+        case "TomorrowMor":
+          datetime = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate() + 1,
+            8,
+            0,
+            0
+          );
+          break;
+        case "TomorrowAft":
+          datetime = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate() + 1,
+            13,
+            0,
+            0
+          );
+          break;
+        case "TomorrowEve":
+          datetime = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate() + 1,
+            19,
+            0,
+            0
+          );
+          break;
+        case "Custom":
+          scheduleinput.value = "";
+          scheduleinput.disabled = false;
+          scheduleinput.addEventListener("change", () => {
+            sessionStorage.setItem("schedule", scheduleinput.value);
+          });
+          return;
+        default:
+          console.warn("Unexpected schedule value:", selectedValue);
+          return;
+      }
+
+      const offsetInMilliseconds = 5.5 * 60 * 60 * 1000; // UTC+5:30
+      const istDatetime = new Date(datetime.getTime() + offsetInMilliseconds);
+
+      // Format IST datetime as "YYYY-MM-DDTHH:MM:SS" for datetime-local
+      const formattedDatetime = istDatetime
+        .toISOString()
+        .slice(0, 19)
+        .replace("T", " ");
+      sessionStorage.setItem("schedule", datetime ? formattedDatetime : "");
+      scheduleinput.value = formattedDatetime;
+      scheduleinput.disabled = true;
+    });
+  }
   if (trackingElement) {
     trackingElement.addEventListener("change", () => {
       sessionStorage.setItem("tracking", trackingElement.checked);

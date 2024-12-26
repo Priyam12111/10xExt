@@ -133,15 +133,53 @@ def send_mails_helper_gcp(
 
 
 def schedule():
+    collection = db[COLLECTION_NAME]
     today = datetime.now().date()
-    documents = collection.find({"target": {"$exists": True, "$ne": None}})
+    documents = collection.find(
+        {
+            "schedule": {"$exists": True, "$ne": None},
+        }
+    )
     result = []
     for doc in documents:
-        if doc["target"].date() == today and doc["status"] != "Completed":
+        print(doc["schedule"])
+        if (
+            doc["schedule"] != "Executed"
+            and doc["schedule"].date() == today
+            and doc["schedule"].time() <= datetime.now().time()
+        ):
+            emails = doc["emails"]
+            subject = doc["subject"] + "Follow Up Campaign"
+            body = doc["body"]
+            tracking = True
+            send_mails_helper_gcp(
+                doc["uploadId"],
+                emails,
+                subject,
+                body,
+                tracking,
+                f'{doc["sender"].replace("@", "").replace(".com", "")}',
+                result,
+            )
+            if doc["status"][0] == "R":
+                newStatus = "1 follow up"
+            else:
+                newStatus = str(int(doc["status"][0]) + 1) + " follow up"
+                if newStatus[0] == "4":
+                    newStatus = "Completed"
+            collection.update_one(
+                {"_id": doc["_id"]},
+                {"$set": {"status": newStatus, "schedule": "Executed"}},
+            )
+        if (
+            "target" in doc
+            and doc["target"].date() == today
+            and doc["status"] != "Completed"
+        ):
             emails = doc["emails"]
             subject = f"Follow Up Mail Campaign {doc['uploadId']}"
             body = "Follow up body Mail to {name}"
-            tracking = True
+            tracking = False
             send_mails_helper_gcp(
                 doc["uploadId"],
                 emails,
@@ -172,6 +210,22 @@ def schedule():
     return jsonify({"status": "No pending campaigns"})
 
 
+def timeSchedule(hours, minutes):
+
+    try:
+        scheduler = BackgroundScheduler()
+        scheduler.start()
+
+        scheduler.add_job(
+            func=schedule,
+            trigger=CronTrigger(hour=hours, minute=minutes),
+            id=f"Job_fixing_{hours}_{minutes}",
+            replace_existing=True,
+        )
+    except Exception:
+        pass
+
+
 @app.route("/schedule", methods=["GET"])
 def schedule_job():
     try:
@@ -179,6 +233,14 @@ def schedule_job():
     except Exception as e:
         print(e)
         return jsonify({"status": "Checking Failed"}), 500
+
+
+@app.route("/timeSchedule", methods=["GET"])
+def timeSchedule_job():
+    hours = int(request.args.get("hours"))
+    minutes = int(request.args.get("minute"))
+    timeSchedule(hours, minutes)
+    return "success", 200
 
 
 @app.route("/authenticate", methods=["POST"])
@@ -321,12 +383,18 @@ def upload_to_mongodb():
     try:
         if "date" in data:
             data["date"] = datetime.now()
+
         if "followup" in data and data["followup"] != 0:
             data["target"] = datetime.now() + timedelta(days=int(data["followup"]))
+
+        if "schedule" in data and data["schedule"] != "Executed":
+            data["schedule"] = datetime.fromisoformat(data["schedule"])
+            timeSchedule(data["schedule"].hour, data["schedule"].minute)
+            print("Timing has been set to ", data["schedule"])
         result = collection.insert_one(data)
         return jsonify({"status": "success", "inserted_id": str(result.inserted_id)})
     except Exception as e:
-        return jsonify({"status": "failed", "error": str(e)})
+        return jsonify({"status": "failed", "error": str(e)}), 500
 
 
 @app.route("/latest_id", methods=["GET"])
@@ -354,24 +422,6 @@ def track_url():
         return redirect(clean_url)
     else:
         return "Invalid parameters", 400
-
-
-@app.route("/timeSchedule", methods=["GET"])
-def timeSchedule():
-    hours = int(request.args.get("hours"))
-    minutes = int(request.args.get("minute"))
-    try:
-        scheduler = BackgroundScheduler()
-        scheduler.start()
-
-        scheduler.add_job(
-            func=schedule,
-            trigger=CronTrigger(hour=hours, minute=minutes),
-            id=f"Job_fixing_{hours}_{minutes}",
-            replace_existing=True,
-        )
-    except Exception:
-        pass
 
 
 if __name__ == "__main__":

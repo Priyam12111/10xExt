@@ -97,30 +97,38 @@ async function sendMails() {
     const body = document.querySelector(
       ".Am.aiL.Al.editable.LW-avf.tS-tW"
     ).textContent;
+    const schedule = sessionStorage.getItem("schedule") || "";
 
-    const sendMailResponse = await sendEmailRequest(
-      sender,
-      uploadId,
-      subject,
-      body,
-      track
-    );
-    console.log(sendMailResponse);
-    if ("error" in sendMailResponse["results"][0]) {
-      handleSendMailResponse({ status: "error" }, sendingAnimation);
-    } else {
-      handleSendMailResponse({ status: "success" }, sendingAnimation);
+    if (schedule === "" || schedule === "Now") {
+      const sendMailResponse = await sendEmailRequest(
+        sender,
+        uploadId,
+        subject,
+        body,
+        track
+      );
+      console.log(sendMailResponse);
+      if ("error" in sendMailResponse["results"][0]) {
+        handleSendMailResponse({ status: "error" }, sendingAnimation);
+      } else {
+        handleSendMailResponse({ status: "success" }, sendingAnimation);
+      }
+      if (sendingAnimation) {
+        setTimeout(() => sendingAnimation.remove(), 5000);
+      }
     }
 
     const uploadResponse = await uploadMailData(
       sender,
       uploadId,
       subject,
-      body
+      body,
+      schedule
     );
-    handleUploadResponse(uploadResponse);
-
-    setTimeout(() => sendingAnimation.remove(), 5000);
+    if (schedule !== "" && schedule !== "Now") {
+      handleUploadResponse(uploadResponse, sendingAnimation);
+      setTimeout(() => sendingAnimation.remove(), 5000);
+    }
   } catch (error) {
     console.error("Error:", error);
     alert("An error occurred!");
@@ -135,11 +143,11 @@ async function sendMails() {
 
 function createSendingAnimation() {
   const div = document.createElement("div");
-  div.innerHTML = `<div class="sending"><p class="send-text">Sending</p></div>`;
+  div.innerHTML = `<div class="sending"><p class="send-text">Processing</p></div>`;
   return div;
 }
 
-function sendEmailRequest(sender, uploadId, subject, body, track) {
+async function sendEmailRequest(sender, uploadId, subject, body, track) {
   const emails = JSON.parse(sessionStorage.getItem("emails") || "[]");
   const variables = JSON.parse(sessionStorage.getItem("variables") || "{}");
 
@@ -184,10 +192,9 @@ function handleSendMailResponse(response, sendingAnimation) {
   `;
 }
 
-function uploadMailData(sender, uploadId, subject, body) {
+function uploadMailData(sender, uploadId, subject, body, schedule) {
   const emails = JSON.parse(sessionStorage.getItem("emails") || "[]");
   const variables = JSON.parse(sessionStorage.getItem("variables") || "{}");
-
   const emailData = emails.map((email, index) => ({
     email,
     variables: Object.keys(variables).reduce((acc, key) => {
@@ -209,16 +216,30 @@ function uploadMailData(sender, uploadId, subject, body) {
       date: "currentdate",
       status: "Ready",
       followup: parseInt(sessionStorage.getItem("followup") || 0),
+      tracking: JSON.parse(sessionStorage.getItem("tracking") || "false"),
+      schedule: schedule,
     }),
   });
 }
 
-function handleUploadResponse(response) {
-  if (response.status === "success") {
+function handleUploadResponse(response, sendingAnimation) {
+  if (response.ok) {
     console.log("Upload Success:", response);
+    var msg = `Mail has been scheduled`;
   } else {
+    var msg = `Mail has not been Scheduled`;
     console.log("Upload Failed:", response);
   }
+  sendingAnimation.innerHTML = `
+    <div class="ending">
+      <p class="ending-text">
+        <svg width="24" height="24" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM10 18L12 22L14 18Z"></path>
+        </svg>
+        ${msg}
+      </p>
+    </div>
+  `;
 }
 
 function sendTestMail() {
