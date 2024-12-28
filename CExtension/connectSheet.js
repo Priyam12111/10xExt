@@ -30,8 +30,22 @@ function sheetListJs() {
       data["result"].forEach((sheet) => {
         const sheetItem = document.createElement("li");
         const sheetArray = sheet.split(" ");
-        sheetItem.textContent = sheetArray[0];
-        sheetItem.setAttribute("data-id", sheetArray[sheetArray.length - 1]);
+        sheetItem.innerHTML = `
+        <li data-id="${
+          sheetArray[sheetArray.length - 1]
+        }" style="display: flex; align-items: center; gap: 10px; padding: 8px; border-bottom: 1px solid #ddd;">
+  <img 
+    src="https://cdn.gmass.us/img2017/google-sheets.png" 
+    alt="Google Sheets Icon" 
+    width="50" 
+    height="50"
+    style="border-radius: 4px;"
+  >
+  <span style="font-size: 16px; font-weight: 500; color: #333;">
+    ${sheetArray[0]}
+  </span>
+</li>
+        `;
         sheetList.appendChild(sheetItem);
       });
     })
@@ -46,10 +60,12 @@ function LoadsheetJS() {
   const sheet_list = document.querySelector(".sheet-list-container");
   const child_sheet_list = document.querySelector(".main");
 
-  dropdown.addEventListener("click", () => {
+  dropdown.addEventListener("click", (event) => {
+    event.stopPropagation();
     placeholder.style.display = "none";
     searchInput.style.display = "block";
     searchInput.focus();
+    SpreadsheetSave.style.display = "none";
     dropdownList.classList.remove("hidden");
   });
 
@@ -97,6 +113,10 @@ function LoadsheetJS() {
 
   child_sheet_list.addEventListener("click", (event) => {
     event.stopPropagation();
+    placeholder.style.display = "block";
+    searchInput.style.display = "none";
+    SpreadsheetSave.style.display = "flex";
+    dropdownList.classList.add("hidden");
   });
 }
 const sheetObserver = new MutationObserver(() => {
@@ -106,8 +126,17 @@ const sheetObserver = new MutationObserver(() => {
     createSheetList();
     const sheetButton = document.createElement("div");
     sheetButton.textContent = "Sheet";
-    sheetButton.innerHTML = `<div id="sheet-button" class="sheet-button" title="Connect to an email list in a Google Sheet." style="width: 20px; display: block; margin-left: 2px; color: white; padding: 9px 5px 0px 12px; font-weight: bold; font-size: 11px; background-position: center center; background-repeat: no-repeat; background-color: rgb(196, 35, 41); background-image: url(&quot;https://cdn.gmass.us/images/GMassSheetsIcon-tiny.png&quot;); cursor: pointer;">&nbsp;&nbsp;&nbsp;</div>`;
-    gmailSearch.parentElement.insertAdjacentElement("afterend", sheetButton);
+    sheetButton.innerHTML = `
+<div 
+  id="sheet-button" 
+  class="sheet-button" 
+  title="Connect to an email list in a Google Sheet." 
+</div>
+
+    `;
+    gmailSearch.parentElement.style.display = "flex";
+    gmailSearch.style.width = "100%";
+    gmailSearch.parentElement.appendChild(sheetButton);
 
     sheetButton.addEventListener("click", () => {
       document

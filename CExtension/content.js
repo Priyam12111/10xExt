@@ -295,23 +295,27 @@ function emailFunctionalities() {
 }
 sessionStorage.removeItem("tracking");
 sessionStorage.removeItem("followup");
-
 const observer = new MutationObserver(() => {
-  const composeToolbar = document.querySelector(".gU.Up");
+  const composeToolbars = document.querySelectorAll(".gU.Up");
   const sender = document.title.split(" ")[3];
-  if (sender && !sessionStorage.getItem("sender")) {
-    sessionStorage.setItem("sender", document.title.split(" ")[3]);
-  }
-  if (composeToolbar && !document.getElementById("cmail-button")) {
-    const { button, dropupMenu } = createButton("cmail-button");
 
-    const sendButton = createSendButton();
-    composeToolbar.appendChild(sendButton);
-    composeToolbar.appendChild(button);
-    composeToolbar.appendChild(dropupMenu);
-    appendConnectButton();
-    emailFunctionalities();
+  if (sender && !sessionStorage.getItem("sender")) {
+    sessionStorage.setItem("sender", sender);
   }
+
+  composeToolbars.forEach((composeToolbar) => {
+    if (!composeToolbar.querySelector("#cmail-button")) {
+      const { button, dropupMenu } = createButton("cmail-button");
+      const sendButton = createSendButton();
+
+      composeToolbar.appendChild(sendButton);
+      composeToolbar.appendChild(button);
+      composeToolbar.appendChild(dropupMenu);
+
+      appendConnectButton();
+      emailFunctionalities();
+    }
+  });
 });
 
 observer.observe(document.body, { childList: true, subtree: true });

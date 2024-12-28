@@ -65,8 +65,29 @@
   }
   #SpreadsheetSave {
     display: flex;
-    margin: 10px auto;
+    justify-content: center;
     align-items: center;
+    margin: 10px auto;
+    padding: 10px 20px;
+    background-color: #e63946;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  #SpreadsheetSave:hover {
+    background-color: #d62828;
+    transform: translateY(-2px);
+  }
+
+  #SpreadsheetSave:active {
+    background-color: #b51717;
+    transform: translateY(0);
   }
 </style>
 <div class="main">
@@ -81,6 +102,8 @@
       />
     </div>
     <ul id="dropdown-list" class="hidden"></ul>
-    <button id="SpreadsheetSave" class="save-btn">Save</button>
+    <button id="SpreadsheetSave" class="save-btn">
+      CONNECT TO SPREADSHEET
+    </button>
   </div>
 </div>

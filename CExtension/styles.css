@@ -399,33 +399,12 @@ input#days {
   display: none;
 }
 
-#sheet-button:before,
-.sheet-button:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #f5f6f6
-    url("https://cdn.gmass.us/Extension2019Images/icon_import.png") center
-    center no-repeat !important;
-  background-size: 20px auto !important;
-  transition: 0.3s;
+#sheet-button:hover {
+  background: #d62828
+    url("https://cdn.gmass.us/Extension2019Images/icon_import_w.png") center
+    center no-repeat;
 }
-#sheet-button:after,
-.sheet-button:after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #c42529 url("icon_import_w.png") center center no-repeat !important;
-  background-size: 20px auto !important;
-  transition: 0.3s;
-  opacity: 0;
-}
+
 #sheet-button,
 .sheet-button {
   height: 38px !important;
@@ -433,13 +412,18 @@ input#days {
   border-radius: 4px !important;
   background: #f5f6f6
     url("https://cdn.gmass.us/Extension2019Images/icon_import.png") center
-    center no-repeat !important;
+    center no-repeat;
   background-size: 20px auto !important;
   cursor: pointer !important;
   padding: 0 !important;
-  margin-left: 0 !important;
+  margin-left: 10px !important;
   margin-right: 5px !important;
-  transition: 0.3s !important;
+  margin-top: 5px !important;
+  transition: 0.1s !important;
   position: relative;
   overflow: hidden;
+  display: block;
+  color: white;
+  font-weight: bold;
+  font-size: 11px;
 }

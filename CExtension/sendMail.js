@@ -38,7 +38,8 @@ function fetchDataFromSheet() {
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
-      alert("Remove Restricted Access to the Spreadsheet");
+      alert("Failed to fetch data. Please check the console for errors.");
+
       document.getElementById("data").textContent =
         "Failed to fetch data. Please check the console for errors.";
     });
@@ -85,7 +86,7 @@ function setEmailDetails(emails, subject, body) {
 
 async function sendMails() {
   const track = JSON.parse(sessionStorage.getItem("tracking") || "false");
-  const sendingAnimation = createSendingAnimation();
+  const sendingAnimation = createSendingAnimation("Processing...");
   document.body.appendChild(sendingAnimation);
 
   try {
@@ -142,9 +143,11 @@ async function sendMails() {
   }
 }
 
-function createSendingAnimation() {
+function createSendingAnimation(msg) {
   const div = document.createElement("div");
-  div.innerHTML = `<div class="sending"><p class="send-text">Processing</p></div>`;
+  div.innerHTML = `<div class="sending"><p class="send-text">${
+    msg || "Sending..."
+  }</p></div>`;
   return div;
 }
 

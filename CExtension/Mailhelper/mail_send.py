@@ -142,7 +142,6 @@ def schedule():
     )
     result = []
     for doc in documents:
-        print(doc["schedule"])
         if (
             doc["schedule"] != "Executed"
             and doc["schedule"].date() == today
@@ -315,7 +314,6 @@ def get_sheet_data():
         return jsonify({"error": "No data found"}), 400
 
     headers = rows[0]
-    print(rows)
     if "Email" not in headers:
         print("No 'Email' column found in the sheet.")
         return jsonify({"error": "No 'Email' column in the sheet"}), 400
