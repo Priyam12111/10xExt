@@ -37,14 +37,32 @@ function createButton(id) {
 
 function fetchAndInjectDropupMenu(dropupMenu) {
   const htmlUrl = chrome.runtime.getURL("dropupMenu.html");
+
   fetch(htmlUrl)
     .then((response) => response.text())
-    .then((html) => {
-      dropupMenu.innerHTML = html;
+    .then((htmlContent) => {
+      const iframe = document.createElement("iframe");
+      iframe.style.width = "410px";
+      iframe.style.height = "400px";
+      iframe.style.border = "none";
+      dropupMenu.appendChild(iframe);
+
+      const doc = iframe.contentWindow.document;
+      doc.open();
+      doc.write(htmlContent);
+      doc.close();
+
+      return iframe; // Return iframe to be used later
     })
-    .then(() => dropupJs())
-    .then(() => emailFunctionalities())
-    .catch((err) => console.error("Error loading dropup menu HTML:", err));
+    .then((iframe) => {
+      iframe.onload = () => {
+        const doc = iframe.contentWindow.document;
+        
+      };
+    })
+    .catch((error) => {
+      console.error("Error loading the HTML:", error);
+    });
 }
 
 function toggleDropupMenu(dropupMenu) {

@@ -32,9 +32,6 @@ div#cmail-dropup {
   box-shadow: rgba(0, 0, 0, 0.2) 0px 8px 16px;
   padding: 10px;
   border-radius: 4px;
-  position: fixed;
-  bottom: 10%;
-  left: 68%;
   min-height: 360px;
   max-height: 400px;
   width: 350;
@@ -426,4 +423,15 @@ input#days {
   color: white;
   font-weight: bold;
   font-size: 11px;
+}
+
+iframe {
+  position: absolute;
+  width: 410px;
+  height: 400px;
+  position: absolute;
+  border: none;
+  bottom: 32px;
+  right: 72px;
+  overflow: hidden;
 }
