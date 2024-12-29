@@ -37,7 +37,7 @@ div#cmail-dropup {
   width: 350;
   font-family: "Google-sans", sans-serif;
   overflow-y: auto;
-  z-index: 10000;
+  z-index: 12;
   width: 390px;
 }
 #cmail-dropup::-webkit-scrollbar {
@@ -128,7 +128,7 @@ textarea:focus {
   top: 0px;
   left: 0px;
   background: rgba(0, 0, 0, 0.6);
-  z-index: 99999;
+  z-index: 10;
 }
 
 .form-container {
@@ -274,7 +274,7 @@ input#email-subject {
   justify-content: center;
   color: white;
   align-items: center;
-  z-index: 100000;
+  z-index: 10;
   padding-left: 10px;
 }
 .sending::before {
@@ -316,7 +316,7 @@ input#days {
   font-size: 14px;
   padding: 10px;
   align-items: center;
-  z-index: 100000;
+  z-index: 10;
   padding-left: 10px;
 }
 
@@ -414,7 +414,7 @@ input#days {
 iframe {
   position: absolute;
   width: 460px;
-  height: 450px;
+  height: 500px;
   border: none;
   bottom: 10px;
   left: 70px;
@@ -429,7 +429,7 @@ iframe {
   margin: 10px;
   padding: 5px 10px;
   border: 1px solid;
-  z-index: 99;
+  z-index: 10;
   width: 300px;
   border-radius: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);

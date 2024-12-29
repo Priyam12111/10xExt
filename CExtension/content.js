@@ -42,9 +42,6 @@ function fetchAndInjectDropupMenu(dropupMenu) {
     .then((response) => response.text())
     .then((htmlContent) => {
       const iframe = document.createElement("iframe");
-      iframe.style.width = "460px";
-      iframe.style.height = "472px";
-
       iframe.style.border = "none";
       dropupMenu.appendChild(iframe);
 
@@ -328,12 +325,15 @@ function emailFunctionalities(document) {
   if (stage1) {
     stage1.addEventListener("change", () => {
       timeS1.style.display = stage1.checked ? "block" : "none";
+      document.querySelector(".S2").classList.toggle("hidden", !stage1.checked);
       sessionStorage.setItem("stage1", stage1.checked);
     });
   }
   if (stage2) {
     stage2.addEventListener("change", () => {
       timeS2.style.display = stage2.checked ? "block" : "none";
+      document.querySelector(".S3").classList.toggle("hidden", !stage2.checked);
+
       sessionStorage.setItem("stage2", stage2.checked);
     });
   }
