@@ -121,20 +121,6 @@ textarea:focus {
   outline: none;
 }
 
-@media (max-width: 768px) {
-  .template {
-    padding: 20px;
-  }
-
-  #email-body {
-    font-size: 14px;
-  }
-
-  #save-button {
-    font-size: 16px;
-  }
-}
-
 .containerContent {
   width: 100vw;
   height: 100vh;
@@ -435,7 +421,20 @@ iframe {
   right: 0px;
   overflow: hidden;
 }
-
+.msg-box {
+  position: fixed;
+  bottom: 10px;
+  background: white;
+  color: black;
+  margin: 10px;
+  padding: 5px 10px;
+  border: 1px solid;
+  z-index: 99;
+  width: 300px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-size: 12px;
+}
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;

@@ -43,7 +43,7 @@ function fetchAndInjectDropupMenu(dropupMenu) {
     .then((htmlContent) => {
       const iframe = document.createElement("iframe");
       iframe.style.width = "460px";
-      iframe.style.height = "460px";
+      iframe.style.height = "472px";
 
       iframe.style.border = "none";
       dropupMenu.appendChild(iframe);

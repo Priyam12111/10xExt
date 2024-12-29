@@ -1,4 +1,5 @@
 function fetchDataFromSheet() {
+  createMsgBox("Fetching data from Google Sheet...");
   const sheetList = document.querySelector(".sheet-list-container");
   const spreadsheetId = sessionStorage.getItem("spreadsheetId");
 
@@ -38,8 +39,10 @@ function fetchDataFromSheet() {
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
-      alert("Failed to fetch data. Please check the console for errors.");
-
+      // alert("Failed to fetch data. Please check the console for errors.");
+      createMsgBox(
+        "Failed to fetch data. Please check the console for errors."
+      );
       document.getElementById("data").textContent =
         "Failed to fetch data. Please check the console for errors.";
     });
@@ -128,7 +131,7 @@ async function sendMails() {
     );
     if (schedule !== "" && schedule !== "Now") {
       handleUploadResponse(uploadResponse, sendingAnimation);
-      setTimeout(() => sendingAnimation.remove(), 5000);
+      setTimeout(() => sendingAnimation.remove(), 4000);
     }
   } catch (error) {
     console.error("Error:", error);
@@ -150,12 +153,13 @@ function createSendingAnimation(msg) {
   }</p></div>`;
   return div;
 }
-function MsgBox(msg) {
-  const div = document.createElement("div");
-  div.innerHTML = `<div class="sending"><p class="send-text">${
-    msg || "Sending..."
-  }</p></div>`;
-  return div;
+function createMsgBox(msg) {
+  const msgBox = document.createElement("div");
+  msgBox.classList.add("msg-box");
+  msgBox.innerHTML = `<p class="msg-text">${msg || "Unknown Message"}</p>`;
+  document.body.appendChild(msgBox);
+  setTimeout(() => msgBox.remove(), 5000);
+  return msgBox;
 }
 
 async function sendEmailRequest(sender, uploadId, subject, body, track) {
@@ -206,6 +210,7 @@ function handleSendMailResponse(response, sendingAnimation) {
 function uploadMailData(sender, uploadId, subject, body, schedule) {
   const emails = JSON.parse(sessionStorage.getItem("emails") || "[]");
   const variables = JSON.parse(sessionStorage.getItem("variables") || "{}");
+  const stage1 = JSON.parse(sessionStorage.getItem("stage1") || "[]");
   const emailData = emails.map((email, index) => ({
     email,
     variables: Object.keys(variables).reduce((acc, key) => {
