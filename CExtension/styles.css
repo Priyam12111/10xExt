@@ -427,11 +427,25 @@ input#days {
 
 iframe {
   position: absolute;
-  width: 410px;
-  height: 400px;
+  width: 460px;
+  height: 450px;
   border: none;
   bottom: 10px;
-  left: 55px;
+  left: 70px;
   right: 0px;
   overflow: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-button {
+  background: #ccc;
+}
+::-webkit-scrollbar-track-piece {
+  background: #888;
+}
+::-webkit-scrollbar-thumb {
+  background: #eee;
 }

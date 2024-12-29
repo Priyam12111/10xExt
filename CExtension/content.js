@@ -42,8 +42,9 @@ function fetchAndInjectDropupMenu(dropupMenu) {
     .then((response) => response.text())
     .then((htmlContent) => {
       const iframe = document.createElement("iframe");
-      iframe.style.width = "390px";
-      iframe.style.height = "413px";
+      iframe.style.width = "460px";
+      iframe.style.height = "460px";
+
       iframe.style.border = "none";
       dropupMenu.appendChild(iframe);
 
@@ -175,7 +176,12 @@ function dropupJs(document) {
   accordionTitles.forEach((title) => {
     title.addEventListener("click", () => {
       const content = title.nextElementSibling;
-      content.classList.toggle("active");
+      if (content.classList.contains("buttonshowpice")) {
+        content.classList.toggle("hidden");
+        content.nextElementSibling.classList.toggle("active");
+      } else {
+        content.classList.toggle("active");
+      }
     });
   });
 
@@ -209,6 +215,13 @@ function emailFunctionalities(document) {
   const inputDays = document.querySelector("#days");
   const schedule = document.querySelector("#EUYaSGMassDateDropdown");
   const scheduleinput = document.querySelector("#EUYaSGMassDateTime");
+  const timeS1 = document.querySelector(".timeS1");
+  const timeS2 = document.querySelector(".timeS2");
+  const timeS3 = document.querySelector(".timeS3");
+  const stage1 = document.querySelector("#stage1");
+  const stage2 = document.querySelector("#stage2");
+  const stage3 = document.querySelector("#stage3");
+  const stagetextarea = document.querySelectorAll(".stagetextarea");
   if (schedule) {
     schedule.addEventListener("change", function (event) {
       const selectedValue = event.target.value;
@@ -309,6 +322,37 @@ function emailFunctionalities(document) {
       if (followUpElement.checked) {
         sessionStorage.setItem("followup", parseInt(inputDays.value) || 0);
       }
+    });
+  }
+
+  if (stage1) {
+    stage1.addEventListener("change", () => {
+      timeS1.style.display = stage1.checked ? "block" : "none";
+      sessionStorage.setItem("stage1", stage1.checked);
+    });
+  }
+  if (stage2) {
+    stage2.addEventListener("change", () => {
+      timeS2.style.display = stage2.checked ? "block" : "none";
+      sessionStorage.setItem("stage2", stage2.checked);
+    });
+  }
+  if (stage3) {
+    stage3.addEventListener("change", () => {
+      timeS3.style.display = stage3.checked ? "block" : "none";
+      sessionStorage.setItem("stage3", stage3.checked);
+    });
+  }
+  if (stagetextarea) {
+    const valuesArray = [];
+    stagetextarea.forEach((textarea, index) => {
+      textarea.addEventListener("change", function () {
+        valuesArray[index] = textarea.value;
+        sessionStorage.setItem(
+          "stagetextarea-values",
+          JSON.stringify(valuesArray)
+        );
+      });
     });
   }
 }

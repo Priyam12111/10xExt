@@ -314,7 +314,7 @@ def get_sheet_data():
         return jsonify({"error": "No data found"}), 400
 
     headers = rows[0]
-    if "Email" not in headers:
+    if not any("email" in header.lower() for header in headers):
         print("No 'Email' column found in the sheet.")
         return jsonify({"error": "No 'Email' column in the sheet"}), 400
 

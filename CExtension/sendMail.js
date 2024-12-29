@@ -51,12 +51,12 @@ function processData(headers, allData) {
   allData.forEach((row) => {
     headers.forEach((header, index) => {
       if (row[index]) {
-        if (header !== "Email") {
+        if (header !== "Email" && !header.includes("Email")) {
           variables[header] = variables[header] || [];
           variables[header].push(row[index]);
         } else {
-          storedData[header] = storedData[header] || [];
-          storedData[header].push(row[index]);
+          storedData["Email"] = storedData["Email"] || [];
+          storedData["Email"].push(row[index]);
         }
       }
     });
@@ -144,6 +144,13 @@ async function sendMails() {
 }
 
 function createSendingAnimation(msg) {
+  const div = document.createElement("div");
+  div.innerHTML = `<div class="sending"><p class="send-text">${
+    msg || "Sending..."
+  }</p></div>`;
+  return div;
+}
+function MsgBox(msg) {
   const div = document.createElement("div");
   div.innerHTML = `<div class="sending"><p class="send-text">${
     msg || "Sending..."
