@@ -210,7 +210,17 @@ function handleSendMailResponse(response, sendingAnimation) {
 function uploadMailData(sender, uploadId, subject, body, schedule) {
   const emails = JSON.parse(sessionStorage.getItem("emails") || "[]");
   const variables = JSON.parse(sessionStorage.getItem("variables") || "{}");
-  const stage1 = JSON.parse(sessionStorage.getItem("stage1") || "[]");
+  const stage1 = JSON.parse(sessionStorage.getItem("stage1") || false);
+  const stage2 = JSON.parse(sessionStorage.getItem("stage2") || false);
+  const stage3 = JSON.parse(sessionStorage.getItem("stage3") || false);
+
+  if (stage1 || stage2 || stage3) {
+    var stageData = JSON.parse(
+      sessionStorage.getItem("stagetextarea-values") || "[]"
+    );
+  } else {
+    var stageData = [];
+  }
   const emailData = emails.map((email, index) => ({
     email,
     variables: Object.keys(variables).reduce((acc, key) => {
@@ -234,6 +244,7 @@ function uploadMailData(sender, uploadId, subject, body, schedule) {
       followup: parseInt(sessionStorage.getItem("followup") || 0),
       tracking: JSON.parse(sessionStorage.getItem("tracking") || "false"),
       schedule: schedule,
+      stageData: stageData,
     }),
   });
 }

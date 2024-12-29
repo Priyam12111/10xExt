@@ -285,8 +285,6 @@ function emailFunctionalities(document) {
 
       const offsetInMilliseconds = 5.5 * 60 * 60 * 1000; // UTC+5:30
       const istDatetime = new Date(datetime.getTime() + offsetInMilliseconds);
-
-      // Format IST datetime as "YYYY-MM-DDTHH:MM:SS" for datetime-local
       const formattedDatetime = istDatetime
         .toISOString()
         .slice(0, 19)
@@ -333,7 +331,9 @@ function emailFunctionalities(document) {
     stage2.addEventListener("change", () => {
       timeS2.style.display = stage2.checked ? "block" : "none";
       document.querySelector(".S3").classList.toggle("hidden", !stage2.checked);
-
+      if (!stage2.checked) {
+        sessionStorage.setItem("stage3", false);
+      }
       sessionStorage.setItem("stage2", stage2.checked);
     });
   }

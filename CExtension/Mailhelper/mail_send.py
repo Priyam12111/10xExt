@@ -141,9 +141,17 @@ def schedule():
         }
     )
     result = []
+
     for doc in documents:
+        if doc["schedule"] != "Executed" and doc["schedule"] != "":
+            print(
+                doc["schedule"].time() <= datetime.now().time(),
+                doc["schedule"],
+                datetime.now().time(),
+            )
         if (
             doc["schedule"] != "Executed"
+            and doc["schedule"] != ""
             and doc["schedule"].date() == today
             and doc["schedule"].time() <= datetime.now().time()
         ):
@@ -204,9 +212,6 @@ def schedule():
                     }
                 },
             )
-    if result:
-        return jsonify({"status": "success", "result": result})
-    return jsonify({"status": "No pending campaigns"})
 
 
 def timeSchedule(hours, minutes):
@@ -228,10 +233,11 @@ def timeSchedule(hours, minutes):
 @app.route("/schedule", methods=["GET"])
 def schedule_job():
     try:
-        return schedule()
+        schedule()
     except Exception as e:
         print(e)
         return jsonify({"status": "Checking Failed"}), 500
+    return "success", 200
 
 
 @app.route("/timeSchedule", methods=["GET"])
