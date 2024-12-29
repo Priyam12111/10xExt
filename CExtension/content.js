@@ -26,6 +26,7 @@ function createButton(id) {
   button.style.marginLeft = "0px";
   button.style.position = "relative";
   const dropupMenu = document.createElement("div");
+  dropupMenu.style.position = "fixed";
   dropupMenu.style.display = "none";
 
   fetchAndInjectDropupMenu(dropupMenu);
@@ -37,13 +38,12 @@ function createButton(id) {
 
 function fetchAndInjectDropupMenu(dropupMenu) {
   const htmlUrl = chrome.runtime.getURL("dropupMenu.html");
-
   fetch(htmlUrl)
     .then((response) => response.text())
     .then((htmlContent) => {
       const iframe = document.createElement("iframe");
-      iframe.style.width = "410px";
-      iframe.style.height = "400px";
+      iframe.style.width = "390px";
+      iframe.style.height = "413px";
       iframe.style.border = "none";
       dropupMenu.appendChild(iframe);
 
@@ -57,7 +57,8 @@ function fetchAndInjectDropupMenu(dropupMenu) {
     .then((iframe) => {
       iframe.onload = () => {
         const doc = iframe.contentWindow.document;
-        
+        dropupJs(doc);
+        emailFunctionalities(doc);
       };
     })
     .catch((error) => {
@@ -169,7 +170,7 @@ function toggleContainerDisplay(container, containerContent) {
     });
   }
 }
-function dropupJs() {
+function dropupJs(document) {
   const accordionTitles = document.querySelectorAll(".g_accordian_title");
   accordionTitles.forEach((title) => {
     title.addEventListener("click", () => {
@@ -202,7 +203,7 @@ function dropupJs() {
   }
 }
 
-function emailFunctionalities() {
+function emailFunctionalities(document) {
   const trackingElement = document.querySelector("#iyEIROpenTracking");
   const followUpElement = document.querySelector("#followup");
   const inputDays = document.querySelector("#days");
@@ -331,7 +332,6 @@ const observer = new MutationObserver(() => {
       composeToolbar.appendChild(dropupMenu);
 
       appendConnectButton();
-      emailFunctionalities();
     }
   });
 });

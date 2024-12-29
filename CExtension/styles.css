@@ -429,9 +429,9 @@ iframe {
   position: absolute;
   width: 410px;
   height: 400px;
-  position: absolute;
   border: none;
-  bottom: 32px;
-  right: 72px;
+  bottom: 10px;
+  left: 55px;
+  right: 0px;
   overflow: hidden;
 }
