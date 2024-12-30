@@ -136,7 +136,7 @@ async function sendMails() {
   } catch (error) {
     console.error("Error:", error);
     setTimeout(() => sendingAnimation.remove(), 5000);
-    alert("An error occurred!");
+    createMsgBox("An Error Occurred. Please check the console for details.");
   } finally {
     try {
       sendingAnimation.classList.remove("sending");
@@ -245,6 +245,9 @@ function uploadMailData(sender, uploadId, subject, body, schedule) {
       tracking: JSON.parse(sessionStorage.getItem("tracking") || "false"),
       schedule: schedule,
       stageData: stageData,
+      stage1: stage1,
+      stage2: stage2,
+      stage3: stage3,
     }),
   });
 }

@@ -749,12 +749,11 @@
                     <label class="form-check-label" for="stage1"> after </label>
                     <input
                       type="number"
-                      id="quantity"
                       name="quantity"
                       min="1"
                       max="1000"
                       placeholder="0"
-                      class="stageNumberinput"
+                      class="stageNumberinputS1"
                     />
                     <span>days</span>
                   </div>
@@ -766,16 +765,15 @@
 
                     <div class="form-check setmargn">
                       <input
-                        class="form-check-input"
+                        class="form-check-input sendoriginal"
                         type="radio"
                         name="sendori"
-                        id="sendoriginal"
                         checked=""
                       />
                       <label
                         class="form-check-label"
                         for="sendoriginal"
-                        id="sendoriginal"
+                        id="sendoriginalS1"
                         name="sendori"
                       >
                         Send text above original
@@ -833,15 +831,14 @@
                       </span>
                     </div>
 
-                    <label class="form-check-label" for="stage1"> after </label>
+                    <label class="form-check-label" for="stage2"> after </label>
                     <input
                       type="number"
-                      id="quantity"
                       name="quantity"
                       min="1"
                       max="1000"
                       placeholder="0"
-                      class="stageNumberinput"
+                      class="stageNumberinputS2"
                     />
                     <span>days</span>
                   </div>
@@ -853,16 +850,15 @@
 
                     <div class="form-check setmargn">
                       <input
-                        class="form-check-input"
+                        class="form-check-input sendoriginal"
                         type="radio"
                         name="sendori"
-                        id="sendoriginal"
                         checked=""
                       />
                       <label
                         class="form-check-label"
                         for="sendoriginal"
-                        id="sendoriginal"
+                        id="sendoriginalS2"
                         name="sendori"
                       >
                         Send text above original
@@ -920,15 +916,14 @@
                       </span>
                     </div>
 
-                    <label class="form-check-label" for="stage1"> after </label>
+                    <label class="form-check-label" for="stage3"> after </label>
                     <input
                       type="number"
-                      id="quantity"
                       name="quantity"
                       min="1"
                       max="1000"
                       placeholder="0"
-                      class="stageNumberinput"
+                      class="stageNumberinputS3"
                     />
                     <span>days</span>
                   </div>
@@ -938,18 +933,17 @@
                       <input class="inputTimeSec" type="time" id="daysS3" />
                     </div>
 
-                    <div class="form-check setmargn">
+                    <div class="form-check setmargn sendoriginal">
                       <input
                         class="form-check-input"
                         type="radio"
                         name="sendori"
-                        id="sendoriginal"
                         checked=""
                       />
                       <label
                         class="form-check-label"
                         for="sendoriginal"
-                        id="sendoriginal"
+                        id="sendoriginalS3"
                         name="sendori"
                       >
                         Send text above original
@@ -985,7 +979,7 @@
             <hr />
             <div style="display: flex">
               <div class="g_col_label" style="float: none">Time:</div>
-              <div>
+              <div style="margin-left: 25px">
                 <select id="EUYaSGMassDateDropdown" style="margin-bottom: 5px">
                   <option selected="" disabled="" hidden="" value=""></option>
                   <option value="Now" selected="">Now</option>
@@ -1217,7 +1211,7 @@
               style="display: flex"
             >
               <div class="g_col_label" style="float: none">Speed:</div>
-              <div>
+              <div style="margin: 10px 8px">
                 <span style="padding-top: 0px">
                   <span>Send</span>
                   <input

@@ -16,6 +16,9 @@ function createSendButton() {
 
 function createButton(id) {
   const button = document.createElement("button");
+  const dropupMenu = document.createElement("div");
+  const gmailSubject = document.querySelector(".aO7");
+
   button.id = id;
   button.innerHTML = `
       <button class="arrow-btn" id="rotateBtn">
@@ -25,12 +28,10 @@ function createButton(id) {
       </button>`;
   button.style.marginLeft = "0px";
   button.style.position = "relative";
-  const dropupMenu = document.createElement("div");
   dropupMenu.style.position = "fixed";
   dropupMenu.style.display = "none";
 
   fetchAndInjectDropupMenu(dropupMenu);
-  const gmailSubject = document.querySelector(".aO7");
   gmailSubject.onclick = () => (dropupMenu.style.display = "none");
   button.addEventListener("click", () => toggleDropupMenu(dropupMenu));
   return { button, dropupMenu };
@@ -205,95 +206,96 @@ function dropupJs(document) {
     );
   }
 }
-
 function emailFunctionalities(document) {
-  const trackingElement = document.querySelector("#iyEIROpenTracking");
-  const followUpElement = document.querySelector("#followup");
-  const inputDays = document.querySelector("#days");
   const schedule = document.querySelector("#EUYaSGMassDateDropdown");
   const scheduleinput = document.querySelector("#EUYaSGMassDateTime");
-  const timeS1 = document.querySelector(".timeS1");
-  const timeS2 = document.querySelector(".timeS2");
-  const timeS3 = document.querySelector(".timeS3");
-  const stage1 = document.querySelector("#stage1");
-  const stage2 = document.querySelector("#stage2");
-  const stage3 = document.querySelector("#stage3");
+  const followUpElement = document.querySelector("#followup");
+  const inputDays = document.querySelector("#days");
+  const trackingElement = document.querySelector("#iyEIROpenTracking");
+  const stages = ["stage1", "stage2", "stage3"];
+  const times = [".timeS1", ".timeS2", ".timeS3"];
+  const stageInputs = [
+    ".stageNumberinputS1",
+    ".stageNumberinputS2",
+    ".stageNumberinputS3",
+  ];
+  const stageContainers = [".S1", ".S2", ".S3"];
   const stagetextarea = document.querySelectorAll(".stagetextarea");
+
+  const updateSchedule = (value) => {
+    const now = new Date();
+    let datetime;
+
+    switch (value) {
+      case "Now":
+        datetime = now;
+        break;
+      case "FiveMinutes":
+        datetime = new Date(now.getTime() + 5 * 60 * 1000);
+        break;
+      case "OneHour":
+        datetime = new Date(now.getTime() + 60 * 60 * 1000);
+        break;
+      case "ThreeHours":
+        datetime = new Date(now.getTime() + 3 * 60 * 60 * 1000);
+        break;
+      case "TomorrowMor":
+        datetime = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate() + 1,
+          8,
+          0,
+          0
+        );
+        break;
+      case "TomorrowAft":
+        datetime = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate() + 1,
+          13,
+          0,
+          0
+        );
+        break;
+      case "TomorrowEve":
+        datetime = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate() + 1,
+          19,
+          0,
+          0
+        );
+        break;
+      case "Custom":
+        scheduleinput.value = "";
+        scheduleinput.disabled = false;
+        scheduleinput.addEventListener("change", () => {
+          sessionStorage.setItem("schedule", scheduleinput.value);
+        });
+        return;
+      default:
+        console.warn("Unexpected schedule value:", value);
+        return;
+    }
+
+    const offset = 5.5 * 60 * 60 * 1000; // UTC+5:30
+    const istDatetime = new Date(datetime.getTime() + offset);
+    const formattedDatetime = istDatetime
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", " ");
+    sessionStorage.setItem("schedule", formattedDatetime);
+    scheduleinput.value = formattedDatetime;
+    scheduleinput.disabled = true;
+  };
+
   if (schedule) {
-    schedule.addEventListener("change", function (event) {
-      const selectedValue = event.target.value;
-      console.log("Selected value:", selectedValue);
-
-      const now = new Date();
-      console.log(now);
-      let datetime;
-      switch (selectedValue) {
-        case "Now":
-          datetime = now;
-          scheduleinput.value = "Now";
-          return;
-        case "FiveMinutes":
-          datetime = new Date(now.getTime() + 5 * 60 * 1000); // Add 5 minutes
-          break;
-        case "OneHour":
-          datetime = new Date(now.getTime() + 60 * 60 * 1000); // Add 1 hour
-          break;
-        case "ThreeHours":
-          datetime = new Date(now.getTime() + 3 * 60 * 60 * 1000); // Add 3 hours
-          break;
-        case "TomorrowMor":
-          datetime = new Date(
-            now.getFullYear(),
-            now.getMonth(),
-            now.getDate() + 1,
-            8,
-            0,
-            0
-          );
-          break;
-        case "TomorrowAft":
-          datetime = new Date(
-            now.getFullYear(),
-            now.getMonth(),
-            now.getDate() + 1,
-            13,
-            0,
-            0
-          );
-          break;
-        case "TomorrowEve":
-          datetime = new Date(
-            now.getFullYear(),
-            now.getMonth(),
-            now.getDate() + 1,
-            19,
-            0,
-            0
-          );
-          break;
-        case "Custom":
-          scheduleinput.value = "";
-          scheduleinput.disabled = false;
-          scheduleinput.addEventListener("change", () => {
-            sessionStorage.setItem("schedule", scheduleinput.value);
-          });
-          return;
-        default:
-          console.warn("Unexpected schedule value:", selectedValue);
-          return;
-      }
-
-      const offsetInMilliseconds = 5.5 * 60 * 60 * 1000; // UTC+5:30
-      const istDatetime = new Date(datetime.getTime() + offsetInMilliseconds);
-      const formattedDatetime = istDatetime
-        .toISOString()
-        .slice(0, 19)
-        .replace("T", " ");
-      sessionStorage.setItem("schedule", datetime ? formattedDatetime : "");
-      scheduleinput.value = formattedDatetime;
-      scheduleinput.disabled = true;
-    });
+    schedule.addEventListener("change", (e) => updateSchedule(e.target.value));
   }
+
   if (trackingElement) {
     trackingElement.addEventListener("change", () => {
       sessionStorage.setItem("tracking", trackingElement.checked);
@@ -301,63 +303,65 @@ function emailFunctionalities(document) {
   }
 
   if (followUpElement && inputDays) {
-    if (followUpElement.checked) {
-      sessionStorage.setItem("followup", parseInt(inputDays.value) || 0);
+    const updateFollowUp = () => {
+      sessionStorage.setItem(
+        "followup",
+        followUpElement.checked ? parseInt(inputDays.value) || 0 : ""
+      );
+    };
+    followUpElement.addEventListener("click", updateFollowUp);
+    inputDays.addEventListener("change", updateFollowUp);
+  }
+
+  stages.forEach((stageId, index) => {
+    const stage = document.querySelector(`#${stageId}`);
+    const timeSelector = document.querySelector(times[index]);
+    const stageInput = document.querySelector(stageInputs[index]);
+    if (index < 2) {
+      var nextStageContainer = document.querySelector(
+        stageContainers[index + 1]
+      );
     }
 
-    followUpElement.addEventListener("click", () => {
-      if (followUpElement.checked) {
-        sessionStorage.setItem("followup", parseInt(inputDays.value) || 0);
-      } else {
-        sessionStorage.removeItem("followup");
-      }
+    if (stage) {
+      stage.addEventListener("change", () => {
+        timeSelector.style.display = stage.checked ? "block" : "none";
+        if (nextStageContainer) {
+          nextStageContainer.classList.toggle("hidden", !stage.checked);
+        }
+        sessionStorage.setItem(stageId, stage.checked ? stageInput.value : "");
+      });
+      stageInput.addEventListener("change", () => {
+        sessionStorage.setItem(stageId, stage.checked ? stageInput.value : "0");
+      });
+    }
+  });
+  const sendTextConfirm = document.querySelectorAll(".sendoriginal");
+  sendTextConfirm.forEach((checkbox, index) => {
+    checkbox.addEventListener("change", () => {
+      sessionStorage.setItem(
+        "stagetextarea-values",
+        stagetextarea[index].value
+      );
     });
-
-    inputDays.addEventListener("change", () => {
-      if (followUpElement.checked) {
-        sessionStorage.setItem("followup", parseInt(inputDays.value) || 0);
-      }
-    });
-  }
-
-  if (stage1) {
-    stage1.addEventListener("change", () => {
-      timeS1.style.display = stage1.checked ? "block" : "none";
-      document.querySelector(".S2").classList.toggle("hidden", !stage1.checked);
-      sessionStorage.setItem("stage1", stage1.checked);
-    });
-  }
-  if (stage2) {
-    stage2.addEventListener("change", () => {
-      timeS2.style.display = stage2.checked ? "block" : "none";
-      document.querySelector(".S3").classList.toggle("hidden", !stage2.checked);
-      if (!stage2.checked) {
-        sessionStorage.setItem("stage3", false);
-      }
-      sessionStorage.setItem("stage2", stage2.checked);
-    });
-  }
-  if (stage3) {
-    stage3.addEventListener("change", () => {
-      timeS3.style.display = stage3.checked ? "block" : "none";
-      sessionStorage.setItem("stage3", stage3.checked);
-    });
-  }
+  });
   if (stagetextarea) {
-    const valuesArray = [];
+    const valuesArray = new Array(stagetextarea.length).fill("");
     stagetextarea.forEach((textarea, index) => {
-      textarea.addEventListener("change", function () {
-        valuesArray[index] = textarea.value;
-        sessionStorage.setItem(
-          "stagetextarea-values",
-          JSON.stringify(valuesArray)
-        );
+      textarea.addEventListener("change", () => {
+        if (sendTextConfirm[index].checked === true) {
+          valuesArray[index] = textarea.value;
+          sessionStorage.setItem(
+            "stagetextarea-values",
+            JSON.stringify(valuesArray)
+          );
+        }
       });
     });
   }
 }
+
 sessionStorage.removeItem("tracking");
-sessionStorage.removeItem("followup");
 const observer = new MutationObserver(() => {
   const composeToolbars = document.querySelectorAll(".gU.Up");
   const sender = document.title.split(" ")[3];

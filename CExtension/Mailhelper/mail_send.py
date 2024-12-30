@@ -15,6 +15,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 import base64, os
 from dotenv import load_dotenv
+from apscheduler.triggers.date import DateTrigger
 
 load_dotenv(dotenv_path="Mailhelper\.env")
 
@@ -153,12 +154,13 @@ def schedule():
             doc["schedule"] != "Executed"
             and doc["schedule"] != ""
             and doc["schedule"].date() == today
-            and doc["schedule"].time() <= datetime.now().time()
+            and doc["schedule"].hour == datetime.now().hour
+            and doc["schedule"].minute <= datetime.now().minute
         ):
             emails = doc["emails"]
             subject = doc["subject"] + "Follow Up Campaign"
             body = doc["body"]
-            tracking = True
+            tracking = doc["tracking"]
             send_mails_helper_gcp(
                 doc["uploadId"],
                 emails,
@@ -178,15 +180,82 @@ def schedule():
                 {"_id": doc["_id"]},
                 {"$set": {"status": newStatus, "schedule": "Executed"}},
             )
+
+
+def followUpSchedule():
+    collection = db[COLLECTION_NAME]
+    today = datetime.now().date()
+    try:
+        documents = collection.find(
+            {
+                "$or": [
+                    {"stage1": {"$exists": True, "$ne": None}},
+                    {"stage2": {"$exists": True, "$ne": None}},
+                    {"stage3": {"$exists": True, "$ne": None}},
+                ]
+            }
+        )
+
+        today = datetime.now().date()
+        result = []
+        for doc in documents:
+            for i, stage in enumerate(["stage1", "stage2", "stage3"]):
+                if doc[stage] != False:
+                    print(doc[stage].date(), today)
+                if (
+                    stage in doc
+                    and doc[stage] != False
+                    and doc[stage].date() == today
+                    and doc["status"] != "Completed"
+                ):
+                    print(f"Processing {stage} for document ID {doc['_id']} on {today}")
+
+                    emails = doc["emails"]
+                    if i < len(doc["stageData"]):
+                        subject = doc["stageData"][i] + " For " + doc["subject"]
+                    else:
+                        subject = f"Followup For {doc['subject']}"
+                    body = "Follow up body Mail to " + doc["body"]
+                    tracking = doc["tracking"]
+
+                    send_mails_helper_gcp(
+                        doc["uploadId"],
+                        emails,
+                        subject,
+                        body,
+                        tracking,
+                        f'{doc["sender"].replace("@", "").replace(".com", "")}',
+                        result,
+                    )
+
+                    # Determine the new status
+                    if doc["status"][0] == "R":
+                        newStatus = "stage1"
+                    else:
+                        newStatus = "stage" + str(int(doc["status"][-1]) + 1)
+                        if newStatus[-1] == "4":
+                            newStatus = "Completed"
+                            continue
+
+                    print("Updating Follow UP")
+                    collection.update_one(
+                        {"_id": doc["_id"]},
+                        {"$set": {"status": newStatus, stage: "Executed"}},
+                    )
+    except Exception as e:
+        print(f"Error in processing stages: {e}")
+
+    for doc in documents:
+        print(doc["target"].date() == today, doc["target"], today)
         if (
             "target" in doc
             and doc["target"].date() == today
             and doc["status"] != "Completed"
         ):
             emails = doc["emails"]
-            subject = f"Follow Up Mail Campaign {doc['uploadId']}"
-            body = "Follow up body Mail to {name}"
-            tracking = False
+            subject = f"Follow Up Mail Campaign For {doc['subject']}"
+            body = "Follow up body Mail to " + doc["body"]
+            tracking = doc["tracking"]
             send_mails_helper_gcp(
                 doc["uploadId"],
                 emails,
@@ -197,11 +266,13 @@ def schedule():
                 result,
             )
             if doc["status"][0] == "R":
-                newStatus = "1 follow up"
+                newStatus = "stage1"
             else:
-                newStatus = str(int(doc["status"][0]) + 1) + " follow up"
-                if newStatus[0] == "4":
+                newStatus = str(int(doc["status"][-1]) + 1)
+                if newStatus[-1] == "4":
                     newStatus = "Completed"
+                    continue
+            print("Updating Follow UP")
             collection.update_one(
                 {"_id": doc["_id"]},
                 {
@@ -214,26 +285,47 @@ def schedule():
             )
 
 
-def timeSchedule(hours, minutes):
-
+def timeSchedule(year=None, month=None, day=None, hours=None, minutes=None):
     try:
+        now = datetime.now()
+
+        year = year or now.year
+        month = month or now.month
+        day = day or now.day
+        hours = hours if hours is not None else now.hour
+        minutes = minutes if minutes is not None else now.minute
+
+        # Initialize scheduler and define the trigger
         scheduler = BackgroundScheduler()
         scheduler.start()
 
+        trigger = DateTrigger(run_date=datetime(year, month, day, hours, minutes))
+
         scheduler.add_job(
             func=schedule,
-            trigger=CronTrigger(hour=hours, minute=minutes),
-            id=f"Job_fixing_{hours}_{minutes}",
+            trigger=trigger,
+            id=f"Job_fixing_{year}_{month}_{day}_{hours}_{minutes}",
             replace_existing=True,
         )
-    except Exception:
-        pass
+        print(f"Job scheduled for {year}-{month}-{day} at {hours}:{minutes}.")
+    except Exception as e:
+        print(f"An error occurred while scheduling: {e}")
 
 
 @app.route("/schedule", methods=["GET"])
 def schedule_job():
     try:
         schedule()
+    except Exception as e:
+        print(e)
+        return jsonify({"status": "Checking Failed"}), 500
+    return "success", 200
+
+
+@app.route("/followUpschedule", methods=["GET"])
+def follow_job():
+    try:
+        followUpSchedule()
     except Exception as e:
         print(e)
         return jsonify({"status": "Checking Failed"}), 500
@@ -385,19 +477,34 @@ def send_mails():
 def upload_to_mongodb():
     data = request.json
     try:
+        if "subject" in data:
+            existing_subject = collection.find_one({"subject": data["subject"]})
+            if existing_subject:
+                collection.delete_one({"subject": data["subject"]})
+                data["uploadId"] = existing_subject.get("uploadId", 0)
         if "date" in data:
             data["date"] = datetime.now()
 
-        if "followup" in data and data["followup"] != 0:
-            data["target"] = datetime.now() + timedelta(days=int(data["followup"]))
-
         if "schedule" in data and data["schedule"] != "Executed":
             data["schedule"] = datetime.fromisoformat(data["schedule"])
-            timeSchedule(data["schedule"].hour, data["schedule"].minute)
+            timeSchedule(hours=data["schedule"].hour, minutes=data["schedule"].minute)
             print("Timing has been set to ", data["schedule"])
+
+        for stage in ["stage1", "stage2", "stage3"]:
+            if stage in data and data[stage] != False:
+                data[stage] = datetime.now() + timedelta(days=int(data[stage]))
+                timeSchedule(
+                    data[stage].year,
+                    data[stage].month,
+                    data[stage].day,
+                    data[stage].hour,
+                    data[stage].minute,
+                )
+                print("Timing has been set to ", data["schedule"])
         result = collection.insert_one(data)
         return jsonify({"status": "success", "inserted_id": str(result.inserted_id)})
     except Exception as e:
+        print(e)
         return jsonify({"status": "failed", "error": str(e)}), 500
 
 
