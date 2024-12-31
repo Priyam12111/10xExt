@@ -537,6 +537,7 @@ def upload_to_mongodb():
                 print("Timing has been set to ", data["schedule"])
         if thread_idx != "":
             data["threadId"] = thread_idx
+
         result = collection.insert_one(data)
         return jsonify({"status": "success", "inserted_id": str(result.inserted_id)})
     except Exception as e:
@@ -585,6 +586,19 @@ def isUserSigned():
             )
         else:
             return "Invalid parameters", 400
+    else:
+        return "Invalid parameters", 400
+
+
+@app.route("/unsubscribe", methods=["GET"])
+def unsubscribe():
+    userID = request.args.get("userID")
+    if userID:
+        collection.update_one(
+            {"uploadId": int(userID)},
+            {"$set": {"unsubscribe": True}},
+        )
+        return "success", 200
     else:
         return "Invalid parameters", 400
 

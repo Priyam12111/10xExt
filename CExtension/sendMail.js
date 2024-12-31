@@ -100,7 +100,7 @@ async function sendMails() {
     const subject = document.querySelector(".aoT").value;
     const body = document.querySelector(
       ".Am.aiL.Al.editable.LW-avf.tS-tW"
-    ).textContent;
+    ).innerHTML;
     const schedule = sessionStorage.getItem("schedule") || "";
 
     if (schedule === "" || schedule === "Now") {

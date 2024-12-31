@@ -221,7 +221,31 @@ function emailFunctionalities(document) {
   ];
   const stageContainers = [".S1", ".S2", ".S3"];
   const stagetextarea = document.querySelectorAll(".stagetextarea");
+  const unsubLink = document.querySelector("#unsubLink");
+  let uploadId;
 
+  fetch("http://127.0.0.1:5000/latest_id")
+    .then((res) => res.text())
+    .then((text) => {
+      uploadId = JSON.parse(text).Latest_id;
+      console.log("Fetched Upload ID:", uploadId);
+    })
+    .catch((error) => {
+      console.error("Error fetching the uploadId:", error);
+    });
+
+  unsubLink.addEventListener("click", () => {
+    if (uploadId !== undefined) {
+      createMsgBox("Unsubscribe link added");
+      console.log("Adding unsubscribe link");
+      window.document.querySelector(
+        ".Am.aiL.Al.editable.LW-avf.tS-tW"
+      ).innerHTML += `\n\n <a href="http://127.0.0.1:5000/unsubscribe?userID=${uploadId}">Unsubscribe</a>`;
+      sessionStorage.setItem("unsubscribed", true);
+    } else {
+      console.error("uploadId is not available yet.");
+    }
+  });
   const updateSchedule = (value) => {
     const now = new Date();
     let datetime;

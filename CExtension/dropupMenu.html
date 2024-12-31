@@ -3,6 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap"
+      rel="stylesheet"
+    />
     <title>Dropup Menu</title>
   </head>
 
@@ -15,11 +22,13 @@
         --quaternary-color: #bebcbc;
       }
       * {
+        font-family: "Figtree", serif;
         font-size: max(
           14px,
           12px
         ) !important; /* Ensures font size doesn't go below 12px */
       }
+
       input,
       select {
         height: 40px;
@@ -629,6 +638,188 @@
         width: 30%;
         cursor: pointer;
       }
+      .email-settings-container {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px; /* Adjust spacing as needed */
+      }
+
+      .label {
+        font-size: 1rem;
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      .settings-content {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .email-limit {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.9rem;
+      }
+
+      .pause-settings {
+        display: flex;
+        align-items: center;
+        margin-top: 4px;
+        gap: 10px;
+      }
+
+      .checkbox-label {
+        display: flex;
+        align-items: center;
+        font-size: 0.9rem;
+      }
+
+      .checkbox-text {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      input[type="text"] {
+        padding: 4px 8px;
+        font-size: 0.9rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 50px; /* Adjust width if needed */
+      }
+
+      select {
+        padding: 4px 8px;
+        font-size: 0.9rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #fff;
+        cursor: pointer;
+      }
+
+      /* Container Styling */
+      .send-test-section {
+        padding: 10px;
+        font-family: Arial, sans-serif;
+      }
+
+      .section-title {
+        font-size: 1rem;
+        margin-bottom: 10px;
+      }
+
+      /* Flex Layout */
+      .search-flex {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+      }
+
+      /* Dropdown Styling */
+      .dropdown-container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .dropdown-width {
+        width: 200px;
+      }
+
+      .dropdown-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+        cursor: pointer;
+      }
+
+      .dropdown-header span {
+        font-size: 0.9rem;
+      }
+
+      .dropdown-content {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 10;
+        width: 100%;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 10px;
+        display: none; /* Hidden by default */
+      }
+
+      .dropdown-content.active {
+        display: block; /* Displayed when active */
+      }
+
+      /* Search Bar Inside Dropdown */
+      .dropdown-search {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-bottom: 10px;
+      }
+
+      .search-icon {
+        font-size: 1rem;
+        color: #888;
+      }
+
+      .dropdown-search input {
+        width: 100%;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      /* Dropdown List */
+      .dropdown-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .dropdown-list li {
+        padding: 5px 0;
+        font-size: 0.9rem;
+        cursor: pointer;
+      }
+
+      .dropdown-list li:hover {
+        background-color: #f0f0f0;
+      }
+
+      /* Unsubscribe Section */
+      .unsubscribe-section {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .purple-link {
+        color: purple;
+        text-decoration: none;
+        font-size: 0.9rem;
+      }
+
+      .purple-link:hover {
+        text-decoration: underline;
+      }
+
+      /* Copy Content Icon */
+      .copy-content a img {
+        cursor: pointer;
+        display: block;
+      }
     </style>
     <div id="cmail-dropup">
       <div class="modal-header">
@@ -648,10 +839,68 @@
           </div>
         </div>
         <hr />
-        <div class="change-template">
+        <!-- <div class="change-template">
           <span style="margin: 12px" class="labelText">Choose Templates:</span>
           <button id="configure-button">Template</button>
+        </div> -->
+
+        <!-- <hr /> -->
+        <div class="send-test-section">
+          <h6 class="section-title" style="margin-top: 5px">Personalize</h6>
+          <div class="search-flex">
+            <!-- Dropdown for Past Emails -->
+            <div class="dropdown-container dropdown-width">
+              <div class="dropdown-header personalize-dropdown">
+                <span>Select Past Email</span>
+                <span><i class="mdi mdi-menu-down"></i></span>
+              </div>
+              <!-- Dropdown Content -->
+              <div class="dropdown-content" id="listsecOpenTwo">
+                <div class="dropdown-search">
+                  <span class="search-icon"
+                    ><i class="mdi mdi-magnify"></i
+                  ></span>
+                  <input type="text" placeholder="Search" />
+                </div>
+                <ul class="dropdown-list personalize-list">
+                  <li><span>First Name / Friend</span></li>
+                  <li><span>Last Name</span></li>
+                  <li><span>Email Address</span></li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Unsubscribe Link Section -->
+            <div class="dropdown-container dropdown-width">
+              <div class="dropdown-header">
+                <div class="unsubscribe-section">
+                  <a href="">
+                    <img
+                      src="https://drkcrypt.github.io/Dropmenu/assets/images/link-icon.svg"
+                      alt="Link Icon"
+                      width="20"
+                      height="20"
+                    />
+                  </a>
+                  <a href="#" id="unsubLink" class="purple-link">Unsubscribe Link</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Copy Content Icon -->
+            <div class="copy-content">
+              <a href="#">
+                <img
+                  src="https://drkcrypt.github.io/Dropmenu/assets/images/content-copy.svg"
+                  alt="Copy Icon"
+                  width="18"
+                  height="18"
+                />
+              </a>
+            </div>
+          </div>
         </div>
+
         <div class="g2_settings_accordions">Settings:</div>
         <div class="g2_tracking g_accordian" style="padding: 13px">
           <div class="g_accordian_title">
@@ -748,7 +997,7 @@
                       </select>
                       <span class="arowimgsec">
                         <img
-                          src="./assets/images/down-arrow.svg"
+                          src="https://drkcrypt.github.io/Dropmenu/assets/images/down-arrow.svg"
                           alt=""
                           width="14"
                           height="6"
@@ -833,7 +1082,7 @@
                       </select>
                       <span class="arowimgsec">
                         <img
-                          src="./assets/images/down-arrow.svg"
+                          src="https://drkcrypt.github.io/Dropmenu/assets/images/down-arrow.svg"
                           alt=""
                           width="14"
                           height="6"
@@ -918,7 +1167,7 @@
                       </select>
                       <span class="arowimgsec">
                         <img
-                          src="./assets/images/down-arrow.svg"
+                          src="https://drkcrypt.github.io/Dropmenu/assets/images/down-arrow.svg"
                           alt=""
                           width="14"
                           height="6"
@@ -1024,6 +1273,8 @@
                     id="EUYaSGMassDateTime"
                     value=""
                     data-oval="schedule set"
+                    disabled=""
+                    style="width: 100%"
                   />
                   <div class="gmass-calendar-icon" style="height: 30px"></div>
                 </div>
@@ -1224,42 +1475,33 @@
               </div>
             </div>
             <hr />
-            <div
-              class="g_border_top not-inline-reply-form"
-              style="display: flex"
-            >
-              <h5 class="g_col_label" style="float: none">Speed:</h5>
-              <div style="margin: 10px 8px">
-                <span
-                  style="
-                    display: flex;
-                    padding-top: 0px;
-                    gap: 20px;
-                    line-height: 55px;
-                  "
-                >
-                  <span>Send</span>
-                  <input
-                    type="text"
-                    placeholder="Max"
-                    size="4"
-                    id="bqpifMaxEmails"
-                    name="MaxEmails"
-                    value=""
-                    data-oval="daily limit"
-                  />
-                  <span>Emails/day</span>
-                </span>
-                <div style="margin-top: 4px; margin-left: 32px">
-                  <label class="g2_checkbox with-select">
+            <div class="email-settings-container">
+              <h5 class="label">Speed:</h5>
+              <div class="settings-content">
+                <div class="email-limit">
+                  <label for="bqpifMaxEmails">
+                    <span>Send</span>
+                    <input
+                      type="text"
+                      placeholder="Max"
+                      size="4"
+                      id="bqpifMaxEmails"
+                      name="MaxEmails"
+                      value=""
+                      data-oval="daily limit"
+                    />
+                    <span>Emails/day</span>
+                  </label>
+                </div>
+                <div class="pause-settings">
+                  <label class="checkbox-label">
                     <input
                       type="checkbox"
                       id="bqpifDelayCheckbox"
                       name="DelayCheckbox"
-                      [delayoff]=""
                       data-oval="pause between emails"
                     />
-                    <span>
+                    <span class="checkbox-text">
                       Pause
                       <select id="bqpifPauseSeconds" name="PauseSeconds">
                         <option value="1">5-10 seconds</option>
