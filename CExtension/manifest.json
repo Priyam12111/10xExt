@@ -17,7 +17,7 @@
   "content_scripts": [
     {
       "matches": ["https://mail.google.com/*"],
-      "css": ["styles.css"],
+      "css": ["styles.css", "style.css"],
       "js": ["content.js", "sendMail.js", "connectSheet.js"]
     }
   ],

@@ -571,5 +571,23 @@ def track_url():
         return "Invalid parameters", 400
 
 
+@app.route("/isUserSigned", methods=["GET"])
+def isUserSigned():
+    user = request.args.get("user")
+    if user:
+        if user:
+            token_file = f"{user.replace('@', '').replace('.com', '')}.json"
+            return (
+                jsonify(
+                    {"status": "success", "isSignedIn": os.path.exists(token_file)}
+                ),
+                200,
+            )
+        else:
+            return "Invalid parameters", 400
+    else:
+        return "Invalid parameters", 400
+
+
 if __name__ == "__main__":
     app.run(debug=True)

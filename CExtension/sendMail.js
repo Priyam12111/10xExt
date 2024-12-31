@@ -1,8 +1,8 @@
 function fetchDataFromSheet() {
   createMsgBox("Fetching data from Google Sheet...");
+  sheetListJs();
   const sheetList = document.querySelector(".sheet-list-container");
   const spreadsheetId = sessionStorage.getItem("spreadsheetId");
-
   if (!spreadsheetId) {
     sheetList.classList.remove("hidden");
     return;
@@ -153,13 +153,17 @@ function createSendingAnimation(msg) {
   }</p></div>`;
   return div;
 }
-function createMsgBox(msg) {
-  const msgBox = document.createElement("div");
-  msgBox.classList.add("msg-box");
-  msgBox.innerHTML = `<p class="msg-text">${msg || "Unknown Message"}</p>`;
-  document.body.appendChild(msgBox);
-  setTimeout(() => msgBox.remove(), 5000);
-  return msgBox;
+async function createMsgBox(msg) {
+  return new Promise((resolve) => {
+    const msgBox = document.createElement("div");
+    msgBox.classList.add("msg-box");
+    msgBox.innerHTML = `<p class="msg-text">${msg || "Unknown Message"}</p>`;
+    document.body.appendChild(msgBox);
+    setTimeout(() => {
+      msgBox.remove();
+      resolve();
+    }, 3000);
+  });
 }
 
 async function sendEmailRequest(sender, uploadId, subject, body, track) {

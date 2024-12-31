@@ -27,30 +27,6 @@
     outline: none;
   }
 
-  #dropdown-list {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: white;
-    border: 1px solid black;
-    border-radius: 8px;
-    max-height: 200px;
-    overflow-y: auto;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  #dropdown-list li {
-    padding: 10px;
-    cursor: pointer;
-  }
-
-  #dropdown-list li:hover {
-    background-color: #f0f0f0;
-  }
-
   .hidden {
     display: none;
   }
@@ -63,47 +39,33 @@
   .header {
     text-align: center;
   }
-  #SpreadsheetSave {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 10px auto;
-    padding: 10px 20px;
-    background-color: #e63946;
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-
-  #SpreadsheetSave:hover {
-    background-color: #d62828;
-    transform: translateY(-2px);
-  }
-
-  #SpreadsheetSave:active {
-    background-color: #b51717;
-    transform: translateY(0);
-  }
 </style>
 <div class="main">
   <div id="dropdown-container">
-    <h1 class="header">Choose a Spreadsheet</h1>
-    <div id="dropdown" class="dropdown">
-      <span id="dropdown-placeholder">Select Spreadsheet</span>
-      <input
-        type="search"
-        id="dropdown-search"
-        placeholder="Search sheets..."
-      />
+    <div class="modal-body">
+      <div class="gmas-sign googleSheetPad">
+        <div class="gooShetAftet">
+          <img
+            src="https://drkcrypt.github.io/Dropmenu/assets/images/google-sheet-icon.svg"
+            alt="gmass mailer"
+            width="120"
+            height="120"
+          />
+        </div>
+        <h3 class="mb-2">Choose a Google Sheet below.</h3>
+        <div id="dropdown" class="dropdown">
+          <span id="dropdown-placeholder">Select Spreadsheet</span>
+          <input
+            type="search"
+            id="dropdown-search"
+            placeholder="Search sheets..."
+          />
+        </div>
+        <ul id="dropdown-list" class="hidden"></ul>
+        <div id="SpreadsheetSave" class="save-btn buttonPopoSec">
+          <a href="#">Connect To Spreadsheet</a>
+        </d>
+      </div>
     </div>
-    <ul id="dropdown-list" class="hidden"></ul>
-    <button id="SpreadsheetSave" class="save-btn">
-      CONNECT TO SPREADSHEET
-    </button>
   </div>
 </div>

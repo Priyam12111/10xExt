@@ -790,6 +790,7 @@ textarea:focus {
   text-decoration: none;
   display: flex;
   justify-content: center;
+  cursor: pointer;
 }
 
 .googleSignsec {
@@ -1017,4 +1018,88 @@ select {
 }
 ::-webkit-scrollbar-thumb {
   background: #eee;
+}
+
+#signGmass {
+  position: absolute;
+  z-index: 12;
+  background: #0000008c;
+  width: 100%;
+  left: 0px;
+  top: 0px;
+  height: 100%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+.modal-dialog {
+  width: fit-content;
+  height: fit-content;
+  background: white;
+  border-radius: 10px;
+}
+
+#dropdown-container {
+  position: relative;
+  width: 65vw;
+  margin: auto;
+  margin-top: 60px;
+}
+
+#dropdown {
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  position: relative;
+  bottom: 45px;
+}
+
+#dropdown-placeholder {
+  color: grey;
+}
+
+#dropdown-search {
+  display: none;
+  width: calc(100% - 20px);
+  padding: 5px;
+  border: none;
+  outline: none;
+}
+
+#dropdown-list {
+  position: relative;
+  width: 100%;
+  background: white;
+  border: 1px solid black;
+  border-radius: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  bottom: 45px;
+}
+
+#dropdown-list li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+#dropdown-list li:hover {
+  background-color: #f0f0f0;
+}
+
+.hidden {
+  display: none;
+}
+.main {
+  height: 70vh;
+  background: white;
+  width: 70vw;
+  border-radius: 20px;
+}
+.header {
+  text-align: center;
 }
