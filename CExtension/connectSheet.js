@@ -42,7 +42,7 @@ function sheetListJs() {
     style="border-radius: 4px;"
   >
   <span style="font-size: 16px; font-weight: 500; color: #333;">
-    ${sheetArray[0]}
+    ${sheetArray.slice(0, -1).join(" ")}
   </span>
 </li>
         `;
