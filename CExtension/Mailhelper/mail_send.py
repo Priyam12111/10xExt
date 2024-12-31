@@ -22,7 +22,7 @@ load_dotenv(dotenv_path="Mailhelper\.env")
 app = Flask(__name__)
 CORS(app)
 
-
+thread_idx = ""
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 EMAIL_ADDRESS = "priyamtomar133@gmail.com"
@@ -76,9 +76,11 @@ def send_mails_helper_gcp(
     track,
     token_file,
     results,
+    followup=False,
+    thread_id=None,
 ):
     try:
-
+        url = "http://15.207.71.80"
         creds = authenticate_gmail(token_file.replace("@", "").replace(".com", ""))
         service = build("gmail", "v1", credentials=creds)
 
@@ -91,7 +93,6 @@ def send_mails_helper_gcp(
                 except Exception:
                     to_email = email_data
                     variables = {"name": "Test"}
-                url = "http://15.207.71.80"
 
                 if track:
                     tracking_pixel_url = f"{url}/track.png?name={to_email}&idx={idx}"
@@ -116,10 +117,39 @@ def send_mails_helper_gcp(
                 msg.attach(html_body)
 
                 raw = base64.urlsafe_b64encode(msg.as_bytes()).decode()
-
+                collection.find_one(sort=[("uploadId", -1)])
                 message = {"raw": raw}
-                service.users().messages().send(userId="me", body=message).execute()
-                print("Mail Sent Successfully")
+
+                # For Scheduled mails or follow-ups
+                if followup:
+                    new_message = {
+                        "raw": raw,
+                        "threadId": thread_id,  # Include the thread ID here
+                    }
+
+                    response = (
+                        service.users()
+                        .messages()
+                        .send(userId="me", body=new_message)
+                        .execute()
+                    )
+                    print(
+                        "Mail Sent in Thread. Message ID:",
+                        response["id"],
+                        "Thread ID:",
+                        response["threadId"],
+                    )
+                else:
+                    response = (
+                        service.users()
+                        .messages()
+                        .send(userId="me", body=message)
+                        .execute()
+                    )
+                    global thread_idx
+                    thread_idx = response["threadId"]
+                    print("Mail Sent. Thread ID:", thread_idx)
+
                 results.append({"email": to_email, "status": "sent"})
             except HttpError as e:
 
@@ -217,7 +247,6 @@ def followUpSchedule():
                         subject = f"Followup For {doc['subject']}"
                     body = "Follow up body Mail to " + doc["body"]
                     tracking = doc["tracking"]
-
                     send_mails_helper_gcp(
                         doc["uploadId"],
                         emails,
@@ -226,9 +255,10 @@ def followUpSchedule():
                         tracking,
                         f'{doc["sender"].replace("@", "").replace(".com", "")}',
                         result,
+                        followUp=True,
+                        thread_id=doc["threadId"],
                     )
 
-                    # Determine the new status
                     if doc["status"][0] == "R":
                         newStatus = "stage1"
                     else:
@@ -485,7 +515,11 @@ def upload_to_mongodb():
         if "date" in data:
             data["date"] = datetime.now()
 
-        if "schedule" in data and data["schedule"] != "Executed":
+        if (
+            "schedule" in data
+            and data["schedule"] != ""
+            and data["schedule"] != "Executed"
+        ):
             data["schedule"] = datetime.fromisoformat(data["schedule"])
             timeSchedule(hours=data["schedule"].hour, minutes=data["schedule"].minute)
             print("Timing has been set to ", data["schedule"])
@@ -501,6 +535,8 @@ def upload_to_mongodb():
                     data[stage].minute,
                 )
                 print("Timing has been set to ", data["schedule"])
+        if thread_idx != "":
+            data["threadId"] = thread_idx
         result = collection.insert_one(data)
         return jsonify({"status": "success", "inserted_id": str(result.inserted_id)})
     except Exception as e:
