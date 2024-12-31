@@ -424,16 +424,47 @@ iframe {
 .msg-box {
   position: fixed;
   bottom: 10px;
-  background: white;
-  color: black;
+  left: 10px;
+  background: linear-gradient(
+    0deg,
+    rgba(29, 33, 48, 1) 0%,
+    rgba(96, 16, 154, 1) 35%,
+    rgba(161, 0, 255, 1) 100%
+  );
+  color: white;
   margin: 10px;
-  padding: 5px 10px;
-  border: 1px solid;
+  padding: 10px 15px;
+  border: none;
   z-index: 10;
   width: 300px;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  font-size: 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  font-size: 13px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.msg-box:hover {
+  background: linear-gradient(
+    0deg,
+    rgba(29, 33, 48, 1) 0%,
+    rgba(96, 16, 154, 1) 35%,
+    rgba(161, 0, 255, 1) 100%
+  );
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
 }
 ::-webkit-scrollbar {
   width: 5px;
