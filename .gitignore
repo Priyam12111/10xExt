@@ -4,3 +4,6 @@
 CExt/Mailhelper/.env
 /CExtension/mailvenv
 /CExtension/node_modules
+/CExtension/Mailhelper/credentials.json
+/CExtension/Mailhelper/hiten.kapooracadecraft.json
+/CExtension/Mailhelper/priyamtomar133gmail.json
