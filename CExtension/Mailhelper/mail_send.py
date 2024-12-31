@@ -394,7 +394,7 @@ def list_google_sheets():
         cred = authenticate_gmail(sender.replace("@", "").replace(".com", ""))
     except Exception as e:
         print(e)
-        return
+        return jsonify({"error": "Authentication failed"}), 403
     service = build("drive", "v3", credentials=cred)
     results = (
         service.files()
