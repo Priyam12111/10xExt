@@ -217,6 +217,13 @@ function uploadMailData(sender, uploadId, subject, body, schedule) {
   const stage1 = JSON.parse(sessionStorage.getItem("stage1") || false);
   const stage2 = JSON.parse(sessionStorage.getItem("stage2") || false);
   const stage3 = JSON.parse(sessionStorage.getItem("stage3") || false);
+  const SendDaysOn = JSON.parse(sessionStorage.getItem("SendDaysOn") || false);
+  let checkedDays;
+  if (SendDaysOn) {
+    checkedDays = JSON.parse(sessionStorage.getItem("checkedDays") || "[]");
+  } else {
+    checkedDays = [];
+  }
 
   if (stage1 || stage2 || stage3) {
     var stageData = JSON.parse(
@@ -242,16 +249,18 @@ function uploadMailData(sender, uploadId, subject, body, schedule) {
       uploadId,
       subject,
       body,
+      schedule,
+      stageData,
+      stage1,
+      stage2,
+      stage3,
+      checkedDays,
       emails: emailData,
       date: "currentdate",
       status: "Ready",
-      followup: parseInt(sessionStorage.getItem("followup") || 0),
-      tracking: JSON.parse(sessionStorage.getItem("tracking") || "false"),
-      schedule: schedule,
-      stageData: stageData,
-      stage1: stage1,
-      stage2: stage2,
-      stage3: stage3,
+      tracking: JSON.parse(sessionStorage.getItem("tracking") || false),
+      MaxEmails: parseInt(sessionStorage.getItem("MaxEmails") || 0),
+      DelayCheckbox: parseInt(sessionStorage.getItem("DelayCheckbox") || 0),
     }),
   });
 }

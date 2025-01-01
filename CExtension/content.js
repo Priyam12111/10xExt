@@ -1,5 +1,4 @@
 console.log("Executing Content Script");
-
 function createSendButton() {
   const sendButton = document.createElement("div");
   sendButton.setAttribute("role", "button");
@@ -8,6 +7,7 @@ function createSendButton() {
 
   sendButton.addEventListener("click", (event) => {
     event.preventDefault();
+    event.stopPropagation();
     sendMails();
   });
 
@@ -17,7 +17,6 @@ function createSendButton() {
 function createButton(id) {
   const button = document.createElement("button");
   const dropupMenu = document.createElement("div");
-  const gmailSubject = document.querySelector(".aO7");
 
   button.id = id;
   button.innerHTML = `
@@ -32,13 +31,27 @@ function createButton(id) {
   dropupMenu.style.display = "none";
 
   fetchAndInjectDropupMenu(dropupMenu);
-  gmailSubject.onclick = () => (dropupMenu.style.display = "none");
-  button.addEventListener("click", () => toggleDropupMenu(dropupMenu));
+
+  document.addEventListener("click", () => {
+    if (dropupMenu.style.display === "block") {
+      toggleDropupMenu(dropupMenu);
+    }
+  });
+
+  dropupMenu.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
+
+  button.addEventListener("click", (event) => {
+    event.stopPropagation();
+    toggleDropupMenu(dropupMenu);
+  });
   return { button, dropupMenu };
 }
-
 function fetchAndInjectDropupMenu(dropupMenu) {
   const htmlUrl = chrome.runtime.getURL("dropupMenu.html");
+  const cssUrl = chrome.runtime.getURL("styledrop.css");
+
   fetch(htmlUrl)
     .then((response) => response.text())
     .then((htmlContent) => {
@@ -51,9 +64,11 @@ function fetchAndInjectDropupMenu(dropupMenu) {
       doc.write(htmlContent);
       doc.close();
 
-      return iframe; // Return iframe to be used later
-    })
-    .then((iframe) => {
+      const link = doc.createElement("link");
+      link.rel = "stylesheet";
+      link.href = cssUrl;
+      doc.head.appendChild(link);
+
       iframe.onload = () => {
         const doc = iframe.contentWindow.document;
         dropupJs(doc);
@@ -66,7 +81,10 @@ function fetchAndInjectDropupMenu(dropupMenu) {
 }
 
 function toggleDropupMenu(dropupMenu) {
-  document.querySelector(".arrow").classList.toggle("rotate");
+  const arrow = document.querySelector(".arrow");
+  if (arrow) {
+    arrow.classList.toggle("rotate");
+  }
   dropupMenu.style.display =
     dropupMenu.style.display === "none" ? "block" : "none";
 }
@@ -171,6 +189,48 @@ function toggleContainerDisplay(container, containerContent) {
 }
 function dropupJs(document) {
   const accordionTitles = document.querySelectorAll(".g_accordian_title");
+  const SendDaysOn = document.querySelector("#EUYaSSendDaysOn");
+  const dropdowndays = document.getElementById("listsecOpenDays");
+  const triggerdays = document.querySelector(".senddays");
+  const itemsdays = document.querySelectorAll("label.form-check-label");
+  const checkboxes = document.querySelectorAll(".form-check-input");
+  const sendButton = document.getElementById("test-send");
+  const testInput = document.getElementById("test-input");
+  const { containerbox, containerContentbox } = createEmailForm();
+  const configureButton = document.getElementById("configure-button");
+
+  SendDaysOn.addEventListener("change", () => {
+    sessionStorage.setItem("SendDaysOn", SendDaysOn.checked);
+  });
+
+  triggerdays.addEventListener("click", (e) => {
+    e.stopPropagation();
+    dropdowndays.classList.toggle("hidden");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!dropdowndays.contains(e.target) && !triggerdays.contains(e.target)) {
+      dropdowndays.classList.add("hidden");
+    }
+  });
+
+  itemsdays.forEach((item) => {
+    item.addEventListener("click", () => {
+      console.log("item clicked");
+      triggerdays.querySelector("span").textContent = item.textContent;
+      dropdowndays.classList.add("hidden");
+    });
+  });
+
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener("change", () => {
+      const updatedCheckedDays = Array.from(checkboxes)
+        .filter((checkbox) => checkbox.checked)
+        .map((checkbox) => checkbox.value);
+      sessionStorage.setItem("checkedDays", JSON.stringify(updatedCheckedDays));
+    });
+  });
+
   accordionTitles.forEach((title) => {
     title.addEventListener("click", () => {
       const content = title.nextElementSibling;
@@ -183,8 +243,6 @@ function dropupJs(document) {
     });
   });
 
-  const sendButton = document.getElementById("test-send");
-  const testInput = document.getElementById("test-input");
   if (sendButton && testInput) {
     sendButton.addEventListener("click", () => {
       const email = testInput.value;
@@ -192,9 +250,6 @@ function dropupJs(document) {
     });
   }
 
-  const { containerbox, containerContentbox } = createEmailForm();
-
-  const configureButton = document.getElementById("configure-button");
   if (configureButton) {
     const newConfigureButton = configureButton.cloneNode(true);
     configureButton.parentNode.replaceChild(
@@ -206,42 +261,61 @@ function dropupJs(document) {
     );
   }
 }
+
 function emailFunctionalities(document) {
   const schedule = document.querySelector("#EUYaSGMassDateDropdown");
   const scheduleinput = document.querySelector("#EUYaSGMassDateTime");
   const followUpElement = document.querySelector("#followup");
   const inputDays = document.querySelector("#days");
   const trackingElement = document.querySelector("#iyEIROpenTracking");
+  const stagetextarea = document.querySelectorAll(".stagetextarea");
+  const unsubLink = document.querySelector("#unsubLink");
+  const MaxEmails = document.querySelector("#bqpifMaxEmails");
+  const DelayCheckbox = document.querySelector("#bqpifDelayCheckbox");
+  const PauseSeconds = document.querySelector("#bqpifPauseSeconds");
   const stages = ["stage1", "stage2", "stage3"];
   const times = [".timeS1", ".timeS2", ".timeS3"];
+  const stageContainers = [".S1", ".S2", ".S3"];
   const stageInputs = [
     ".stageNumberinputS1",
     ".stageNumberinputS2",
     ".stageNumberinputS3",
   ];
-  const stageContainers = [".S1", ".S2", ".S3"];
-  const stagetextarea = document.querySelectorAll(".stagetextarea");
-  const unsubLink = document.querySelector("#unsubLink");
-  let uploadId;
+  MaxEmails.addEventListener("change", () => {
+    sessionStorage.setItem("MaxEmails", MaxEmails.value);
+  });
 
+  const updateDelaySetting = () =>
+    sessionStorage.setItem(
+      "DelayCheckbox",
+      DelayCheckbox.checked ? PauseSeconds.value : "0"
+    );
+
+  DelayCheckbox.addEventListener("change", updateDelaySetting);
+  PauseSeconds.addEventListener("change", updateDelaySetting);
+  let uploadId;
   fetch("http://127.0.0.1:5000/latest_id")
-    .then((res) => res.text())
-    .then((text) => {
-      uploadId = JSON.parse(text).Latest_id;
-      console.log("Fetched Upload ID:", uploadId);
+    .then((res) => res.json())
+    .then((data) => {
+      uploadId = data.Latest_id;
     })
     .catch((error) => {
       console.error("Error fetching the uploadId:", error);
     });
 
   unsubLink.addEventListener("click", () => {
-    if (uploadId !== undefined) {
+    if (uploadId) {
       createMsgBox("Unsubscribe link added");
       console.log("Adding unsubscribe link");
-      window.document.querySelector(
+      const emailBody = document.querySelector(
         ".Am.aiL.Al.editable.LW-avf.tS-tW"
-      ).innerHTML += `\n\n <a href="http://127.0.0.1:5000/unsubscribe?userID=${uploadId}">Unsubscribe</a>`;
-      sessionStorage.setItem("unsubscribed", true);
+      );
+      if (emailBody) {
+        emailBody.innerHTML += `\n\n<a href="http://127.0.0.1:5000/unsubscribe?userID=${uploadId}">Unsubscribe</a>`;
+        sessionStorage.setItem("unsubscribed", true);
+      } else {
+        console.error("Email body element not found.");
+      }
     } else {
       console.error("uploadId is not available yet.");
     }
@@ -384,8 +458,9 @@ function emailFunctionalities(document) {
     });
   }
 }
+sessionStorage.setItem("tracking", true);
+sessionStorage.removeItem("schedule");
 
-sessionStorage.removeItem("tracking");
 const observer = new MutationObserver(() => {
   const composeToolbars = document.querySelectorAll(".gU.Up");
   const sender = document.title.split(" ")[3];

@@ -69,7 +69,6 @@
       .form-check {
         display: block;
         min-height: 1.5rem;
-        padding-left: 1.5em;
         margin-bottom: 0.125rem;
       }
       .timesec {
@@ -820,6 +819,129 @@
         cursor: pointer;
         display: block;
       }
+
+      .droPosisionDays {
+        position: relative;
+      }
+      .droupSec {
+        border: 1px solid #d0d4e4;
+        border-radius: 4px;
+        padding: 3px 8px;
+        width: 94%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 14px;
+        height: 40px;
+        position: sticky;
+        top: 0;
+        background-color: #fff;
+        margin: 12px 0px;
+      }
+
+      .droupSec span .mdi-menu-down::before {
+        font-size: 25px;
+      }
+
+      .droupSec input {
+        border: none;
+        width: 100%;
+        font-size: 14px;
+        color: #323338;
+      }
+
+      .droupSec .searchIcon {
+        color: #323338;
+        margin-right: 4px;
+      }
+
+      .droupOpenSec {
+        background-color: #fff;
+        border: 1px solid #b9b9b9;
+        border-radius: 4px;
+        padding: 6px;
+        height: 100%;
+        max-height: 200px;
+        min-height: 200px;
+        overflow-y: auto;
+      }
+      /* =====  */
+      .satgeSec h5 {
+        color: #323338;
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      .stageDroupsec a {
+        /* border: 1px solid #D0D4E4; */
+        border: 0.2px solid #d0d4e496;
+        background-color: #fff;
+        color: #4a4a4a;
+        font-size: 12px;
+      }
+
+      .stageDroupsec a.show {
+        border-color: #d0d4e4 !important;
+        background-color: #fff !important;
+        color: #4a4a4a !important;
+      }
+
+      .stageDroupsec a:active {
+        border-color: #d0d4e4 !important;
+        background-color: #fff !important;
+        color: #4a4a4a !important;
+      }
+
+      .stageDroupsec a:hover {
+        border-color: #d0d4e4 !important;
+        background-color: #fff !important;
+        color: #4a4a4a !important;
+      }
+
+      .stageNumberinput {
+        border: 1px solid #d0d4e4;
+        background-color: #fff;
+        color: #4a4a4a;
+        font-size: 12px;
+        padding: 0px 12px;
+        border-radius: 4px;
+        height: 32px;
+        width: 60px;
+      }
+      .listWidIcons {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .listWidIcons li {
+        font-size: 14px;
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+        border-bottom: 1px solid #d0d4e4;
+        cursor: pointer;
+      }
+
+      .droupSec input {
+        border: none;
+        width: 100%;
+        font-size: 14px;
+        color: #323338;
+      }
+      .droupOpenSec .droupSec {
+        border: 0.2px solid #d0d4e496;
+        background-color: #fff;
+        width: 100%;
+        padding: 6px;
+        font-size: 12px;
+        border-radius: 4px;
+        margin: 12px auto;
+        position: relative;
+        position: sticky;
+        top: -3px;
+      }
     </style>
     <div id="cmail-dropup">
       <div class="modal-header">
@@ -882,7 +1004,9 @@
                       height="20"
                     />
                   </a>
-                  <a href="#" id="unsubLink" class="purple-link">Unsubscribe Link</a>
+                  <a href="#" id="unsubLink" class="purple-link"
+                    >Unsubscribe Link</a
+                  >
                 </div>
               </div>
             </div>
@@ -930,6 +1054,7 @@
                   name="OpenTracking"
                   id="iyEIROpenTracking"
                   data-oval="opens"
+                  checked
                 />
                 <span>Opens</span>
               </label>
@@ -938,6 +1063,7 @@
                   type="checkbox"
                   name="OpenClick"
                   id="iyEIROpenClick"
+                  checked
                   data-oval="Click"
                 />
                 <span>Click</span>
@@ -1274,7 +1400,7 @@
                     value=""
                     data-oval="schedule set"
                     disabled=""
-                    style="width: 100%"
+                    style="width: 85%"
                   />
                   <div class="gmass-calendar-icon" style="height: 30px"></div>
                 </div>
@@ -1319,157 +1445,141 @@
                     />
                     <span>Choose specific days</span>
                   </label>
-                  <div
-                    class="g_senddays"
-                    style="margin-top: 1em; display: none"
-                  >
-                    <select
-                      name="SendDays"
-                      id="EUYaSSendDays"
-                      multiple=""
-                      style="display: none"
-                    >
-                      <option value="weekdays" data-group="true">
-                        Select weekdays only
-                      </option>
-                      <option value="3">Monday</option>
-                      <option value="4">Tuesday</option>
-                      <option value="5">Wednesday</option>
-                      <option value="6">Thursday</option>
-                      <option value="7">Friday</option>
-                      <option value="1">Saturday</option>
-                      <option value="2">Sunday</option>
-                    </select>
-                    <div class="gmass-select-many">
-                      <div class="select-many-label">
-                        <span>Select sending days</span
-                        ><span class="select-arrow"></span>
-                      </div>
-                      <div class="gmass-select-many-list">
-                        <input type="text" />
-                        <ul>
-                          <li>
-                            <label class="g2_checkbox">
-                              <input type="checkbox" class="select-all" />
-                              <span>Select/Remove all days</span>
-                              <label> </label
-                            ></label>
-                          </li>
-                          <li data-group="true" data-value="weekdays">
-                            <div
-                              style="
-                                display: flex;
-                                width: 100%;
-                                justify-content: space-between;
-                              "
-                            >
-                              <label class="g2_checkbox">
-                                <input type="checkbox" value="weekdays" />
-                                <span>Select weekdays only</span>
-                              </label>
-                            </div>
-                          </li>
-                          <li data-value="3">
-                            <div
-                              style="
-                                display: flex;
-                                width: 100%;
-                                justify-content: space-between;
-                              "
-                            >
-                              <label class="g2_checkbox">
-                                <input type="checkbox" value="3" />
-                                <span>Monday</span>
-                              </label>
-                            </div>
-                          </li>
-                          <li data-value="4">
-                            <div
-                              style="
-                                display: flex;
-                                width: 100%;
-                                justify-content: space-between;
-                              "
-                            >
-                              <label class="g2_checkbox">
-                                <input type="checkbox" value="4" />
-                                <span>Tuesday</span>
-                              </label>
-                            </div>
-                          </li>
-                          <li data-value="5">
-                            <div
-                              style="
-                                display: flex;
-                                width: 100%;
-                                justify-content: space-between;
-                              "
-                            >
-                              <label class="g2_checkbox">
-                                <input type="checkbox" value="5" />
-                                <span>Wednesday</span>
-                              </label>
-                            </div>
-                          </li>
-                          <li data-value="6">
-                            <div
-                              style="
-                                display: flex;
-                                width: 100%;
-                                justify-content: space-between;
-                              "
-                            >
-                              <label class="g2_checkbox">
-                                <input type="checkbox" value="6" />
-                                <span>Thursday</span>
-                              </label>
-                            </div>
-                          </li>
-                          <li data-value="7">
-                            <div
-                              style="
-                                display: flex;
-                                width: 100%;
-                                justify-content: space-between;
-                              "
-                            >
-                              <label class="g2_checkbox">
-                                <input type="checkbox" value="7" />
-                                <span>Friday</span>
-                              </label>
-                            </div>
-                          </li>
-                          <li data-value="1">
-                            <div
-                              style="
-                                display: flex;
-                                width: 100%;
-                                justify-content: space-between;
-                              "
-                            >
-                              <label class="g2_checkbox">
-                                <input type="checkbox" value="1" />
-                                <span>Saturday</span>
-                              </label>
-                            </div>
-                          </li>
-                          <li data-value="2">
-                            <div
-                              style="
-                                display: flex;
-                                width: 100%;
-                                justify-content: space-between;
-                              "
-                            >
-                              <label class="g2_checkbox">
-                                <input type="checkbox" value="2" />
-                                <span>Sunday</span>
-                              </label>
-                            </div>
-                          </li>
-                        </ul>
+                  <div class="droPosisionDays">
+                    <div class="">
+                      <div class="droupSec senddays">
+                        <span>Select sending days</span>
+                        <!-- <input type="" placeholder=""> -->
+                        <span><i class="mdi mdi-menu-down"></i></span>
                       </div>
                     </div>
+                    <!-- = Dropdown = -->
+                    <div
+                      class="droupOpenSec hidden"
+                      id="listsecOpenDays"
+                      style="width: 270px"
+                    >
+                      <ul class="listWidIcons listdaysShow">
+                        <li>
+                          <div class="form-check">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              value=""
+                              id="removedays"
+                            />
+                            <label class="form-check-label" for="removedays">
+                              Select/Remove all days
+                            </label>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="form-check">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              value=""
+                              id="weekdays"
+                            />
+                            <label class="form-check-label" for="weekdays">
+                              Select weekdays only
+                            </label>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="form-check">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              value="Monday"
+                              id="monday"
+                            />
+                            <label class="form-check-label" for="monday">
+                              Monday
+                            </label>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="form-check">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              value="Tuesday"
+                              id="tuesday"
+                            />
+                            <label class="form-check-label" for="tuesday">
+                              Tuesday
+                            </label>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="form-check">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              value="Wednesday"
+                              id="wednesday"
+                            />
+                            <label class="form-check-label" for="wednesday">
+                              Wednesday
+                            </label>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="form-check">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              value="Thursday"
+                              id="thursday"
+                            />
+                            <label class="form-check-label" for="thursday">
+                              Thursday
+                            </label>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="form-check">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              value="Friday"
+                              id="friday"
+                            />
+                            <label class="form-check-label" for="friday">
+                              Friday
+                            </label>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="form-check">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              value="Saturday"
+                              id="saturday"
+                            />
+                            <label class="form-check-label" for="saturday">
+                              Saturday
+                            </label>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="form-check">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              value="Sunday"
+                              id="sunday"
+                            />
+                            <label class="form-check-label" for="sunday">
+                              Sunday
+                            </label>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                    <!-- == -->
                   </div>
                 </div>
               </div>

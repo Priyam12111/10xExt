@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify, redirect
 from flask_cors import CORS
-import smtplib
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -14,6 +13,7 @@ from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 import base64, os
+from time import sleep
 from dotenv import load_dotenv
 from apscheduler.triggers.date import DateTrigger
 
@@ -76,6 +76,8 @@ def send_mails_helper_gcp(
     track,
     token_file,
     results,
+    max_emails=0,
+    delay=0,
     followup=False,
     thread_id=None,
 ):
@@ -83,8 +85,10 @@ def send_mails_helper_gcp(
         url = "http://15.207.71.80"
         creds = authenticate_gmail(token_file.replace("@", "").replace(".com", ""))
         service = build("gmail", "v1", credentials=creds)
-
+        email_count = 0
         for email_data in emails:
+            if max_emails != 0 and email_count >= max_emails:
+                break
             try:
 
                 try:
@@ -156,6 +160,16 @@ def send_mails_helper_gcp(
                 results.append({"email": to_email, "status": "failed", "error": str(e)})
             except Exception as e:
                 results.append({"email": to_email, "status": "failed", "error": str(e)})
+            email_count += 1
+            if delay > 0:
+                if delay == 1:
+                    sleep(7)
+                elif delay == 2:
+                    sleep(20)
+                elif delay == 3:
+                    sleep(120)
+                elif delay == 4:
+                    sleep(300)
 
     except Exception as e:
         print(f"An error occurred during Gmail API setup: {e}")
