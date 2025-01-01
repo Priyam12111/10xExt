@@ -307,7 +307,7 @@ function emailFunctionalities(document) {
     if (uploadId) {
       createMsgBox("Unsubscribe link added");
       console.log("Adding unsubscribe link");
-      const emailBody = document.querySelector(
+      const emailBody = window.document.querySelector(
         ".Am.aiL.Al.editable.LW-avf.tS-tW"
       );
       if (emailBody) {

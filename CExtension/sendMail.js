@@ -112,13 +112,13 @@ async function sendMails() {
         track
       );
       console.log(sendMailResponse);
-      if ("error" in sendMailResponse["results"][0]) {
-        handleSendMailResponse({ status: "error" }, sendingAnimation);
-      } else {
-        handleSendMailResponse({ status: "success" }, sendingAnimation);
-      }
       if (sendingAnimation) {
-        setTimeout(() => sendingAnimation.remove(), 5000);
+        sendingAnimation.remove();
+      }
+      if ("error" in sendMailResponse["results"][0]) {
+        await handleSendMailResponse({ status: "error" });
+      } else {
+        await handleSendMailResponse({ status: "success" });
       }
     }
 
@@ -148,17 +148,30 @@ async function sendMails() {
 
 function createSendingAnimation(msg) {
   const div = document.createElement("div");
-  div.innerHTML = `<div class="sending"><p class="send-text">${
-    msg || "Sending..."
-  }</p></div>`;
+  div.classList.add("sending-animation-container");
+  div.innerHTML = `
+    <div class="sending-animation">
+      <p class="send-text">${msg || "Sending..."}</p>
+      <div class="loading-dots">
+        <span>.</span><span>.</span><span>.</span>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(div);
   return div;
 }
+
 async function createMsgBox(msg) {
   return new Promise((resolve) => {
     const msgBox = document.createElement("div");
     msgBox.classList.add("msg-box");
-    msgBox.innerHTML = `<p class="msg-text">${msg || "Unknown Message"}</p>`;
+    msgBox.innerHTML = `
+      <p class="msg-title">Notification</p>
+      <p class="msg-text">${msg || "Unknown Message"}</p>
+    `;
     document.body.appendChild(msgBox);
+
+    // Automatically remove the message box after 3 seconds
     setTimeout(() => {
       msgBox.remove();
       resolve();
@@ -192,23 +205,13 @@ async function sendEmailRequest(sender, uploadId, subject, body, track) {
     }),
   }).then((res) => res.json());
 }
-
-function handleSendMailResponse(response, sendingAnimation) {
+async function handleSendMailResponse(response) {
   let msg =
     response.status === "success"
       ? "Mail has been sent successfully."
       : "Mail has not been sent. Please try again.";
 
-  sendingAnimation.innerHTML = `
-    <div class="ending">
-      <p class="ending-text">
-        <svg width="24" height="24" viewBox="0 0 24 24">
-          <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM10 18L12 22L14 18Z"></path>
-        </svg>
-        ${msg}
-      </p>
-    </div>
-  `;
+  await createMsgBox(msg);
 }
 
 function uploadMailData(sender, uploadId, subject, body, schedule) {

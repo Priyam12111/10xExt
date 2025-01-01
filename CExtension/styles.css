@@ -266,37 +266,64 @@ input#email-subject {
 .gmass-bump {
   margin: 12px;
 }
-.sending {
+
+.sending-animation-container {
   position: fixed;
-  bottom: 10px;
-  left: 10px;
-  display: flex;
-  justify-content: center;
-  color: white;
-  align-items: center;
-  z-index: 10;
-  padding-left: 10px;
-}
-.sending::before {
-  content: "";
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #3498db;
-  border-radius: 50%;
-  width: 10px;
-  height: 10px;
-  animation: spin 1s linear infinite;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+.sending-animation {
+  background-color: #2a2a2a;
+  color: white;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  max-width: 300px;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  font-size: 14px;
+  animation: fadeIn 0.3s ease-out;
 }
+
 .send-text {
-  padding: 5px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.loading-dots {
+  font-size: 20px;
+  letter-spacing: 5px;
+  animation: blink 1.5s infinite ease-in-out;
+}
+
+.loading-dots span {
+  animation: blink 1.5s infinite ease-in-out;
+  opacity: 0.5;
+}
+
+.loading-dots span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 input#days {
@@ -305,19 +332,19 @@ input#days {
 }
 .ending {
   position: fixed;
-  bottom: 10px;
-  left: 10px;
+  bottom: 20px;
+  left: 20px;
   display: flex;
   justify-content: center;
-  color: black;
-  background: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  align-items: center;
+  color: white;
+  background: #2a2a2a;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   font-family: Arial, sans-serif;
   font-size: 14px;
-  padding: 10px;
-  align-items: center;
-  z-index: 10;
-  padding-left: 10px;
+  border-radius: 5px;
+  padding: 15px;
+  z-index: 1000;
 }
 
 .ending-text {
@@ -327,15 +354,18 @@ input#days {
 }
 
 .ending-text svg {
-  margin-right: 5px;
-  animation: spin 5s ease-in-out infinite;
+  margin-right: 10px;
+  animation: spin 1.5s linear infinite;
+  width: 16px;
+  height: 16px;
+  fill: white;
 }
 
 @keyframes spin {
-  0% {
+  from {
     transform: rotate(0deg);
   }
-  100% {
+  to {
     transform: rotate(360deg);
   }
 }
@@ -421,28 +451,45 @@ iframe {
   right: 0px;
   overflow: hidden;
 }
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-button {
+  background: #ccc;
+}
+::-webkit-scrollbar-track-piece {
+  background: #888;
+}
+::-webkit-scrollbar-thumb {
+  background: #eee;
+}
+
 .msg-box {
-  position: fixed;
-  bottom: 10px;
-  left: 10px;
-  background: linear-gradient(
-    0deg,
-    rgba(29, 33, 48, 1) 0%,
-    rgba(96, 16, 154, 1) 35%,
-    rgba(161, 0, 255, 1) 100%
-  );
+  background-color: #2a2a2a;
   color: white;
-  margin: 10px;
-  padding: 10px 15px;
-  border: none;
-  z-index: 10;
-  width: 300px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  font-size: 13px;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  text-align: center;
-  animation: fadeIn 0.5s ease-in-out;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  max-width: 400px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease, fadeOut 0.5s ease 2.5s;
+}
+
+.msg-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.msg-text {
+  line-height: 1.4;
 }
 
 @keyframes fadeIn {
@@ -456,26 +503,13 @@ iframe {
   }
 }
 
-.msg-box:hover {
-  background: linear-gradient(
-    0deg,
-    rgba(29, 33, 48, 1) 0%,
-    rgba(96, 16, 154, 1) 35%,
-    rgba(161, 0, 255, 1) 100%
-  );
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-}
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-::-webkit-scrollbar-button {
-  background: #ccc;
-}
-::-webkit-scrollbar-track-piece {
-  background: #888;
-}
-::-webkit-scrollbar-thumb {
-  background: #eee;
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
 }
