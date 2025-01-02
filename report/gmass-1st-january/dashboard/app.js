@@ -24,6 +24,8 @@ const EmailSchema = new mongoose.Schema({
   startDate: String,
   unsubscribe: Array,
   last_sent: String,
+  thread_data: Array,
+  FollowUp: Number,
 });
 const ReportSchema = new mongoose.Schema({
   uploadId: Number,
@@ -40,7 +42,7 @@ app.get("/fetch-data", async (req, res) => {
     const reports = await ReportModel.find();
     const formattedData = emails.map((email, index) => {
       let Opens = 0;
-
+      let lastSent = "N/A";
       reports.forEach((report) => {
         if (report.uploadId == email.uploadId) {
           Opens = JSON.stringify(report.Emails.length);
@@ -49,7 +51,9 @@ app.get("/fetch-data", async (req, res) => {
       });
       const startDate = new Date(email.startDate || email.date);
       const endDate = new Date(startDate);
-      let lastSent = new Date(email.last_sent) || "null";
+      if (email.last_sent) {
+        lastSent = new Date(email.last_sent) || "N/A";
+      }
       if (lastSent != "null") {
         lastSent = lastSent.toString().split("T")[0];
       }
@@ -64,6 +68,7 @@ app.get("/fetch-data", async (req, res) => {
         Opens: Opens || 0,
         unsubscribed: email.unsubscribe.length,
         lastSent: lastSent || "null",
+        followUp: email.thread_data.length,
       };
     });
     res.json(formattedData);

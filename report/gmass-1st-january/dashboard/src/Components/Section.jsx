@@ -141,7 +141,7 @@ const Section = () => {
                                                     <td className="fw-bold text-center purpleText">N/A</td> {/* Add Bounces logic */}
                                                     <td className="fw-bold text-center greenText">N/A</td> {/* Add Replies logic */}
                                                     <td className="fw-bold text-center redText">N/A</td> {/* Add Blocks logic */}
-                                                    <td className="fw-bold text-center greenText">N/A</td> {/* Add Auto Follow-Up logic */}
+                                                    <td className="fw-bold text-center greenText">{email.followUp || "0"}</td> {/* Add Auto Follow-Up logic */}
                                                     <td className="text-center">N/A</td> {/* Add Sends Next logic */}
                                                     <td className="text-center">{email.lastSent || "N/A"}</td> {/* Add Last Sent logic */}
                                                     <td className="actionIconsSec">
