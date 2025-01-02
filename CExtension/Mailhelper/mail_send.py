@@ -22,7 +22,6 @@ load_dotenv(dotenv_path="Mailhelper\.env")
 app = Flask(__name__)
 CORS(app)
 
-thread_idx = ""
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 EMAIL_ADDRESS = "priyamtomar133@gmail.com"
@@ -79,13 +78,14 @@ def send_mails_helper_gcp(
     max_emails=0,
     delay=0,
     followup=False,
-    thread_id=None,
+    thread_data=None,
 ):
     try:
         url = "http://15.207.71.80"
         creds = authenticate_gmail(token_file.replace("@", "").replace(".com", ""))
         service = build("gmail", "v1", credentials=creds)
         email_count = 0
+        mail_data = []
         for email_data in emails:
             if max_emails != 0 and email_count >= max_emails:
                 break
@@ -111,7 +111,10 @@ def send_mails_helper_gcp(
                     body = body_template_plain.format(**variables)
                 else:
                     body = body_template.format(**variables)
-
+                if "userID=#" in body:
+                    body = body.replace("userID=#", f"userID={idx}")
+                if "Email=#" in body:
+                    body = body.replace("Email=#", f"Email={to_email}")
                 msg = MIMEMultipart()
                 msg["From"] = "me"
                 msg["To"] = to_email
@@ -125,10 +128,19 @@ def send_mails_helper_gcp(
                 message = {"raw": raw}
 
                 # For Scheduled mails or follow-ups
-                if followup:
+
+                if followup and thread_data:
+                    thread_id = next(
+                        (
+                            data.split(", ")[1]
+                            for data in thread_data
+                            if data.split(", ")[0] == to_email
+                        ),
+                        None,
+                    )
                     new_message = {
                         "raw": raw,
-                        "threadId": thread_id,  # Include the thread ID here
+                        "threadId": thread_id,
                     }
 
                     response = (
@@ -137,12 +149,6 @@ def send_mails_helper_gcp(
                         .send(userId="me", body=new_message)
                         .execute()
                     )
-                    print(
-                        "Mail Sent in Thread. Message ID:",
-                        response["id"],
-                        "Thread ID:",
-                        response["threadId"],
-                    )
                 else:
                     response = (
                         service.users()
@@ -150,16 +156,15 @@ def send_mails_helper_gcp(
                         .send(userId="me", body=message)
                         .execute()
                     )
-                    global thread_idx
-                    thread_idx = response["threadId"]
-                    print("Mail Sent. Thread ID:", thread_idx)
-
+                thread_idx = response["threadId"]
+                print("Mail Sent. Thread ID:", thread_idx)
                 results.append({"email": to_email, "status": "sent"})
             except HttpError as e:
 
                 results.append({"email": to_email, "status": "failed", "error": str(e)})
             except Exception as e:
                 results.append({"email": to_email, "status": "failed", "error": str(e)})
+            mail_data.append(f"{to_email}, {thread_idx}")
             email_count += 1
             if delay > 0:
                 if delay == 1:
@@ -170,6 +175,12 @@ def send_mails_helper_gcp(
                     sleep(120)
                 elif delay == 4:
                     sleep(300)
+            print("Uploading thread ID to the database", thread_idx)
+        if thread_idx:
+            collection.update_one(
+                {"uploadId": idx},
+                {"$set": {"thread_data": mail_data, "last_sent": datetime.now()}},
+            )
 
     except Exception as e:
         print(f"An error occurred during Gmail API setup: {e}")
@@ -202,9 +213,10 @@ def schedule():
             and doc["schedule"].minute <= datetime.now().minute
         ):
             emails = doc["emails"]
-            subject = doc["subject"] + "Follow Up Campaign"
+            subject = doc["subject"]
             body = doc["body"]
             tracking = doc["tracking"]
+            delay = doc["DelayCheckbox"]
             send_mails_helper_gcp(
                 doc["uploadId"],
                 emails,
@@ -213,6 +225,7 @@ def schedule():
                 tracking,
                 f'{doc["sender"].replace("@", "").replace(".com", "")}',
                 result,
+                delay=delay,
             )
             if doc["status"][0] == "R":
                 newStatus = "1 follow up"
@@ -229,104 +242,66 @@ def schedule():
 def followUpSchedule():
     collection = db[COLLECTION_NAME]
     today = datetime.now().date()
-    try:
-        documents = collection.find(
-            {
-                "$or": [
-                    {"stage1": {"$exists": True, "$ne": None}},
-                    {"stage2": {"$exists": True, "$ne": None}},
-                    {"stage3": {"$exists": True, "$ne": None}},
-                ]
-            }
-        )
+    documents = collection.find(
+        {
+            "$or": [
+                {"stage1": {"$exists": True, "$ne": None}},
+                {"stage2": {"$exists": True, "$ne": None}},
+                {"stage3": {"$exists": True, "$ne": None}},
+            ]
+        }
+    )
 
-        today = datetime.now().date()
-        result = []
-        for doc in documents:
-            for i, stage in enumerate(["stage1", "stage2", "stage3"]):
-                if doc[stage] != False:
-                    print(doc[stage].date(), today)
-                if (
-                    stage in doc
-                    and doc[stage] != False
-                    and doc[stage].date() == today
-                    and doc["status"] != "Completed"
-                ):
-                    print(f"Processing {stage} for document ID {doc['_id']} on {today}")
-
-                    emails = doc["emails"]
-                    if i < len(doc["stageData"]):
-                        subject = doc["stageData"][i] + " For " + doc["subject"]
-                    else:
-                        subject = f"Followup For {doc['subject']}"
-                    body = "Follow up body Mail to " + doc["body"]
-                    tracking = doc["tracking"]
-                    send_mails_helper_gcp(
-                        doc["uploadId"],
-                        emails,
-                        subject,
-                        body,
-                        tracking,
-                        f'{doc["sender"].replace("@", "").replace(".com", "")}',
-                        result,
-                        followUp=True,
-                        thread_id=doc["threadId"],
-                    )
-
-                    if doc["status"][0] == "R":
-                        newStatus = "stage1"
-                    else:
-                        newStatus = "stage" + str(int(doc["status"][-1]) + 1)
-                        if newStatus[-1] == "4":
-                            newStatus = "Completed"
-                            continue
-
-                    print("Updating Follow UP")
-                    collection.update_one(
-                        {"_id": doc["_id"]},
-                        {"$set": {"status": newStatus, stage: "Executed"}},
-                    )
-    except Exception as e:
-        print(f"Error in processing stages: {e}")
-
+    result = []
     for doc in documents:
-        print(doc["target"].date() == today, doc["target"], today)
-        if (
-            "target" in doc
-            and doc["target"].date() == today
-            and doc["status"] != "Completed"
-        ):
-            emails = doc["emails"]
-            subject = f"Follow Up Mail Campaign For {doc['subject']}"
-            body = "Follow up body Mail to " + doc["body"]
-            tracking = doc["tracking"]
-            send_mails_helper_gcp(
-                doc["uploadId"],
-                emails,
-                subject,
-                body,
-                tracking,
-                f'{doc["sender"].replace("@", "").replace(".com", "")}',
-                result,
-            )
-            if doc["status"][0] == "R":
-                newStatus = "stage1"
-            else:
-                newStatus = str(int(doc["status"][-1]) + 1)
-                if newStatus[-1] == "4":
-                    newStatus = "Completed"
-                    continue
-            print("Updating Follow UP")
-            collection.update_one(
-                {"_id": doc["_id"]},
-                {
-                    "$set": {
-                        "target": ["none"],
-                        "status": newStatus,
-                        "target": datetime.now() + timedelta(days=3),
-                    }
-                },
-            )
+        for i, stage in enumerate(["stage1", "stage2", "stage3"]):
+            if (
+                stage in doc
+                and doc[stage] != False
+                and doc[stage] != "Executed"
+                and doc["status"] != "Completed"
+                and doc[stage].date() == today
+            ):
+                processFollowUp(doc, i, stage, result)
+
+    return result
+
+
+def processFollowUp(doc, i, stage, result):
+    print(f"Processing {stage} for document ID {doc['_id']} on {datetime.now().date()}")
+
+    emails = doc["emails"]
+    if i < len(doc["stageData"]):
+        subject = doc["stageData"][i] + " For " + doc["subject"]
+    else:
+        subject = f"Followup For {doc['subject']}"
+    body = "Follow up body Mail to " + doc["body"]
+    tracking = doc["tracking"]
+    try:
+        thread_data_idx = doc["thread_data"]
+    except Exception:
+        thread_data_idx = None
+    send_mails_helper_gcp(
+        doc["uploadId"],
+        emails,
+        subject,
+        body,
+        tracking,
+        f'{doc["sender"].replace("@", "").replace(".com", "")}',
+        result,
+        thread_data=thread_data_idx,
+        followup=True,
+    )
+    if doc["status"][0] == "R":
+        newStatus = "1 follow up"
+    else:
+        newStatus = str(int(doc["status"][0]) + 1) + " follow up"
+        if newStatus[0] == "4":
+            newStatus = "Completed"
+    collection.update_one(
+        {"_id": doc["_id"]},
+        {"$set": {"status": newStatus, stage: "Executed"}},
+    )
 
 
 def timeSchedule(year=None, month=None, day=None, hours=None, minutes=None):
@@ -473,7 +448,10 @@ def send_mails():
         body_template = data.get("body")
         track = data.get("tracking")
         emails = data.get("emails", [])
-
+        delay = data.get("DelayCheckbox", 0)
+        existing_subject = collection.find_one({"subject": subject})
+        if existing_subject:
+            idx = existing_subject.get("uploadId", 0)
         if not sender or not subject or not body_template or not emails:
             return (
                 jsonify({"status": "error", "message": "Missing required fields"}),
@@ -490,8 +468,8 @@ def send_mails():
                 track,
                 f'{sender.replace("@", "").replace(".com", "")}',
                 results,
+                delay=delay,
             )
-
         except Exception:
             return (
                 jsonify(
@@ -549,8 +527,6 @@ def upload_to_mongodb():
                     data[stage].minute,
                 )
                 print("Timing has been set to ", data["schedule"])
-        if thread_idx != "":
-            data["threadId"] = thread_idx
 
         result = collection.insert_one(data)
         return jsonify({"status": "success", "inserted_id": str(result.inserted_id)})
@@ -561,7 +537,15 @@ def upload_to_mongodb():
 
 @app.route("/latest_id", methods=["GET"])
 def get_latest_id():
-    latest_document = collection.find_one(sort=[("uploadId", -1)])
+    subject = request.args.get("subject")
+    if subject:
+        latest_document = collection.find_one(
+            {"subject": subject}, sort=[("uploadId", -1)]
+        )
+        if not latest_document:
+            latest_document = collection.find_one(sort=[("uploadId", -1)])
+    else:
+        latest_document = collection.find_one(sort=[("uploadId", -1)])
     if latest_document:
         return jsonify({"Latest_id": latest_document.get("uploadId", 0)})
     else:
@@ -607,14 +591,33 @@ def isUserSigned():
 @app.route("/unsubscribe", methods=["GET"])
 def unsubscribe():
     userID = request.args.get("userID")
-    if userID:
-        collection.update_one(
-            {"uploadId": int(userID)},
-            {"$set": {"unsubscribe": True}},
+    Email = request.args.get("Email")
+
+    if not userID or not Email:
+        return (
+            jsonify(
+                {"error": "Missing parameters. 'userID' and 'Email' are required."}
+            ),
+            400,
         )
-        return "success", 200
+
+    try:
+        userID = int(userID)
+    except ValueError:
+        return jsonify({"error": "'userID' must be a valid integer."}), 400
+
+    document = collection.find_one({"uploadId": userID})
+
+    if not document:
+        return jsonify({"error": "No document found for the given 'userID'."}), 404
+
+    unsubscribe = document.get("unsubscribe", [])
+
+    if Email not in unsubscribe:
+        collection.update_one({"uploadId": userID}, {"$push": {"unsubscribe": Email}})
+        return jsonify({"message": "Email successfully unsubscribed."}), 200
     else:
-        return "Invalid parameters", 400
+        return jsonify({"message": "Email is already unsubscribed."}), 200
 
 
 if __name__ == "__main__":

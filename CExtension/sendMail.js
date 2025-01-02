@@ -89,15 +89,18 @@ function setEmailDetails(emails, subject, body) {
 
 async function sendMails() {
   const track = JSON.parse(sessionStorage.getItem("tracking") || "false");
+  const DelayCheckbox = sessionStorage.getItem("DelayCheckbox") || 0;
   const sendingAnimation = createSendingAnimation("Processing...");
   document.body.appendChild(sendingAnimation);
 
   try {
-    const uploadId = await fetch("http://127.0.0.1:5000/latest_id")
-      .then((res) => res.text())
-      .then((id) => JSON.parse(id).Latest_id + 1);
     const sender = document.title.split(" ")[3];
     const subject = document.querySelector(".aoT").value;
+    const uploadId = await fetch(
+      `http://127.0.0.1:5000/latest_id?subject=${subject}`
+    )
+      .then((res) => res.text())
+      .then((id) => JSON.parse(id).Latest_id + 1);
     const body = document.querySelector(
       ".Am.aiL.Al.editable.LW-avf.tS-tW"
     ).innerHTML;
@@ -122,15 +125,17 @@ async function sendMails() {
       }
     }
 
+    console.log("Uploading Mail Data...");
     const uploadResponse = await uploadMailData(
       sender,
       uploadId,
       subject,
       body,
-      schedule
+      schedule,
+      DelayCheckbox
     );
     if (schedule !== "" && schedule !== "Now") {
-      handleUploadResponse(uploadResponse, sendingAnimation);
+      handleUploadResponse(uploadResponse, schedule, DelayCheckbox);
       setTimeout(() => sendingAnimation.remove(), 4000);
     }
   } catch (error) {
@@ -202,6 +207,7 @@ async function sendEmailRequest(sender, uploadId, subject, body, track) {
       body,
       emails: emailData,
       tracking: track,
+      DelayCheckbox: parseInt(sessionStorage.getItem("DelayCheckbox") || 0),
     }),
   }).then((res) => res.json());
 }
@@ -214,14 +220,22 @@ async function handleSendMailResponse(response) {
   await createMsgBox(msg);
 }
 
-function uploadMailData(sender, uploadId, subject, body, schedule) {
+function uploadMailData(
+  sender,
+  uploadId,
+  subject,
+  body,
+  schedule,
+  DelayCheckbox
+) {
   const emails = JSON.parse(sessionStorage.getItem("emails") || "[]");
   const variables = JSON.parse(sessionStorage.getItem("variables") || "{}");
   const stage1 = JSON.parse(sessionStorage.getItem("stage1") || false);
   const stage2 = JSON.parse(sessionStorage.getItem("stage2") || false);
   const stage3 = JSON.parse(sessionStorage.getItem("stage3") || false);
   const SendDaysOn = JSON.parse(sessionStorage.getItem("SendDaysOn") || false);
-  let checkedDays;
+
+  let checkedDays, stageData;
   if (SendDaysOn) {
     checkedDays = JSON.parse(sessionStorage.getItem("checkedDays") || "[]");
   } else {
@@ -229,11 +243,11 @@ function uploadMailData(sender, uploadId, subject, body, schedule) {
   }
 
   if (stage1 || stage2 || stage3) {
-    var stageData = JSON.parse(
+    stageData = JSON.parse(
       sessionStorage.getItem("stagetextarea-values") || "[]"
     );
   } else {
-    var stageData = [];
+    stageData = [];
   }
   const emailData = emails.map((email, index) => ({
     email,
@@ -263,29 +277,22 @@ function uploadMailData(sender, uploadId, subject, body, schedule) {
       status: "Ready",
       tracking: JSON.parse(sessionStorage.getItem("tracking") || false),
       MaxEmails: parseInt(sessionStorage.getItem("MaxEmails") || 0),
-      DelayCheckbox: parseInt(sessionStorage.getItem("DelayCheckbox") || 0),
+      DelayCheckbox: parseInt(DelayCheckbox),
     }),
   });
 }
 
-function handleUploadResponse(response, sendingAnimation) {
+function handleUploadResponse(response, schedule, DelayCheckbox) {
   if (response.ok) {
     console.log("Upload Success:", response);
-    var msg = `Mail has been scheduled`;
+    var msg = `Mail has been scheduled for ${schedule} ${
+      DelayCheckbox ? `with a delay of ${DelayCheckbox} seconds` : "immediately"
+    }`;
   } else {
     var msg = `Mail has not been Scheduled`;
     console.log("Upload Failed:", response);
   }
-  sendingAnimation.innerHTML = `
-    <div class="ending">
-      <p class="ending-text">
-        <svg width="24" height="24" viewBox="0 0 24 24">
-          <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM10 18L12 22L14 18Z"></path>
-        </svg>
-        ${msg}
-      </p>
-    </div>
-  `;
+  createMsgBox(msg);
 }
 
 function sendTestMail() {

@@ -293,31 +293,18 @@ function emailFunctionalities(document) {
 
   DelayCheckbox.addEventListener("change", updateDelaySetting);
   PauseSeconds.addEventListener("change", updateDelaySetting);
-  let uploadId;
-  fetch("http://127.0.0.1:5000/latest_id")
-    .then((res) => res.json())
-    .then((data) => {
-      uploadId = data.Latest_id;
-    })
-    .catch((error) => {
-      console.error("Error fetching the uploadId:", error);
-    });
 
   unsubLink.addEventListener("click", () => {
-    if (uploadId) {
-      createMsgBox("Unsubscribe link added");
-      console.log("Adding unsubscribe link");
-      const emailBody = window.document.querySelector(
-        ".Am.aiL.Al.editable.LW-avf.tS-tW"
-      );
-      if (emailBody) {
-        emailBody.innerHTML += `\n\n<a href="http://127.0.0.1:5000/unsubscribe?userID=${uploadId}">Unsubscribe</a>`;
-        sessionStorage.setItem("unsubscribed", true);
-      } else {
-        console.error("Email body element not found.");
-      }
+    createMsgBox("Unsubscribe link added");
+    console.log("Adding unsubscribe link");
+    const emailBody = window.document.querySelector(
+      ".Am.aiL.Al.editable.LW-avf.tS-tW"
+    );
+    if (emailBody) {
+      emailBody.innerHTML += `\n\n<a href="http://127.0.0.1:5000/unsubscribe?Email=#&userID=#">Unsubscribe</a>`;
+      sessionStorage.setItem("unsubscribed", true);
     } else {
-      console.error("uploadId is not available yet.");
+      console.error("Email body element not found.");
     }
   });
   const updateSchedule = (value) => {
@@ -460,6 +447,7 @@ function emailFunctionalities(document) {
 }
 sessionStorage.setItem("tracking", true);
 sessionStorage.removeItem("schedule");
+sessionStorage.setItem("DelayCheckbox", "1");
 
 const observer = new MutationObserver(() => {
   const composeToolbars = document.querySelectorAll(".gU.Up");
