@@ -290,6 +290,7 @@ function dropupJs(document) {
   if (sendButton && testInput) {
     sendButton.addEventListener("click", () => {
       const email = testInput.value;
+      sendTestMail();
       alert(`Test email sent to ${email}`);
     });
   }

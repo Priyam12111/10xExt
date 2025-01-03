@@ -3,13 +3,13 @@ function fetchDataFromSheet() {
   sheetListJs();
   const sheetList = document.querySelector(".sheet-list-container");
   const spreadsheetId = sessionStorage.getItem("spreadsheetId");
+  const sender = document.title.split(" ")[3];
+  const range = "Sheet1!A:Z";
+  const endpoint = `http://localhost:5000/sheet-data?sender=${sender}&spreadsheetId=${spreadsheetId}&range=${range}`;
   if (!spreadsheetId) {
     sheetList.classList.remove("hidden");
     return;
   }
-  const sender = document.title.split(" ")[3];
-  const range = "Sheet1!A:Z";
-  const endpoint = `http://localhost:5000/sheet-data?sender=${sender}&spreadsheetId=${spreadsheetId}&range=${range}`;
 
   fetch(`${endpoint}`)
     .then((response) =>
@@ -39,7 +39,7 @@ function fetchDataFromSheet() {
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
-      // alert("Failed to fetch data. Please check the console for errors.");
+
       createMsgBox(
         "Failed to fetch data. Please check the console for errors."
       );
@@ -175,8 +175,6 @@ async function createMsgBox(msg) {
       <p class="msg-text">${msg || "Unknown Message"}</p>
     `;
     document.body.appendChild(msgBox);
-
-    // Automatically remove the message box after 3 seconds
     setTimeout(() => {
       msgBox.remove();
       resolve();
