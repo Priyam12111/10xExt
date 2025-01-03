@@ -49,22 +49,36 @@ app.get("/fetch-data", async (req, res) => {
           return Opens;
         }
       });
-      const startDate = new Date(email.startDate || email.date);
+      const startDate = email.startDate
+        ? new Date(email.startDate)
+        : new Date(email.date);
       const endDate = new Date(startDate);
-      if (email.last_sent) {
-        lastSent = new Date(email.last_sent) || "N/A";
-      }
-      if (lastSent != "null") {
-        lastSent = lastSent.toString().split("T")[0];
-      }
-      endDate.setDate(startDate.getDate() + 30);
-      const formattedEndDate = endDate.toISOString().split("T")[0];
+      endDate.setDate(endDate.getDate() + 30);
+      const formattedEndDate = `${endDate.toLocaleString("default", {
+        day: "numeric",
+      })}-${endDate.toLocaleString("default", {
+        month: "short",
+      })}-${endDate.getFullYear()}`;
+      const formattedDate = `${startDate.toLocaleString("default", {
+        day: "numeric",
+      })}-${startDate.toLocaleString("default", {
+        month: "short",
+      })}-${startDate.getFullYear()}`;
+      lastSent = email.last_sent
+        ? new Date(email.last_sent)
+            .toLocaleString("default", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            })
+            .replace(/\//g, "-")
+        : "N/A";
       return {
         subject: email.subject,
-        startDate: startDate.toISOString().split("T")[0],
+        startDate: formattedDate.split("T")[0],
         endDate: formattedEndDate,
         totalRecipients: email.emails.length,
-        noOfEmailsSent: email.MaxEmails || 0,
+        noOfEmailsSent: email.emails.length || 0,
         Opens: Opens || 0,
         unsubscribed: email.unsubscribe.length,
         lastSent: lastSent || "null",

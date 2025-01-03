@@ -198,7 +198,35 @@ function dropupJs(document) {
   const testInput = document.getElementById("test-input");
   const { containerbox, containerContentbox } = createEmailForm();
   const configureButton = document.getElementById("configure-button");
+  const dropdownHeader = document.querySelector(".dropdown-header");
+  const dropdownContent = document.querySelector(".dropdown-content");
+  const searchInput = dropdownContent.querySelector("input");
+  const listItems = Array.from(
+    dropdownContent.querySelectorAll(".dropdown-list li")
+  );
 
+  dropdownHeader.addEventListener("click", () => {
+    dropdownContent.style.display =
+      dropdownContent.style.display === "block" ? "none" : "block";
+  });
+  searchInput.addEventListener("input", (event) => {
+    const filter = event.target.value.toLowerCase();
+    listItems.forEach((item) => {
+      if (item.textContent.toLowerCase().includes(filter)) {
+        item.style.display = "";
+      } else {
+        item.style.display = "none";
+      }
+    });
+  });
+  document.addEventListener("click", (event) => {
+    if (
+      !dropdownHeader.contains(event.target) &&
+      !dropdownContent.contains(event.target)
+    ) {
+      dropdownContent.style.display = "none";
+    }
+  });
   SendDaysOn.addEventListener("change", () => {
     sessionStorage.setItem("SendDaysOn", SendDaysOn.checked);
   });
