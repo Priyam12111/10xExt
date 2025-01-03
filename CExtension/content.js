@@ -51,7 +51,6 @@ function createButton(id) {
 function fetchAndInjectDropupMenu(dropupMenu) {
   const htmlUrl = chrome.runtime.getURL("dropupMenu.html");
   const cssUrl = chrome.runtime.getURL("styledrop.css");
-
   fetch(htmlUrl)
     .then((response) => response.text())
     .then((htmlContent) => {
@@ -189,6 +188,7 @@ function toggleContainerDisplay(container, containerContent) {
 }
 function dropupJs(document) {
   const accordionTitles = document.querySelectorAll(".g_accordian_title");
+  const { containerbox, containerContentbox } = createEmailForm();
   const SendDaysOn = document.querySelector("#EUYaSSendDaysOn");
   const dropdowndays = document.getElementById("listsecOpenDays");
   const triggerdays = document.querySelector(".senddays");
@@ -196,11 +196,27 @@ function dropupJs(document) {
   const checkboxes = document.querySelectorAll(".form-check-input");
   const sendButton = document.getElementById("test-send");
   const testInput = document.getElementById("test-input");
-  const { containerbox, containerContentbox } = createEmailForm();
   const configureButton = document.getElementById("configure-button");
   const dropdownHeader = document.querySelector(".dropdown-header");
   const dropdownContent = document.querySelector(".dropdown-content");
   const searchInput = dropdownContent.querySelector("input");
+  const Fields = dropdownContent.querySelector(".personalize-list");
+  const variables = JSON.parse(sessionStorage.getItem("variables") || "{}");
+  const lists = document.createElement("li");
+  if (variables) {
+    Object.entries(variables).forEach(([key, value]) => {
+      const listItem = document.createElement("li");
+      listItem.innerHTML = `<span>${key}</span>`;
+      Fields.appendChild(listItem);
+    });
+  } else {
+    lists.innerHTML = `
+    <li><span>No variables found</span></li>
+  `;
+  }
+
+  Fields.appendChild(lists);
+
   const listItems = Array.from(
     dropdownContent.querySelectorAll(".dropdown-list li")
   );
