@@ -50,7 +50,6 @@ function createButton(id) {
 }
 function fetchAndInjectDropupMenu(dropupMenu) {
   const htmlUrl = chrome.runtime.getURL("dropupMenu.html");
-  const cssUrl = chrome.runtime.getURL("styledrop.css");
   fetch(htmlUrl)
     .then((response) => response.text())
     .then((htmlContent) => {
@@ -62,11 +61,6 @@ function fetchAndInjectDropupMenu(dropupMenu) {
       doc.open();
       doc.write(htmlContent);
       doc.close();
-
-      const link = doc.createElement("link");
-      link.rel = "stylesheet";
-      link.href = cssUrl;
-      doc.head.appendChild(link);
 
       iframe.onload = () => {
         const doc = iframe.contentWindow.document;
