@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "CMail",
-  "version": "1.2",
+  "version": "1.3.1",
   "description": "A Chrome extension handle Gmail",
   "permissions": ["activeTab", "scripting", "identity"],
   "oauth2": {
@@ -9,7 +9,7 @@
     "scopes": ["https://www.googleapis.com/auth/spreadsheets.readonly"]
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "scripts/background.js"
   },
   "action": {
     "default_popup": "popup.html"
@@ -18,12 +18,16 @@
     {
       "matches": ["https://mail.google.com/*"],
       "css": ["styles.css", "style.css"],
-      "js": ["content.js", "sendMail.js", "connectSheet.js"]
+      "js": [
+        "scripts/connectSheet.js",
+        "scripts/content.js",
+        "scripts/sendMail.js"
+      ]
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["dropupMenu.html", "sheetList.html"],
+      "resources": ["html/dropupMenu.html", "html/sheetList.html"],
       "matches": ["<all_urls>"]
     }
   ],
