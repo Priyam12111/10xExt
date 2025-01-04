@@ -136,13 +136,13 @@ const Section = () => {
                                                         {email.noOfEmailsSent || 0}
                                                     </td>
                                                     <td className="fw-bold text-center orangeText">{email.Opens || 0}</td> {/* Add Opens logic */}
-                                                    <td className="fw-bold text-center greenText">0</td> {/* Add Clicks logic */}
+                                                    <td className="fw-bold text-center greenText">{email.Clicks || 0}</td> {/* Add Clicks logic */}
                                                     <td className="fw-bold text-center skyBlueText">{email.unsubscribed || 0}</td> {/* Add Unsubscribed logic */}
                                                     <td className="fw-bold text-center purpleText">N/A</td> {/* Add Bounces logic */}
                                                     <td className="fw-bold text-center greenText">N/A</td> {/* Add Replies logic */}
                                                     <td className="fw-bold text-center redText">N/A</td> {/* Add Blocks logic */}
                                                     <td className="fw-bold text-center greenText">{email.followUp || "0"}</td> {/* Add Auto Follow-Up logic */}
-                                                    <td className="text-center">0</td> {/* Add Sends Next logic */}
+                                                    <td className="text-center">N/A</td> {/* Add Sends Next logic */}
                                                     <td className="text-center">{email.lastSent || "0"}</td> {/* Add Last Sent logic */}
                                                     <td className="actionIconsSec">
                                                         <a href="" className="purplbg">

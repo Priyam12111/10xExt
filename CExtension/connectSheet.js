@@ -71,6 +71,7 @@ function LoadsheetJS() {
   const SpreadsheetSave = document.getElementById("SpreadsheetSave");
   const sheetListContainer = document.querySelector(".sheet-list-container");
   const mainContainer = document.querySelector(".main");
+  const reportdata = document.getElementById("reportdata");
 
   dropdown.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -115,6 +116,21 @@ function LoadsheetJS() {
 
   SpreadsheetSave.addEventListener("click", () => {
     console.log("Saving...");
+    fetch(
+      `http://127.0.0.1:5000/create-headers?sender=${sessionStorage.getItem(
+        "sender"
+      )}&spreadsheetId=${sessionStorage.getItem("spreadsheetId")}&newHeaders=${[
+        "Opens",
+        "Clicks",
+      ]}`
+    ).then((response) => {
+      if (response.ok) {
+        console.log("Headers created successfully.");
+      } else {
+        console.error("Failed to create headers:", response.statusText);
+      }
+    });
+
     sheetListContainer.classList.add("hidden");
   });
 

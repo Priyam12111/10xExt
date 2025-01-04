@@ -17,6 +17,7 @@ from time import sleep
 from dotenv import load_dotenv
 from apscheduler.triggers.date import DateTrigger
 from bs4 import BeautifulSoup
+from threading import Thread
 
 load_dotenv(dotenv_path="Mailhelper\.env")
 
@@ -37,12 +38,136 @@ db = client[DATABASE_NAME]
 collection = db[COLLECTION_NAME]
 
 
+def monitor_changes():
+    print("Starting MongoDB change stream...")
+    change_stream = db["Report"].watch()
+    for change in change_stream:
+        updated_fields = change.get("updateDescription", {}).get("updatedFields", {})
+        newArray = [False, False]
+        email_info = None
+        for key, value in updated_fields.items():
+            if key.startswith("Clicks."):
+                Field = "Clicks"
+                email_info = value
+                newArray[1] = True
+                break
+            elif key.startswith("Opens."):
+                Field = "Opens"
+
+                email_info = value
+                newArray[0] = True
+                break
+        if email_info:
+            emails = re.split(r"[,\s]+", email_info)
+            email = emails[0] if emails else None
+        else:
+            email = None
+        if email:
+            print(f"Updating Google Sheets for email: {email}")
+            update_google_sheet(
+                "hiten.kapooracadecraft",
+                "1z8bkxwjds_2tIweZZ1K8WucCqNhzrNvzkEen_5bP610",
+                email,
+                Field,
+            )
+        else:
+            print("No email found in the updated fields.")
+
+
+def start_background_thread():
+    thread = Thread(target=monitor_changes)
+    thread.daemon = True
+    thread.start()
+
+
+def update_google_sheet(sender, spreadsheet_id, email, field):
+    service = build("sheets", "v4", credentials=authenticate_gmail(sender))
+    sheet = service.spreadsheets()
+
+    result = (
+        sheet.values().get(spreadsheetId=spreadsheet_id, range="Sheet1!1:1").execute()
+    )
+    headers = result.get("values", [])[0]
+    if field not in headers:
+        return
+    header_opens_index = headers.index(field)
+
+    result = (
+        sheet.values().get(spreadsheetId=spreadsheet_id, range="Sheet1!A:Z").execute()
+    )
+    values = result.get("values", [])
+
+    for row_index, row in enumerate(values):
+        if len(row) > 0 and email.lower() in str(row).lower():
+            if len(row) <= header_opens_index:
+                row.extend([None] * (header_opens_index - len(row) + 1))
+
+            row[header_opens_index] = True
+
+            update_range = f"Sheet1!A{row_index + 1}:Z{row_index + 1}"
+            body = {"values": [row]}
+
+            service.spreadsheets().values().update(
+                spreadsheetId=spreadsheet_id,
+                range=update_range,
+                valueInputOption="RAW",
+                body=body,
+            ).execute()
+            return
+
+    print("Email not found in the sheet.")
+
+
+@app.route("/create-headers", methods=["GET"])
+def create_headers():
+    sender = request.args.get("sender")
+    spreadsheet_id = request.args.get("spreadsheetId")
+    new_headers = request.args.get("newHeaders")
+    if not sender or not spreadsheet_id or not new_headers:
+        return (
+            jsonify(
+                {
+                    "error": "Missing required parameters. 'sender', 'spreadsheetId', 'newHeaders' are required."
+                }
+            ),
+            400,
+        )
+    new_headers = new_headers.split(",")
+    service = build(
+        "sheets",
+        "v4",
+        credentials=authenticate_gmail(sender.replace("@", "").replace(".com", "")),
+    )
+    sheet = service.spreadsheets()
+    result = (
+        sheet.values().get(spreadsheetId=spreadsheet_id, range="Sheet1!1:1").execute()
+    )
+    current_headers = result.get("values", [])[0] if result.get("values", []) else []
+    missing_headers = [
+        header for header in new_headers if header not in current_headers
+    ]
+    if missing_headers:
+        updated_headers = current_headers + missing_headers
+        body = {"values": [updated_headers]}
+
+        sheet.values().update(
+            spreadsheetId=spreadsheet_id,
+            range="Sheet1!1:1",
+            valueInputOption="RAW",
+            body=body,
+        ).execute()
+        print(f"Headers added: {missing_headers}")
+    else:
+        print("No new headers to add. All headers are already present.")
+    return jsonify({"status": "success"}), 200
+
+
 def authenticate_gmail(token_file, credentials_file="credentials.json"):
     creds = None
     SCOPES = [
         "https://www.googleapis.com/auth/drive.metadata.readonly",
         "https://www.googleapis.com/auth/gmail.send",
-        "https://www.googleapis.com/auth/spreadsheets.readonly",
+        "https://www.googleapis.com/auth/spreadsheets",
     ]
     token_file = f"{token_file}.json"
     print("token_file", token_file)
@@ -53,8 +178,6 @@ def authenticate_gmail(token_file, credentials_file="credentials.json"):
                 "Existing token does not have the required scopes. Re-authenticating..."
             )
             creds = None
-        else:
-            print(creds.scopes)
 
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
@@ -156,7 +279,6 @@ def send_mails_helper_gcp(
             collection.find_one(sort=[("uploadId", -1)])
             message = {"raw": raw}
 
-            # For Scheduled mails or follow-ups
             if followup and thread_data:
                 thread_id = next(
                     (
@@ -181,7 +303,6 @@ def send_mails_helper_gcp(
                 response = (
                     service.users().messages().send(userId="me", body=message).execute()
                 )
-            print(response["threadId"])
             thread_idx_2 = response["threadId"]
             print("Mail Sent. Thread ID:", thread_idx_2)
             results.append({"email": to_email, "status": "sent"})
@@ -332,7 +453,6 @@ def timeSchedule(year=None, month=None, day=None, hours=None, minutes=None):
         hours = hours if hours is not None else now.hour
         minutes = minutes if minutes is not None else now.minute
 
-        # Initialize scheduler and define the trigger
         scheduler = BackgroundScheduler()
         scheduler.start()
 
@@ -375,23 +495,6 @@ def timeSchedule_job():
     minutes = int(request.args.get("minute"))
     timeSchedule(hours, minutes)
     return "success", 200
-
-
-@app.route("/authenticate", methods=["POST"])
-def authenticate():
-    data = request.json
-
-    token_file = data.get("token_file_name")
-
-    if not token_file:
-        return jsonify({"status": "error", "message": "Missing required fields"}), 400
-
-    try:
-        authenticate_gmail(token_file.replace("@", "").replace(".com", ""))
-    except Exception as e:
-        print(e)
-
-    return jsonify({"status": f"{token_file} has been created"}), 200
 
 
 @app.route("/list-sheets", methods=["GET"])
@@ -627,4 +730,5 @@ def unsubscribe():
 
 
 if __name__ == "__main__":
+    start_background_thread()
     app.run(debug=True)
