@@ -1067,19 +1067,18 @@ select {
   border: none;
   outline: none;
 }
-
 #dropdown-list {
   position: relative;
   width: 100%;
   background: white;
-  border: 1px solid black;
   border-radius: 8px;
-  max-height: 200px;
+  max-height: 90px;
   overflow-y: auto;
   margin: 0;
-  padding: 0;
+  padding: 8px 0; /* Adds spacing inside the container */
   list-style: none;
   bottom: 45px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds a soft shadow for better visual appeal */
 }
 
 #dropdown-list li {

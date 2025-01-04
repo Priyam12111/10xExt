@@ -231,6 +231,7 @@ function uploadMailData(
   const stage1 = JSON.parse(sessionStorage.getItem("stage1") || false);
   const stage2 = JSON.parse(sessionStorage.getItem("stage2") || false);
   const stage3 = JSON.parse(sessionStorage.getItem("stage3") || false);
+  const spreadsheetId = sessionStorage.getItem("spreadsheetId") || false;
   const SendDaysOn = JSON.parse(sessionStorage.getItem("SendDaysOn") || false);
 
   let checkedDays, stageData;
@@ -270,6 +271,7 @@ function uploadMailData(
       stage2,
       stage3,
       checkedDays,
+      spreadsheetId,
       emails: emailData,
       date: "currentdate",
       status: "Ready",

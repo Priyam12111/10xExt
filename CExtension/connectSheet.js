@@ -7,7 +7,9 @@ async function createSheetList() {
   try {
     const response = await fetch(sheetListHtmlUrl);
     if (!response.ok) {
-      throw new Error(`Failed to fetch sheet list HTML: ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch sheet list HTML: ${response.statusText}`
+      );
     }
     const html = await response.text();
     sheetListContainer.innerHTML = html;
@@ -31,8 +33,7 @@ async function sheetListJs() {
 
     data["result"].forEach((sheet) => {
       const sheetItem = document.createElement("li");
-      const sheetArray = sheet.split(" ");
-      sheetItem.dataset.id = sheetArray[sheetArray.length - 1];
+      sheetItem.dataset.id = sheet.id;
       sheetItem.style.display = "flex";
       sheetItem.style.alignItems = "center";
       sheetItem.style.gap = "10px";
@@ -48,7 +49,10 @@ async function sheetListJs() {
           style="border-radius: 4px;"
         >
         <span style="font-size: 16px; font-weight: 500; color: #333;">
-          ${sheetArray.slice(0, -1).join(" ")}
+          ${sheet.name}
+        </span>
+        <span style="font-size: 14px; color: #666; white-space: nowrap; margin-left: auto;">
+          Created: ${new Date(sheet.createdTime).toLocaleString()}
         </span>
       `;
       sheetList.appendChild(sheetItem);

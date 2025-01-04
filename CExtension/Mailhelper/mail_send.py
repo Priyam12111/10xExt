@@ -12,10 +12,11 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
-import base64, os
+import base64, os, re
 from time import sleep
 from dotenv import load_dotenv
 from apscheduler.triggers.date import DateTrigger
+from bs4 import BeautifulSoup
 
 load_dotenv(dotenv_path="Mailhelper\.env")
 
@@ -67,6 +68,48 @@ def authenticate_gmail(token_file, credentials_file="credentials.json"):
     return creds
 
 
+def make_url_tracking(body, idx, to_email):
+    soup = BeautifulSoup(body, "html.parser")
+    for a_tag in soup.find_all("a", href=True):
+        original_url = a_tag["href"]
+
+        if "unsubscribe" in original_url:
+            continue
+
+        tracking_url = (
+            f"http://15.207.71.80/track?url={original_url}&id={idx}&user={to_email}"
+        )
+        a_tag["href"] = tracking_url
+        print(tracking_url)
+    return str(soup)
+
+
+def makeing_unsun_working(body, idx, to_email):
+    if "userID=#" in body:
+        body = body.replace("userID=#", f"userID={idx}")
+    if "Email=#" in body:
+        body = body.replace("Email=#", f"Email={to_email}")
+    return body
+
+
+def addsTracking(url, to_email, idx, body_template, variables, track):
+    if track:
+        tracking_pixel_url = f"{url}/track.png?name={to_email}&idx={idx}"
+        variables["tracking_pixel_url"] = tracking_pixel_url
+        print(tracking_pixel_url)
+        body_template_plain = (
+            body_template
+            + """
+            <p>This email is tracked by MailSend API.</p>
+            <img src="{tracking_pixel_url}" alt="." width="1">
+            """
+        )
+        body = body_template_plain.format(**variables)
+    else:
+        body = body_template.format(**variables)
+    return body
+
+
 def send_mails_helper_gcp(
     idx,
     emails,
@@ -80,111 +123,86 @@ def send_mails_helper_gcp(
     followup=False,
     thread_data=None,
 ):
-    try:
-        url = "http://15.207.71.80"
-        creds = authenticate_gmail(token_file.replace("@", "").replace(".com", ""))
-        service = build("gmail", "v1", credentials=creds)
-        email_count = 0
-        mail_data = []
-        for email_data in emails:
-            if max_emails != 0 and email_count >= max_emails:
-                break
+    url = "http://15.207.71.80"
+    creds = authenticate_gmail(token_file.replace("@", "").replace(".com", ""))
+    service = build("gmail", "v1", credentials=creds)
+    email_count = 0
+    mail_data = []
+    for email_data in emails:
+        if max_emails != 0 and email_count >= max_emails:
+            break
+        try:
+
             try:
+                to_email = email_data["email"]
+                variables = email_data.get("variables", {})
+            except Exception:
+                to_email = email_data
+                variables = {"name": "Test"}
 
-                try:
-                    to_email = email_data["email"]
-                    variables = email_data.get("variables", {})
-                except Exception:
-                    to_email = email_data
-                    variables = {"name": "Test"}
+            body = makeing_unsun_working(body_template, idx, to_email)
+            body = make_url_tracking(body, idx, to_email)
+            body = addsTracking(url, to_email, idx, body, variables, track)
 
-                if track:
-                    tracking_pixel_url = f"{url}/track.png?name={to_email}&idx={idx}"
-                    variables["tracking_pixel_url"] = tracking_pixel_url
-                    body_template_plain = (
-                        body_template
-                        + """
-                        <p>This email is tracked by MailSend API.</p>
-                        <img src="{tracking_pixel_url}" alt="." width="1">
-                        """
-                    )
-                    body = body_template_plain.format(**variables)
-                else:
-                    body = body_template.format(**variables)
-                if "userID=#" in body:
-                    body = body.replace("userID=#", f"userID={idx}")
-                if "Email=#" in body:
-                    body = body.replace("Email=#", f"Email={to_email}")
-                msg = MIMEMultipart()
-                msg["From"] = "me"
-                msg["To"] = to_email
-                msg["Subject"] = subject
+            msg = MIMEMultipart()
+            msg["From"] = "me"
+            msg["To"] = to_email
+            msg["Subject"] = subject
 
-                html_body = MIMEText(body, "html")
-                msg.attach(html_body)
+            html_body = MIMEText(body, "html")
+            msg.attach(html_body)
 
-                raw = base64.urlsafe_b64encode(msg.as_bytes()).decode()
-                collection.find_one(sort=[("uploadId", -1)])
-                message = {"raw": raw}
+            raw = base64.urlsafe_b64encode(msg.as_bytes()).decode()
+            collection.find_one(sort=[("uploadId", -1)])
+            message = {"raw": raw}
 
-                # For Scheduled mails or follow-ups
+            # For Scheduled mails or follow-ups
+            if followup and thread_data:
+                thread_id = next(
+                    (
+                        data.split(", ")[1]
+                        for data in thread_data
+                        if data.split(", ")[0] == to_email
+                    ),
+                    None,
+                )
+                new_message = {
+                    "raw": raw,
+                    "threadId": thread_id,
+                }
 
-                if followup and thread_data:
-                    thread_id = next(
-                        (
-                            data.split(", ")[1]
-                            for data in thread_data
-                            if data.split(", ")[0] == to_email
-                        ),
-                        None,
-                    )
-                    new_message = {
-                        "raw": raw,
-                        "threadId": thread_id,
-                    }
+                response = (
+                    service.users()
+                    .messages()
+                    .send(userId="me", body=new_message)
+                    .execute()
+                )
+            else:
+                response = (
+                    service.users().messages().send(userId="me", body=message).execute()
+                )
+            print(response["threadId"])
+            thread_idx_2 = response["threadId"]
+            print("Mail Sent. Thread ID:", thread_idx_2)
+            results.append({"email": to_email, "status": "sent"})
+        except HttpError as e:
+            print(e)
+            results.append({"email": to_email, "status": "failed", "error": str(e)})
+        except Exception as e:
+            print(e)
+            results.append({"email": to_email, "status": "failed", "error": str(e)})
+        mail_data.append(f"{to_email}, {thread_idx_2}")
+        email_count += 1
+        delay_durations = {1: 7, 2: 20, 3: 120, 4: 300}
+        if delay > 0:
+            sleep(delay_durations.get(delay, 0))
+        print("Uploading thread ID to the database", thread_idx_2)
+    if thread_idx_2:
+        collection.update_one(
+            {"uploadId": idx},
+            {"$set": {"thread_data": mail_data, "last_sent": datetime.now()}},
+        )
 
-                    response = (
-                        service.users()
-                        .messages()
-                        .send(userId="me", body=new_message)
-                        .execute()
-                    )
-                else:
-                    response = (
-                        service.users()
-                        .messages()
-                        .send(userId="me", body=message)
-                        .execute()
-                    )
-                thread_idx = response["threadId"]
-                print("Mail Sent. Thread ID:", thread_idx)
-                results.append({"email": to_email, "status": "sent"})
-            except HttpError as e:
-
-                results.append({"email": to_email, "status": "failed", "error": str(e)})
-            except Exception as e:
-                results.append({"email": to_email, "status": "failed", "error": str(e)})
-            mail_data.append(f"{to_email}, {thread_idx}")
-            email_count += 1
-            if delay > 0:
-                if delay == 1:
-                    sleep(7)
-                elif delay == 2:
-                    sleep(20)
-                elif delay == 3:
-                    sleep(120)
-                elif delay == 4:
-                    sleep(300)
-            print("Uploading thread ID to the database", thread_idx)
-        if thread_idx:
-            collection.update_one(
-                {"uploadId": idx},
-                {"$set": {"thread_data": mail_data, "last_sent": datetime.now()}},
-            )
-
-    except Exception as e:
-        print(f"An error occurred during Gmail API setup: {e}")
-        results.append({"email": to_email, "status": "failed", "error": str(e)})
     return results
 
 
@@ -389,7 +407,7 @@ def list_google_sheets():
         service.files()
         .list(
             q="mimeType='application/vnd.google-apps.spreadsheet'",
-            fields="nextPageToken, files(id, name)",
+            fields="nextPageToken, files(id, name,createdTime)",
         )
         .execute()
     )
@@ -399,7 +417,13 @@ def list_google_sheets():
     else:
         result = []
         for sheet in sheets:
-            result.append(f"{sheet['name']} ({sheet['id']})")
+            result.append(
+                {
+                    "name": sheet["name"],
+                    "id": sheet["id"],
+                    "createdTime": sheet["createdTime"],
+                }
+            )
     return jsonify({"status": "success", "result": result}), 200
 
 
@@ -550,24 +574,6 @@ def get_latest_id():
         return jsonify({"Latest_id": latest_document.get("uploadId", 0)})
     else:
         return jsonify({"Latest_id": 0})
-
-
-@app.route("/track", methods=["GET"])
-def track_url():
-    url = request.args.get("url")
-    idx = request.args.get("id")
-
-    if url and idx:
-        clean_url = url.strip('"')
-
-        collection.update_one(
-            {"uploadId": int(idx)},
-            {"$set": {"access_log": {"timestamp": datetime.now(), "url": clean_url}}},
-        )
-        print(idx)
-        return redirect(clean_url)
-    else:
-        return "Invalid parameters", 400
 
 
 @app.route("/isUserSigned", methods=["GET"])

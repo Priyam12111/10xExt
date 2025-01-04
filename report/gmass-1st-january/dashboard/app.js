@@ -26,6 +26,9 @@ const EmailSchema = new mongoose.Schema({
   last_sent: String,
   thread_data: Array,
   FollowUp: Number,
+  stage1: String,
+  stage2: String,
+  stage3: String,
 });
 const ReportSchema = new mongoose.Schema({
   uploadId: Number,
@@ -43,25 +46,24 @@ app.get("/fetch-data", async (req, res) => {
     const formattedData = emails.map((email, index) => {
       let Opens = 0;
       let lastSent = "N/A";
+      const startDate = new Date(email.date);
+
+      const endDate = new Date(startDate);
       reports.forEach((report) => {
         if (report.uploadId == email.uploadId) {
           Opens = JSON.stringify(report.Emails.length);
           return Opens;
         }
       });
-      const startDate = email.startDate
-        ? new Date(email.startDate)
-        : new Date(email.date);
-      const endDate = new Date(startDate);
-      endDate.setDate(endDate.getDate() + 30);
+      endDate.setDate(endDate.getDate() + 28);
       const formattedEndDate = `${endDate.toLocaleString("default", {
         day: "numeric",
       })}-${endDate.toLocaleString("default", {
         month: "short",
       })}-${endDate.getFullYear()}`;
-      const formattedDate = `${startDate.toLocaleString("default", {
-        day: "numeric",
-      })}-${startDate.toLocaleString("default", {
+      const formattedDate = `${
+        startDate.getDate() - 1
+      }-${startDate.toLocaleString("default", {
         month: "short",
       })}-${startDate.getFullYear()}`;
       lastSent = email.last_sent
@@ -73,6 +75,11 @@ app.get("/fetch-data", async (req, res) => {
             })
             .replace(/\//g, "-")
         : "N/A";
+      let stagesFalse = 0;
+      if (email.stage1 == "false") stagesFalse++;
+      if (email.stage2 == "false") stagesFalse++;
+      if (email.stage3 == "false") stagesFalse++;
+      let followUp = 3 - stagesFalse;
       return {
         subject: email.subject,
         startDate: formattedDate.split("T")[0],
@@ -82,7 +89,7 @@ app.get("/fetch-data", async (req, res) => {
         Opens: Opens || 0,
         unsubscribed: email.unsubscribe.length,
         lastSent: lastSent || "null",
-        followUp: email.thread_data.length,
+        followUp: followUp || 0,
       };
     });
     res.json(formattedData);
