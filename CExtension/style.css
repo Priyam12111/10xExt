@@ -1068,7 +1068,9 @@ select {
   outline: none;
 }
 #dropdown-list {
-  position: relative;
+  position: absolute;
+  top: 270px;
+  height: 90px;
   width: 100%;
   background: white;
   border-radius: 8px;
@@ -1094,7 +1096,7 @@ select {
   display: none;
 }
 .main {
-  height: 70vh;
+  height: 75vh;
   background: white;
   width: 70vw;
   border-radius: 20px;
