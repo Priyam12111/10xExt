@@ -71,7 +71,6 @@ function LoadsheetJS() {
   const SpreadsheetSave = document.getElementById("SpreadsheetSave");
   const sheetListContainer = document.querySelector(".sheet-list-container");
   const mainContainer = document.querySelector(".main");
-  const reportdata = document.getElementById("reportdata");
 
   dropdown.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -226,6 +225,10 @@ const sheetObserver = new MutationObserver(() => {
     createSheetList();
 
     const sheetButton = document.createElement("div");
+    const report = document.createElement("a");
+    report.href = "http://localhost:5173/";
+    report.id = "reportdata";
+
     sheetButton.id = "sheet-button";
     sheetButton.className = "sheet-button";
     sheetButton.title = "Connect to an email list in a Google Sheet.";
@@ -233,6 +236,7 @@ const sheetObserver = new MutationObserver(() => {
     gmailSearch.parentElement.style.display = "flex";
     gmailSearch.style.width = "100%";
     gmailSearch.parentElement.appendChild(sheetButton);
+    gmailSearch.parentElement.appendChild(report);
 
     sheetButton.addEventListener("click", async () => {
       try {
