@@ -49,7 +49,7 @@ function createButton(id) {
   return { button, dropupMenu };
 }
 function fetchAndInjectDropupMenu(dropupMenu) {
-  const htmlUrl = chrome.runtime.getURL("html/dropupMenu.html");
+  const htmlUrl = chrome.runtime.getURL("assets/html/dropupMenu.html");
   fetch(htmlUrl)
     .then((response) => response.text())
     .then((htmlContent) => {

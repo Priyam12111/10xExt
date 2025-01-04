@@ -2,7 +2,7 @@ console.log("Executing Sheet Script");
 async function createSheetList() {
   const sheetListContainer = document.createElement("div");
   sheetListContainer.className = "sheet-list-container hidden";
-  const sheetListHtmlUrl = chrome.runtime.getURL("html/sheetList.html");
+  const sheetListHtmlUrl = chrome.runtime.getURL("assets/html/sheetList.html");
 
   try {
     const response = await fetch(sheetListHtmlUrl);
