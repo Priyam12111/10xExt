@@ -12,7 +12,7 @@ body {
   color: white;
   border: none;
   border-radius: 5px;
-  background-color: rgb(160, 38, 38);
+  background-color: #c42529;
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
@@ -56,9 +56,10 @@ div#cmail-dropup {
   border: none;
   height: 16px;
   font-size: 1rem;
+  font-weight: bold;
   cursor: pointer;
   width: fit-content;
-  background-color: rgb(160, 38, 38);
+  background-color: #c42529;
   border-radius: 5px;
   border-radius: 11px 0px 0px 10px;
   margin-left: 7px;
@@ -365,7 +366,7 @@ input#days {
 }
 
 .arrow-btn {
-  background-color: rgb(160, 38, 38);
+  background-color: #c42529;
   cursor: pointer;
   color: white;
   transition: transform 0.3s;

@@ -199,15 +199,17 @@ async function createSignUp() {
 }
 async function CheckSignedIn() {
   try {
+    const sender = sessionStorage.getItem("sender");
     const response = await fetch(
-      "http://127.0.0.1:5000/isUserSigned?user=" +
-        sessionStorage.getItem("sender")
+      "http://127.0.0.1:5000/isUserSigned?user=" + sender
     );
     const data = await response.json();
     const isSignedIn = data["isSignedIn"];
 
-    if (!isSignedIn) {
+    if (!isSignedIn && sender.toLowerCase().includes("acadecraft")) {
       document.querySelector("#signGmass").style.display = "flex";
+    } else {
+      console.log("Your email is not authorized to use this feature.");
     }
     return isSignedIn;
   } catch (error) {
@@ -240,15 +242,15 @@ const sheetObserver = new MutationObserver(() => {
 
     sheetButton.addEventListener("click", async () => {
       try {
-        createMsgBox("Checking Permissions of Google Sheet...");
         const isSignedIn = await CheckSignedIn();
         if (isSignedIn) {
+          createMsgBox("Checking Permissions of Google Sheet...");
           await sheetListJs();
           document
             .querySelector(".sheet-list-container")
             .classList.toggle("hidden");
         } else {
-          document.querySelector("#signGmass").style.display = "flex";
+          createMsgBox("Your email is not authorized to use this feature.");
         }
       } catch (error) {
         console.error("Error handling sheet button click:", error);
