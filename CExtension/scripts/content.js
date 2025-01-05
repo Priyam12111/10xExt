@@ -197,6 +197,7 @@ function dropupJs(document) {
   const Fields = dropdownContent.querySelector(".personalize-list");
   const variables = JSON.parse(sessionStorage.getItem("variables") || "{}");
   const lists = document.createElement("li");
+
   if (variables) {
     Object.entries(variables).forEach(([key, value]) => {
       const listItem = document.createElement("li");
@@ -238,6 +239,7 @@ function dropupJs(document) {
     }
   });
   SendDaysOn.addEventListener("change", () => {
+    triggerdays.classList.toggle("hidden");
     sessionStorage.setItem("SendDaysOn", SendDaysOn.checked);
   });
 
@@ -300,10 +302,90 @@ function dropupJs(document) {
     );
   }
 }
+function updateSchedule(value, scheduleinput) {
+  const now = new Date();
+  let datetime;
+
+  const formatIST = (date) => {
+    return new Intl.DateTimeFormat("en-IN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+      timeZone: "Asia/Kolkata",
+    }).format(date);
+  };
+
+  switch (value) {
+    case "Now":
+      datetime = now;
+      break;
+    case "FiveMinutes":
+      datetime = new Date(now.getTime() + 5 * 60 * 1000);
+      break;
+    case "OneHour":
+      datetime = new Date(now.getTime() + 60 * 60 * 1000);
+      break;
+    case "ThreeHours":
+      datetime = new Date(now.getTime() + 3 * 60 * 60 * 1000);
+      break;
+    case "TomorrowMor":
+      datetime = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() + 1,
+        8,
+        0,
+        0
+      );
+      break;
+    case "TomorrowAft":
+      datetime = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() + 1,
+        13,
+        0,
+        0
+      );
+      break;
+    case "TomorrowEve":
+      datetime = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() + 1,
+        19,
+        0,
+        0
+      );
+      break;
+    case "Custom":
+      scheduleinput.disabled = false;
+      scheduleinput.value = formatIST(datetime);
+      scheduleinput.addEventListener("change", () => {
+        const inputDate = new Date(scheduleinput.value);
+        if (!isNaN(inputDate.getTime())) {
+          sessionStorage.setItem("schedule", scheduleinput.value);
+        } else {
+          console.error("Invalid date input.");
+        }
+      });
+      return;
+    default:
+      console.warn("Unexpected schedule value:", value);
+      return;
+  }
+
+  const formattedDatetime = formatIST(datetime);
+  sessionStorage.setItem("schedule", formattedDatetime);
+  scheduleinput.value = formattedDatetime;
+  scheduleinput.disabled = true;
+}
 
 function emailFunctionalities(document) {
   const schedule = document.querySelector("#EUYaSGMassDateDropdown");
-  const scheduleinput = document.querySelector("#EUYaSGMassDateTime");
   const followUpElement = document.querySelector("#followup");
   const inputDays = document.querySelector("#days");
   const trackingElement = document.querySelector("#iyEIROpenTracking");
@@ -312,14 +394,35 @@ function emailFunctionalities(document) {
   const MaxEmails = document.querySelector("#bqpifMaxEmails");
   const DelayCheckbox = document.querySelector("#bqpifDelayCheckbox");
   const PauseSeconds = document.querySelector("#bqpifPauseSeconds");
+  const scheduleinput = document.querySelector("#EUYaSGMassDateTime");
   const stages = ["stage1", "stage2", "stage3"];
   const times = [".timeS1", ".timeS2", ".timeS3"];
   const stageContainers = [".S1", ".S2", ".S3"];
+  const followuptime = document.querySelector("#daysS1");
+  
+  followuptime.addEventListener("change", () => {
+    sessionStorage.setItem("followuptime", followuptime.value);
+  });
+
   const stageInputs = [
     ".stageNumberinputS1",
     ".stageNumberinputS2",
     ".stageNumberinputS3",
   ];
+
+  const setTime = document.querySelectorAll(".settime");
+  setTime.forEach((time, index) => {
+    time.addEventListener("click", () => {
+      const formCheck = document.querySelector(`${times[index]} .form-check`);
+      if (formCheck) {
+        formCheck.classList.toggle("hidden");
+      } else {
+        console.error(
+          `Element not found for selector: ${times[index]} .form-check`
+        );
+      }
+    });
+  });
   MaxEmails.addEventListener("change", () => {
     sessionStorage.setItem("MaxEmails", MaxEmails.value);
   });
@@ -346,78 +449,18 @@ function emailFunctionalities(document) {
       console.error("Email body element not found.");
     }
   });
-  const updateSchedule = (value) => {
-    const now = new Date();
-    let datetime;
-
-    switch (value) {
-      case "Now":
-        datetime = now;
-        break;
-      case "FiveMinutes":
-        datetime = new Date(now.getTime() + 5 * 60 * 1000);
-        break;
-      case "OneHour":
-        datetime = new Date(now.getTime() + 60 * 60 * 1000);
-        break;
-      case "ThreeHours":
-        datetime = new Date(now.getTime() + 3 * 60 * 60 * 1000);
-        break;
-      case "TomorrowMor":
-        datetime = new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate() + 1,
-          8,
-          0,
-          0
-        );
-        break;
-      case "TomorrowAft":
-        datetime = new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate() + 1,
-          13,
-          0,
-          0
-        );
-        break;
-      case "TomorrowEve":
-        datetime = new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate() + 1,
-          19,
-          0,
-          0
-        );
-        break;
-      case "Custom":
-        scheduleinput.value = "";
-        scheduleinput.disabled = false;
-        scheduleinput.addEventListener("change", () => {
-          sessionStorage.setItem("schedule", scheduleinput.value);
-        });
-        return;
-      default:
-        console.warn("Unexpected schedule value:", value);
-        return;
-    }
-
-    const offset = 5.5 * 60 * 60 * 1000; // UTC+5:30
-    const istDatetime = new Date(datetime.getTime() + offset);
-    const formattedDatetime = istDatetime
-      .toISOString()
-      .slice(0, 19)
-      .replace("T", " ");
-    sessionStorage.setItem("schedule", formattedDatetime);
-    scheduleinput.value = formattedDatetime;
-    scheduleinput.disabled = true;
-  };
 
   if (schedule) {
-    schedule.addEventListener("change", (e) => updateSchedule(e.target.value));
+    schedule.addEventListener("change", (e) => {
+      if (e.target.value !== "Now") {
+        document
+          .querySelector(".gmass-expand-field")
+          .classList.remove("hidden");
+      } else {
+        document.querySelector(".gmass-expand-field").classList.add("hidden");
+      }
+      updateSchedule(e.target.value, scheduleinput);
+    });
   }
 
   if (trackingElement) {
@@ -453,7 +496,14 @@ function emailFunctionalities(document) {
         if (nextStageContainer) {
           nextStageContainer.classList.toggle("hidden", !stage.checked);
         }
-        sessionStorage.setItem(stageId, stage.checked ? stageInput.value : "");
+        sessionStorage.setItem(
+          stageId,
+          stage.checked
+            ? stageInput.value === ""
+              ? "0"
+              : stageInput.value
+            : ""
+        );
       });
       stageInput.addEventListener("change", () => {
         sessionStorage.setItem(stageId, stage.checked ? stageInput.value : "0");

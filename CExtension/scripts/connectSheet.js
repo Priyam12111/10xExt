@@ -226,6 +226,7 @@ const sheetObserver = new MutationObserver(() => {
     CheckSignedIn();
     createSheetList();
 
+    const buttonContainer = document.createElement("div");
     const sheetButton = document.createElement("div");
     const report = document.createElement("a");
     report.href = "http://localhost:5173/";
@@ -235,10 +236,12 @@ const sheetObserver = new MutationObserver(() => {
     sheetButton.className = "sheet-button";
     sheetButton.title = "Connect to an email list in a Google Sheet.";
 
+    buttonContainer.className = "button-container";
     gmailSearch.parentElement.style.display = "flex";
     gmailSearch.style.width = "100%";
-    gmailSearch.parentElement.appendChild(sheetButton);
-    gmailSearch.parentElement.appendChild(report);
+    buttonContainer.appendChild(sheetButton);
+    buttonContainer.appendChild(report);
+    gmailSearch.parentElement.appendChild(buttonContainer);
 
     sheetButton.addEventListener("click", async () => {
       try {

@@ -40,38 +40,55 @@ collection = db[COLLECTION_NAME]
 
 def monitor_changes():
     print("Starting MongoDB change stream...")
-    change_stream = db["Report"].watch()
-    for change in change_stream:
-        updated_fields = change.get("updateDescription", {}).get("updatedFields", {})
-        newArray = [False, False]
-        email_info = None
-        for key, value in updated_fields.items():
-            if key.startswith("Clicks."):
-                Field = "Clicks"
-                email_info = value
-                newArray[1] = True
-                break
-            elif key.startswith("Opens."):
-                Field = "Opens"
-
-                email_info = value
-                newArray[0] = True
-                break
-        if email_info:
-            emails = re.split(r"[,\s]+", email_info)
-            email = emails[0] if emails else None
-        else:
-            email = None
-        if email:
-            print(f"Updating Google Sheets for email: {email}")
-            update_google_sheet(
-                "hiten.kapooracadecraft",
-                "1z8bkxwjds_2tIweZZ1K8WucCqNhzrNvzkEen_5bP610",
-                email,
-                Field,
+    try:
+        change_stream = db["Report"].watch()
+    except Exception:
+        change_stream = None
+    if change_stream:
+        for change in change_stream:
+            print(change)
+            updated_fields = change.get("updateDescription", {}).get(
+                "updatedFields", {}
             )
-        else:
-            print("No email found in the updated fields.")
+            newArray = [False, False]
+            email_info = None
+            for key, value in updated_fields.items():
+                if key.startswith("Clicks"):
+                    Field = "Clicks"
+                    print(key, value[-1])
+                    email_info = value[-1]
+                    newArray[1] = True
+                    break
+                elif key.startswith("Opens"):
+                    Field = "Opens"
+                    print(key, value[-1])
+
+                    email_info = value[-1]
+                    newArray[0] = True
+                    break
+            if updated_fields == {}:
+                email_info = change.get("fullDocument", {}).get("Opens", [])
+                Field = "Opens"
+                print(email_info)
+            if email_info:
+                emails = re.split(r"[,\s]+", str(email_info))
+                email = (
+                    emails[0].replace("'", "").replace("[", "").replace("]", "")
+                    if emails
+                    else None
+                )
+            else:
+                email = None
+            if email:
+                print(f"Updating Google Sheets for email: {email}")
+                update_google_sheet(
+                    "hiten.kapooracadecraft",
+                    "1z8bkxwjds_2tIweZZ1K8WucCqNhzrNvzkEen_5bP610",
+                    email,
+                    Field,
+                )
+            else:
+                print("No email found in the updated fields. ")
 
 
 def start_background_thread():
@@ -170,7 +187,7 @@ def authenticate_gmail(token_file, credentials_file="credentials.json"):
         "https://www.googleapis.com/auth/spreadsheets",
     ]
     token_file = f"{token_file}.json"
-    
+
     print("token_file", token_file)
     if os.path.exists(token_file):
         creds = Credentials.from_authorized_user_file(token_file)
@@ -204,7 +221,6 @@ def make_url_tracking(body, idx, to_email):
             f"http://15.207.71.80/track?url={original_url}&id={idx}&user={to_email}"
         )
         a_tag["href"] = tracking_url
-        print(tracking_url)
     return str(soup)
 
 
@@ -252,8 +268,10 @@ def send_mails_helper_gcp(
     service = build("gmail", "v1", credentials=creds)
     email_count = 0
     mail_data = []
+    thread_idx_2 = None
     for email_data in emails:
         if max_emails != 0 and email_count >= max_emails:
+            print("Max emails limit reached.")
             break
         try:
 
@@ -281,6 +299,7 @@ def send_mails_helper_gcp(
             message = {"raw": raw}
 
             if followup and thread_data:
+                print("Sending followup mail")
                 thread_id = next(
                     (
                         data.split(", ")[1]
@@ -308,12 +327,13 @@ def send_mails_helper_gcp(
             print("Mail Sent. Thread ID:", thread_idx_2)
             results.append({"email": to_email, "status": "sent"})
         except HttpError as e:
-            print(e)
+            print("HttpError:", e.response.status_code, e)
             results.append({"email": to_email, "status": "failed", "error": str(e)})
         except Exception as e:
-            print(e)
+            print("Exception:", e)
             results.append({"email": to_email, "status": "failed", "error": str(e)})
-        mail_data.append(f"{to_email}, {thread_idx_2}")
+        if thread_idx_2:
+            mail_data.append(f"{to_email}, {thread_idx_2}")
         email_count += 1
         delay_durations = {1: 7, 2: 20, 3: 120, 4: 300}
         if delay > 0:
@@ -412,15 +432,16 @@ def processFollowUp(doc, i, stage, result):
 
     emails = doc["emails"]
     if i < len(doc["stageData"]):
-        subject = doc["stageData"][i] + " For " + doc["subject"]
+        subject = " Followup For " + doc["subject"]
     else:
         subject = f"Followup For {doc['subject']}"
-    body = "Follow up body Mail to " + doc["body"]
+    body = doc["stageData"][i] + "Follow up body Mail to " + doc["body"]
     tracking = doc["tracking"]
     try:
         thread_data_idx = doc["thread_data"]
     except Exception:
         thread_data_idx = None
+    print("Thread data:", thread_data_idx)
     send_mails_helper_gcp(
         doc["uploadId"],
         emails,
@@ -470,12 +491,38 @@ def timeSchedule(year=None, month=None, day=None, hours=None, minutes=None):
         print(f"An error occurred while scheduling: {e}")
 
 
+def followbackSchedule(year=None, month=None, day=None, hours=None, minutes=None):
+    try:
+        now = datetime.now()
+
+        year = year or now.year
+        month = month or now.month
+        day = day or now.day
+        hours = hours if hours is not None else now.hour
+        minutes = minutes if minutes is not None else now.minute
+
+        scheduler = BackgroundScheduler()
+        scheduler.start()
+
+        trigger = DateTrigger(run_date=datetime(year, month, day, hours, minutes))
+
+        scheduler.add_job(
+            func=followUpSchedule,
+            trigger=trigger,
+            id=f"Job_fixing_{year}_{month}_{day}_{hours}_{minutes}",
+            replace_existing=True,
+        )
+        print(f"Followup scheduled for {year}-{month}-{day} at {hours}:{minutes}.")
+    except Exception as e:
+        print(f"An error occurred while scheduling: {e}")
+
+
 @app.route("/schedule", methods=["GET"])
 def schedule_job():
     try:
         schedule()
     except Exception as e:
-        print(e)
+        print("Schedule Error:", e)
         return jsonify({"status": "Checking Failed"}), 500
     return "success", 200
 
@@ -640,26 +687,37 @@ def upload_to_mongodb():
             and data["schedule"] != ""
             and data["schedule"] != "Executed"
         ):
-            data["schedule"] = datetime.fromisoformat(data["schedule"])
+            data["schedule"] = datetime.strptime(data["schedule"], "%d/%m/%Y, %I:%M %p")
             timeSchedule(hours=data["schedule"].hour, minutes=data["schedule"].minute)
             print("Timing has been set to ", data["schedule"])
 
         for stage in ["stage1", "stage2", "stage3"]:
-            if stage in data and data[stage] != False:
-                data[stage] = datetime.now() + timedelta(days=int(data[stage]))
-                timeSchedule(
+            if stage in data and (type(data[stage]) != bool):
+                print(f"\nSetting up schedule for {stage}")
+                if data[stage] == 0:
+                    hour, minute = map(int, data["followuptime"].split(":"))
+                    now = datetime.now()
+                    followup_time = now.replace(
+                        hour=hour, minute=minute, second=0, microsecond=0
+                    )
+                    if followup_time < now:
+                        followup_time += timedelta(days=1)
+                    data[stage] = followup_time
+                else:
+                    data[stage] = datetime.now() + timedelta(days=int(data[stage]))
+                followbackSchedule(
                     data[stage].year,
                     data[stage].month,
                     data[stage].day,
                     data[stage].hour,
                     data[stage].minute,
                 )
-                print("Timing has been set to ", data["schedule"])
+                print(f"Followup has been set to {data[stage]}")
 
         result = collection.insert_one(data)
         return jsonify({"status": "success", "inserted_id": str(result.inserted_id)})
     except Exception as e:
-        print(e)
+        print("Upload Error: ", e)
         return jsonify({"status": "failed", "error": str(e)}), 500
 
 

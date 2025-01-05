@@ -417,7 +417,7 @@ input#days {
 .sheet-button,
 #reportdata {
   height: 38px !important;
-  width: 40px !important;
+  width: 20px !important;
   border-radius: 4px !important;
   background: #f5f6f6
     url("https://cdn.gmass.us/Extension2019Images/icon_import.png") center
@@ -436,7 +436,9 @@ input#days {
   font-weight: bold;
   font-size: 11px;
 }
-
+#sheet-button {
+  width: 30px !important;
+}
 #reportdata:hover {
   background: #d62828
     url("https://cdn.gmass.us/Extension2019Images/Dashboard-icon-hov.svg")
@@ -451,23 +453,11 @@ input#days {
     url("https://cdn.gmass.us/Extension2019Images/Dashboard-icon-reg.svg")
     center center no-repeat;
   background-size: 40px auto !important;
-  cursor: pointer !important;
-  padding: 0 !important;
-  margin-left: 10px !important;
-  margin-right: 5px !important;
-  margin-top: 5px !important;
-  transition: 0.1s !important;
-  position: relative;
-  overflow: hidden;
-  display: block;
-  color: white;
-  font-weight: bold;
-  font-size: 11px;
 }
 
 iframe {
   position: absolute;
-  width: 460px;
+  width: 480px;
   height: 510px;
   border: none;
   bottom: 10px;
@@ -535,5 +525,14 @@ iframe {
   to {
     opacity: 0;
     transform: translateY(10px);
+  }
+}
+.button-container {
+  display: flex;
+}
+@media screen and (max-width: 900px) {
+  .button-container {
+    position: absolute;
+    left: 260px;
   }
 }

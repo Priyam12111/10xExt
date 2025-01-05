@@ -23,6 +23,25 @@
 
   <body>
     <style>
+      .settime {
+        display: block;
+        font-size: 13px !important;
+        width: 26px;
+        text-align: center;
+      }
+      input[type="text"] + .gmass-calendar-icon {
+        cursor: pointer;
+        position: absolute;
+        width: 32px;
+        height: 16px;
+        background: transparent
+          url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADJSURBVDhPY/j//z8K3rB1x//eKTOATOLEmRjQwLmLlxk+fvoM5SEALnFGkCkPHj35P3/pCrDA9Zu3wbSmuiqYhgF08cToCAYFORlGsAH17T3/j508A5YgFliZmzA0VpYwYniBVMACpRliwoMZIoIDoDz8YMXaDQz3HjwEsyl2AYYBOSWVDD5hsXjZyADDAGCMQFm42cgAHgYwsGXVYigLNxsZDEcvkArgSZmVmZlBVlYGKowfPH78hOH337/gpIyRmYgFkMwkwwgAWKmbyFf+ZkYAAAAASUVORK5CYII=)
+          50% 50% no-repeat;
+        display: inline-block;
+        margin-left: -33px;
+        margin-top: 1px;
+      }
+
       :root {
         --primary-color: #493838;
         --secondary-color: #f9f9f9;
@@ -45,25 +64,28 @@
 
       input,
       select {
-        height: 40px;
+        height: 30px;
       }
       input[type="checkbox"] {
         flex-shrink: 0;
-        width: 28px;
-        height: 28px;
+        width: 25px;
+        height: 25px;
         margin-top: 0.25em;
         vertical-align: top;
-        appearance: none; /* Remove default checkbox styles */
-        border: 2px solid #ccc; /* Add a border for visibility */
-        border-radius: 4px; /* Optional: for rounded edges */
-        background-color: #eee; /* Default background color */
+        appearance: none;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        background-color: #eee;
         cursor: pointer;
-        transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transition */
+        transition: 0.2s ease-in-out;
       }
 
       input[type="checkbox"]:checked {
-        background-color: purple; /* Change background to purple when checked */
-        border-color: purple; /* Optional: Change border color to match */
+        border-color: purple;
+        background: purple
+          url("https://cdn.gmass.us/Extension2019Images/fa-check.png") center
+          center no-repeat !important;
+        background-size: 12px auto !important;
       }
       .tackCheckLable {
         display: flex;
@@ -74,6 +96,7 @@
         color: #323338;
         font-size: 16px;
         font-weight: 600;
+        margin: 1px;
       }
       .tackCheckLable .form-check {
         display: flex;
@@ -116,7 +139,18 @@
         align-items: center;
         color: var(--primary-color);
       }
-
+      .g_accordian_title:before {
+        content: "";
+        position: absolute;
+        top: 13px;
+        right: 13px;
+        height: 10px;
+        width: 10px;
+        background: #f6f6f6 url(/Extension2019Images/fa-angle-down.png) center
+          center no-repeat !important;
+        background-size: 10px auto !important;
+        transform: rotate(90deg);
+      }
       .g_accordian_content {
         display: none;
         padding: 10px;
@@ -145,18 +179,10 @@
         margin-top: 8px;
       }
 
-      .g_accordian_title {
-        font-size: 14px;
-      }
-
       .g2_send_test input,
       .g2_send_test button,
       .change-template button {
         width: 100%;
-      }
-
-      .g_accordian_title {
-        font-size: 12px;
       }
 
       .g2_send_test input,
@@ -177,23 +203,6 @@
       .gU.Up {
         display: flex;
       }
-      #cmail-button {
-        color: white;
-        border: none;
-        border-radius: 5px;
-        background-color: rgb(160, 38, 38);
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 500;
-        text-transform: uppercase;
-        transition: background-color 0.3s ease;
-        margin-left: 0px;
-        position: relative;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 18px;
-        border-top-left-radius: 0;
-        border-top-right-radius: 18px;
-      }
 
       div#cmail-dropup {
         display: block;
@@ -204,7 +213,7 @@
         font-family: "Google-sans", sans-serif;
         min-height: 360px;
         max-height: 600px;
-        width: 442px;
+        width: 462px;
         height: 500px;
         overflow-y: auto;
         box-sizing: border-box;
@@ -248,52 +257,6 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       }
 
-      #email-body {
-        width: 100%;
-        padding: 15px;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-        font-size: 16px;
-        margin-bottom: 20px;
-        transition: all 0.3s ease-in-out;
-      }
-
-      #email-body:focus,
-      textarea:focus {
-        border-color: #4caf50;
-        box-shadow: 0 0 10px rgba(76, 175, 80, 0.2);
-      }
-
-      #save-button {
-        background-color: #4caf50;
-        color: #fff;
-        padding: 15px;
-        border: none;
-        border-radius: 8px;
-        font-size: 18px;
-        cursor: pointer;
-        width: 100%;
-        transition: background-color 0.3s;
-      }
-
-      #save-button:hover {
-        background-color: #45a049;
-      }
-
-      #save-button:focus {
-        outline: none;
-      }
-
-      .containerContent {
-        width: 100vw;
-        height: 100vh;
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        background: rgba(0, 0, 0, 0.6);
-        z-index: 99999;
-      }
-
       .form-container {
         display: flex;
         justify-content: center;
@@ -304,35 +267,6 @@
       .template .form-content {
         width: 70%;
         padding: 20px;
-      }
-
-      #close-button {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: none;
-        color: white;
-        border: none;
-        font-size: 24px;
-        cursor: pointer;
-        padding: 10px;
-        transition: 0.3s;
-      }
-
-      #close-button:focus {
-        outline: none;
-      }
-
-      #close-button:hover {
-        color: #ff5c5c;
-      }
-
-      .change-template {
-        display: flex;
-        justify-content: space-between;
-        margin: 10px;
-        display: flex;
-        flex-direction: row;
       }
 
       .g2_settings_accordions {
@@ -388,24 +322,10 @@
         margin: 15px 0;
       }
 
-      button#configure-button {
-        padding: 8px 12px;
-        font-size: 14px;
-        margin: 5px 0;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-
       span {
         font-size: 16px;
       }
 
-      .g2_action {
-        margin-top: 20px;
-      }
       .g2_checkbox {
         display: initial;
         line-height: 35px;
@@ -419,163 +339,15 @@
         border-color: #9e01f9;
       }
 
-      .blank-header {
-        height: 10px;
-        background: rgba(0, 0, 0, 0.534);
-        margin-bottom: 10px;
-      }
-
-      input#email-subject {
-        margin-bottom: 10px;
-        padding: 10px;
-      }
-      .gmass-bump {
-        margin: 12px;
-      }
-      .sending {
-        position: fixed;
-        bottom: 10px;
-        left: 10px;
-        display: flex;
-        justify-content: center;
-        color: white;
-        align-items: center;
-        z-index: 100000;
-        padding-left: 10px;
-      }
-      .sending::before {
-        content: "";
-        border: 5px solid #f3f3f3;
-        border-top: 5px solid #3498db;
-        border-radius: 50%;
-        width: 10px;
-        height: 10px;
-        animation: spin 1s linear infinite;
-      }
-
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-      .send-text {
-        padding: 5px;
-      }
-
       input#days {
         width: 10px;
         font-size: 14px;
       }
-      .ending {
-        position: fixed;
-        bottom: 10px;
-        left: 10px;
-        display: flex;
-        justify-content: center;
-        color: black;
-        background: white;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        font-family: Arial, sans-serif;
-        font-size: 14px;
-        padding: 10px;
-        align-items: center;
-        z-index: 100000;
-        padding-left: 10px;
-      }
 
-      .ending-text {
-        margin: 0;
-        display: flex;
-        align-items: center;
-      }
-
-      .ending-text svg {
-        margin-right: 5px;
-        animation: spin 5s ease-in-out infinite;
-      }
-
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-
-      .arrow-btn {
-        background-color: rgb(160, 38, 38);
-        cursor: pointer;
-        color: white;
-        transition: transform 0.3s;
-        padding: 1px 2px;
-        font-size: 14px;
-        border: none;
-        border-left: 1px solid black;
-      }
-
-      .arrow {
-        display: inline-block;
-        transition: transform 0.3s;
-      }
-
-      .arrow-btn:focus {
-        outline: none;
-      }
-
-      .rotate {
-        transform: rotate(-180deg);
-      }
-
-      .active {
-        display: block;
-      }
-      .sheet-list-container {
-        width: 100vw;
-        height: 100vh;
-        background: #00000073;
-        position: absolute;
-        top: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 6;
-      }
       .hidden {
-        display: none;
+        display: none !important;
       }
 
-      #sheet-button:hover {
-        background: #d62828
-          url("https://cdn.gmass.us/Extension2019Images/icon_import_w.png")
-          center center no-repeat;
-      }
-
-      #sheet-button,
-      .sheet-button {
-        height: 38px !important;
-        width: 40px !important;
-        border-radius: 4px !important;
-        background: #f5f6f6
-          url("https://cdn.gmass.us/Extension2019Images/icon_import.png") center
-          center no-repeat;
-        background-size: 20px auto !important;
-        cursor: pointer !important;
-        padding: 0 !important;
-        margin-left: 10px !important;
-        margin-right: 5px !important;
-        margin-top: 5px !important;
-        transition: 0.1s !important;
-        position: relative;
-        overflow: hidden;
-        display: block;
-        color: white;
-        font-weight: bold;
-        font-size: 11px;
-      }
       .labelText {
         font-size: 14px;
         font-weight: bold;
@@ -605,6 +377,7 @@
         border-top-left-radius: var(--bs-modal-inner-border-radius);
         border-top-right-radius: var(--bs-modal-inner-border-radius);
       }
+
       #test-send,
       #configure-button {
         background: linear-gradient(
@@ -630,12 +403,6 @@
         font-size: 1rem;
         margin: 0;
         line-height: 1.5;
-      }
-
-      .settings-content {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
       }
 
       .email-limit {
@@ -669,7 +436,7 @@
         font-size: 0.9rem;
         border: 1px solid #ccc;
         border-radius: 4px;
-        width: 50px; /* Adjust width if needed */
+        width: 50px;
       }
 
       select {
@@ -681,7 +448,6 @@
         cursor: pointer;
       }
 
-      /* Container Styling */
       .send-test-section {
         padding: 10px;
         font-family: Arial, sans-serif;
@@ -763,8 +529,6 @@
         border-radius: 4px;
       }
 
-      /* Dropdown List */
-      /* Dropdown Header */
       .dropdown-header {
         display: flex;
         justify-content: space-between;
@@ -898,38 +662,6 @@
         min-height: 200px;
         overflow-y: auto;
       }
-      /* =====  */
-      .satgeSec h5 {
-        color: #323338;
-        font-size: 16px;
-        font-weight: 600;
-      }
-
-      .stageDroupsec a {
-        /* border: 1px solid #D0D4E4; */
-        border: 0.2px solid #d0d4e496;
-        background-color: #fff;
-        color: #4a4a4a;
-        font-size: 12px;
-      }
-
-      .stageDroupsec a.show {
-        border-color: #d0d4e4 !important;
-        background-color: #fff !important;
-        color: #4a4a4a !important;
-      }
-
-      .stageDroupsec a:active {
-        border-color: #d0d4e4 !important;
-        background-color: #fff !important;
-        color: #4a4a4a !important;
-      }
-
-      .stageDroupsec a:hover {
-        border-color: #d0d4e4 !important;
-        background-color: #fff !important;
-        color: #4a4a4a !important;
-      }
 
       .stageNumberinput {
         border: 1px solid #d0d4e4;
@@ -941,6 +673,7 @@
         height: 32px;
         width: 60px;
       }
+
       .listWidIcons {
         list-style: none;
         padding: 0;
@@ -974,6 +707,15 @@
         position: relative;
         position: sticky;
         top: -3px;
+      }
+      input[type="Number"] {
+        display: flex;
+        width: 25px;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        margin: auto;
+        padding: 0px 8px;
       }
     </style>
     <div id="cmail-dropup">
@@ -1055,16 +797,14 @@
         </div>
 
         <div class="g2_settings_accordions">Settings:</div>
-        <div class="g2_tracking g_accordian" style="padding: 13px">
+        <div class="g2_tracking g_accordian" style="padding: 5px">
           <div class="g_accordian_title">
-            <span>
-              <img
-                src="https://drkcrypt.github.io/Dropmenu/assets/images/tracking.svg"
-                width="20"
-                height="20"
-              />
-              Tracking
-            </span>
+            <img
+              src="https://drkcrypt.github.io/Dropmenu/assets/images/tracking.svg"
+              width="20"
+              height="20"
+            />
+            <span> Tracking </span>
             <span><i class="mdi mdi-menu-down"></i></span>
           </div>
           <div
@@ -1101,16 +841,14 @@
           </div>
         </div>
 
-        <div class="g2_tracking g_accordian" style="padding: 13px">
+        <div class="g2_tracking g_accordian" style="padding: 5px">
           <div class="g_accordian_title">
-            <span>
-              <img
-                src="https://drkcrypt.github.io/Dropmenu/assets/images/auto-follow.svg"
-                width="20"
-                height="20"
-              />
-              Auto Follow Up
-            </span>
+            <img
+              src="https://drkcrypt.github.io/Dropmenu/assets/images/auto-follow.svg"
+              width="20"
+              height="20"
+            />
+            <span> Auto Follow Up </span>
             <span><i class="mdi mdi-menu-down"></i></span>
           </div>
           <div
@@ -1122,8 +860,8 @@
             <button>Stage 3</button>
           </div>
           <div class="g_accordian_content">
-            <hr />
             <div class="g_hide_on_collapse">
+              <hr />
               <div
                 class="tackCheckLable"
                 style="max-width: 400px; width: 298px"
@@ -1141,7 +879,7 @@
                       id="stage1"
                     />
                     <label class="form-check-label" for="stage1"> If </label>
-                    <div class="iconArrowSelect" style="margin-top: 13px">
+                    <div class="iconArrowSelect">
                       <select name="No Reply" id="No Reply" class="norepselect">
                         <option value="No Reply">No Reply</option>
                         <option value="No Open">No Open</option>
@@ -1150,14 +888,6 @@
                           No Reply or Click
                         </option>
                       </select>
-                      <span class="arowimgsec">
-                        <img
-                          src="https://drkcrypt.github.io/Dropmenu/assets/images/down-arrow.svg"
-                          alt=""
-                          width="14"
-                          height="6"
-                        />
-                      </span>
                     </div>
 
                     <label class="form-check-label" for="stage1"> after </label>
@@ -1170,11 +900,17 @@
                       class="stageNumberinputS1"
                     />
                     <span>days</span>
+                    <a href="#" class="settime">Set time</a>
                   </div>
                   <div class="timesec timeS1">
-                    <div class="form-check">
+                    <div class="form-check hidden">
                       <label class="form-check-label" for="stage1"> at </label>
-                      <input class="inputTimeSec" type="time" id="daysS1" />
+                      <input
+                        class="inputTimeSec"
+                        type="time"
+                        id="daysS1"
+                        value="00:00"
+                      />
                     </div>
 
                     <div class="form-check setmargn">
@@ -1206,9 +942,10 @@
                   </div>
                 </div>
               </div>
-              <hr />
             </div>
             <div class="g_hide_on_collapse S2 hidden">
+              <hr />
+
               <div
                 class="tackCheckLable"
                 style="max-width: 400px; width: 298px"
@@ -1226,7 +963,7 @@
                       id="stage2"
                     />
                     <label class="form-check-label" for="stage2"> If </label>
-                    <div class="iconArrowSelect" style="margin-top: 13px">
+                    <div class="iconArrowSelect">
                       <select name="No Reply" id="No Reply" class="norepselect">
                         <option value="No Reply">No Reply</option>
                         <option value="No Open">No Open</option>
@@ -1235,14 +972,6 @@
                           No Reply or Click
                         </option>
                       </select>
-                      <span class="arowimgsec">
-                        <img
-                          src="https://drkcrypt.github.io/Dropmenu/assets/images/down-arrow.svg"
-                          alt=""
-                          width="14"
-                          height="6"
-                        />
-                      </span>
                     </div>
 
                     <label class="form-check-label" for="stage2"> after </label>
@@ -1255,11 +984,17 @@
                       class="stageNumberinputS2"
                     />
                     <span>days</span>
+                    <a href="#" class="settime">Set time</a>
                   </div>
                   <div class="timesec timeS2">
-                    <div class="form-check">
+                    <div class="form-check hidden">
                       <label class="form-check-label" for="stage2"> at </label>
-                      <input class="inputTimeSec" type="time" id="daysS2" />
+                      <input
+                        class="inputTimeSec"
+                        type="time"
+                        id="daysS2"
+                        value="00:00"
+                      />
                     </div>
 
                     <div class="form-check setmargn">
@@ -1267,7 +1002,6 @@
                         class="form-check-input sendoriginal"
                         type="radio"
                         name="sendori"
-                        checked=""
                       />
                       <label
                         class="form-check-label"
@@ -1291,9 +1025,10 @@
                   </div>
                 </div>
               </div>
-              <hr />
             </div>
             <div class="g_hide_on_collapse S3 hidden">
+              <hr />
+
               <div
                 class="tackCheckLable"
                 style="max-width: 400px; width: 298px"
@@ -1311,7 +1046,7 @@
                       id="stage3"
                     />
                     <label class="form-check-label" for="stage1"> If </label>
-                    <div class="iconArrowSelect" style="margin-top: 13px">
+                    <div class="iconArrowSelect">
                       <select name="No Reply" id="No Reply" class="norepselect">
                         <option value="No Reply">No Reply</option>
                         <option value="No Open">No Open</option>
@@ -1320,14 +1055,6 @@
                           No Reply or Click
                         </option>
                       </select>
-                      <span class="arowimgsec">
-                        <img
-                          src="https://drkcrypt.github.io/Dropmenu/assets/images/down-arrow.svg"
-                          alt=""
-                          width="14"
-                          height="6"
-                        />
-                      </span>
                     </div>
 
                     <label class="form-check-label" for="stage3"> after </label>
@@ -1340,11 +1067,17 @@
                       class="stageNumberinputS3"
                     />
                     <span>days</span>
+                    <a href="#" class="settime">Set time</a>
                   </div>
                   <div class="timesec timeS3">
-                    <div class="form-check">
+                    <div class="form-check hidden">
                       <label class="form-check-label" for="stage3"> at </label>
-                      <input class="inputTimeSec" type="time" id="daysS3" />
+                      <input
+                        class="inputTimeSec"
+                        type="time"
+                        id="daysS3"
+                        value="00:00"
+                      />
                     </div>
 
                     <div class="form-check setmargn sendoriginal">
@@ -1379,12 +1112,12 @@
             </div>
           </div>
         </div>
-        <div class="g2_tracking g_accordian" style="padding: 13px">
+        <div class="g2_tracking g_accordian" style="padding: 5px">
           <div class="g_accordian_title">
+            <img
+              src="https://drkcrypt.github.io/Dropmenu/assets/images/schedule.svg"
+            />
             <span>
-              <img
-                src="https://drkcrypt.github.io/Dropmenu/assets/images/schedule.svg"
-              />
               <span style="padding: 3px">Schedule</span>
             </span>
             <span id="zjDCLmainspread" style="font-weight: normal"></span>
@@ -1421,7 +1154,7 @@
                   </option>
                   <option value="Custom" [custom]="">Custom date/time</option>
                 </select>
-                <div class="gmass-expand-field">
+                <div class="gmass-expand-field hidden">
                   <input
                     size="30"
                     type="text"
@@ -1475,8 +1208,8 @@
                     <span>Choose specific days</span>
                   </label>
                   <div class="droPosisionDays">
-                    <div class="">
-                      <div class="droupSec senddays">
+                    <div>
+                      <div class="droupSec senddays hidden">
                         <span>Select sending days</span>
                         <!-- <input type="" placeholder=""> -->
                         <span><i class="mdi mdi-menu-down"></i></span>
@@ -1486,7 +1219,7 @@
                     <div
                       class="droupOpenSec hidden"
                       id="listsecOpenDays"
-                      style="width: 270px"
+                      style="width: 100%"
                     >
                       <ul class="listWidIcons listdaysShow">
                         <li>
