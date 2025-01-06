@@ -21,7 +21,7 @@ async function createSheetList() {
 async function sheetListJs() {
   try {
     const response = await fetch(
-      "http://127.0.0.1:5000/list-sheets?sender=" +
+      "https://acaderealty.com/list-sheets?sender=" +
         encodeURIComponent(sessionStorage.getItem("sender"))
     );
     if (!response.ok) {
@@ -116,7 +116,7 @@ function LoadsheetJS() {
   SpreadsheetSave.addEventListener("click", () => {
     console.log("Saving...");
     fetch(
-      `http://127.0.0.1:5000/create-headers?sender=${sessionStorage.getItem(
+      `https://acaderealty.com/create-headers?sender=${sessionStorage.getItem(
         "sender"
       )}&spreadsheetId=${sessionStorage.getItem("spreadsheetId")}&newHeaders=${[
         "Opens",
@@ -201,7 +201,7 @@ async function CheckSignedIn() {
   try {
     const sender = sessionStorage.getItem("sender");
     const response = await fetch(
-      "http://127.0.0.1:5000/isUserSigned?user=" + sender
+      "https://acaderealty.com/isUserSigned?user=" + sender
     );
     const data = await response.json();
     const isSignedIn = data["isSignedIn"];

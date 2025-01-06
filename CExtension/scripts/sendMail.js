@@ -5,7 +5,7 @@ function fetchDataFromSheet() {
   const spreadsheetId = sessionStorage.getItem("spreadsheetId");
   const sender = document.title.split(" ")[3];
   const range = "Sheet1!A:Z";
-  const endpoint = `http://localhost:5000/sheet-data?sender=${sender}&spreadsheetId=${spreadsheetId}&range=${range}`;
+  const endpoint = `https://acaderealty.com/sheet-data?sender=${sender}&spreadsheetId=${spreadsheetId}&range=${range}`;
   if (!spreadsheetId) {
     sheetList.classList.remove("hidden");
     return;
@@ -97,7 +97,7 @@ async function sendMails() {
     const sender = document.title.split(" ")[3];
     const subject = document.querySelector(".aoT").value;
     const uploadId = await fetch(
-      `http://127.0.0.1:5000/latest_id?subject=${subject}`
+      `https://acaderealty.com/latest_id?subject=${subject}`
     )
       .then((res) => res.text())
       .then((id) => JSON.parse(id).Latest_id + 1);
@@ -195,7 +195,7 @@ async function sendEmailRequest(sender, uploadId, subject, body, track) {
     }, {}),
   }));
 
-  return fetch("http://127.0.0.1:5000/send-mails", {
+  return fetch("https://acaderealty.com/send-mails", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -265,7 +265,7 @@ function uploadMailData(
     }, {}),
   }));
 
-  return fetch("http://127.0.0.1:5000/upload", {
+  return fetch("https://acaderealty.com/upload", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -314,7 +314,7 @@ function sendTestMail() {
     },
   ];
 
-  fetch("http://127.0.0.1:5000/send-mails", {
+  fetch("https://acaderealty.com/send-mails", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

@@ -399,7 +399,7 @@ function emailFunctionalities(document) {
   const times = [".timeS1", ".timeS2", ".timeS3"];
   const stageContainers = [".S1", ".S2", ".S3"];
   const followuptime = document.querySelector("#daysS1");
-  
+
   followuptime.addEventListener("change", () => {
     sessionStorage.setItem("followuptime", followuptime.value);
   });
@@ -443,7 +443,7 @@ function emailFunctionalities(document) {
       ".Am.aiL.Al.editable.LW-avf.tS-tW"
     );
     if (emailBody) {
-      emailBody.innerHTML += `\n\n<a href="http://127.0.0.1:5000/unsubscribe?Email=#&userID=#">Unsubscribe</a>`;
+      emailBody.innerHTML += `\n\n<a href="https://acaderealty.com/unsubscribe?Email=#&userID=#">Unsubscribe</a>`;
       sessionStorage.setItem("unsubscribed", true);
     } else {
       console.error("Email body element not found.");
