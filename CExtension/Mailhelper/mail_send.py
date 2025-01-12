@@ -186,6 +186,7 @@ def authenticate_gmail(token_file, credentials_file="credentials.json"):
         "https://www.googleapis.com/auth/gmail.send",
         "https://www.googleapis.com/auth/spreadsheets",
     ]
+    token_file = token_file.replace("@", "").replace(".com", "").replace(".json", "")
     token_file = f"{token_file}.json"
 
     print("token_file", token_file)
@@ -789,5 +790,5 @@ def unsubscribe():
 
 
 if __name__ == "__main__":
-    start_background_thread()
-    app.run(debug=True)
+    sender = "sanjana.agrawal@acadecraft.com"
+    authenticate_gmail(sender.replace("@", "").replace(".com", ""))

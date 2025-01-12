@@ -1,9 +1,11 @@
 function fetchDataFromSheet() {
   createMsgBox("Fetching data from Google Sheet...");
-  sheetListJs();
+  if (!sessionStorage.getItem("spreadsheetId")) {
+    sheetListJs();
+  }
   const sheetList = document.querySelector(".sheet-list-container");
   const spreadsheetId = sessionStorage.getItem("spreadsheetId");
-  const sender = document.title.split(" ")[3];
+  const sender = sessionStorage.getItem("sender");
   const range = "Sheet1!A:Z";
   const endpoint = `https://acaderealty.com/sheet-data?sender=${sender}&spreadsheetId=${spreadsheetId}&range=${range}`;
   if (!spreadsheetId) {
@@ -94,7 +96,7 @@ async function sendMails() {
   document.body.appendChild(sendingAnimation);
 
   try {
-    const sender = document.title.split(" ")[3];
+    const sender = sessionStorage.getItem("sender");
     const subject = document.querySelector(".aoT").value;
     const uploadId = await fetch(
       `https://acaderealty.com/latest_id?subject=${subject}`

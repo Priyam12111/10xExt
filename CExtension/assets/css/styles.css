@@ -1,10 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
 
-body {
-  background-color: #f4f4f4;
-  font-size: 16px;
-  font-family: "Open Sans", sans-serif;
-}
 .gU.Up {
   display: flex;
 }
@@ -234,9 +229,6 @@ button#configure-button {
   margin: 5px 0;
 }
 
-span {
-  font-size: 16px;
-}
 
 .g_hide_on_collapse {
   padding-left: 10px;
@@ -535,4 +527,8 @@ iframe {
     position: absolute;
     left: 260px;
   }
+}
+
+#suggestion{
+  color: #757575;
 }

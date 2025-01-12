@@ -101,11 +101,19 @@ function LoadsheetJS() {
 
   dropdownList.addEventListener("click", (e) => {
     if (e.target.tagName === "LI") {
+      console.log("Selected sheet:", e.target.textContent);
       placeholder.textContent = e.target.textContent;
       sessionStorage.setItem(
         "spreadsheetId",
         e.target.dataset.id.replace(/[()]/g, "")
       );
+      searchInput.value = "";
+      searchInput.style.display = "none";
+      placeholder.style.display = "block";
+      dropdownList.classList.add("hidden");
+    } else if (e.target.tagName === "SPAN") {
+      console.log("Selected sheet:", e.target.parentElement.textContent);
+      placeholder.textContent = e.target.parentElement.textContent;
       searchInput.value = "";
       searchInput.style.display = "none";
       placeholder.style.display = "block";
