@@ -74,9 +74,18 @@ function setEmailDetails(emails, subject, body) {
     emailField.focus();
     emailField.value = `${emails.length}-recipients@cmail.in`;
     emailField.dispatchEvent(new Event("input", { bubbles: true }));
-    setTimeout(() => {
+    try {
       document.querySelector(".agJ.aFw").click();
-    }, 1000);
+    } catch (error) {
+      console.error("Error clicking on send button:", error);
+      setTimeout(() => {
+        try {
+          document.querySelector(".agJ.aFw").click();
+        } catch (error) {
+          console.error("Error clicking on send button after retry:", error);
+        }
+      }, 1000);
+    }
     const emailDescription = `Emails: ${emails.slice(0, 3).join(", ")}${
       emails.length > 3 ? ", ..." : ""
     } | Total: ${emails.length}`;
