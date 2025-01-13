@@ -156,7 +156,10 @@ function appendConnectButton() {
   connect.id = "connect-button";
   connect.className = "aB gQ pE";
   connect.textContent = "Connect";
-  connect.onclick = fetchDataFromSheet;
+  connect.addEventListener("click", () => {
+    createMsgBox("Fetching data from Google Sheet...");
+    fetchDataFromSheet();
+  });
 
   const targetElement = document.querySelector(".baT");
   if (targetElement) {

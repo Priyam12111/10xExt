@@ -1,5 +1,4 @@
 function fetchDataFromSheet() {
-  createMsgBox("Fetching data from Google Sheet...");
   if (!sessionStorage.getItem("spreadsheetId")) {
     sheetListJs();
   }
@@ -38,13 +37,7 @@ function fetchDataFromSheet() {
       }
     })
     .catch((error) => {
-      console.error("Error fetching data:", error);
-
-      createMsgBox(
-        "Failed to fetch data. Please check the console for errors."
-      );
-      document.getElementById("data").textContent =
-        "Failed to fetch data. Please check the console for errors.";
+      console.log("Error fetching data:", error);
     });
 }
 function processData(headers, allData) {
@@ -70,19 +63,19 @@ function processData(headers, allData) {
 
 function setEmailDetails(emails, subject, body) {
   const emailField = document.querySelector(".agP.aFw");
-  if (emailField.getAttribute("aria-label") === "To recipients") {
+  if (emailField && emailField.getAttribute("aria-label") === "To recipients") {
     emailField.focus();
     emailField.value = `${emails.length}-recipients@cmail.in`;
     emailField.dispatchEvent(new Event("input", { bubbles: true }));
     try {
       document.querySelector(".agJ.aFw").click();
     } catch (error) {
-      console.error("Error clicking on send button:", error);
+      console.log("Error clicking on send button:", error);
       setTimeout(() => {
         try {
           document.querySelector(".agJ.aFw").click();
         } catch (error) {
-          console.error("Error clicking on send button after retry:", error);
+          console.log("Error clicking on send button after retry:", error);
         }
       }, 1000);
     }
@@ -91,10 +84,12 @@ function setEmailDetails(emails, subject, body) {
     } | Total: ${emails.length}`;
     createMsgBox(emailDescription);
     const subjectField = document.querySelector(".aoT");
-    subjectField.value =
-      subjectField.getAttribute("aria-label") === "To recipients"
-        ? `${emails.length}-recipients@cmail.in`
-        : subject;
+    if (subjectField) {
+      subjectField.value =
+        subjectField.getAttribute("aria-label") === "To recipients"
+          ? `${emails.length}-recipients@cmail.in`
+          : subject;
+    }
   } else {
     emailField.value = subject;
   }
@@ -157,14 +152,14 @@ async function sendMails() {
       setTimeout(() => sendingAnimation.remove(), 4000);
     }
   } catch (error) {
-    console.error("Error:", error);
+    console.log("Error:", error);
     setTimeout(() => sendingAnimation.remove(), 5000);
     createMsgBox("An Error Occurred. Please check the console for details.");
   } finally {
     try {
       sendingAnimation.classList.remove("sending");
     } catch (e) {
-      console.error(e);
+      console.log(e);
     }
   }
 }
@@ -348,7 +343,7 @@ function sendTestMail() {
       alert("Test Mail Sent!");
     })
     .catch((error) => {
-      console.error("Error:", error);
+      console.log("Error:", error);
       alert("Test Mail Not Sent!");
     });
 }

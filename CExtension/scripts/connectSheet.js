@@ -57,8 +57,11 @@ async function sheetListJs() {
       `;
       sheetList.appendChild(sheetItem);
     });
-
-    LoadsheetJS();
+    try {
+      LoadsheetJS();
+    } catch (error) {
+      console.error("Error loading sheet list:", error);
+    }
   } catch (error) {
     console.error("Error fetching sheet list:", error);
   }
@@ -114,6 +117,10 @@ function LoadsheetJS() {
     } else if (e.target.tagName === "SPAN") {
       console.log("Selected sheet:", e.target.parentElement.textContent);
       placeholder.textContent = e.target.parentElement.textContent;
+      sessionStorage.setItem(
+        "spreadsheetId",
+        e.target.parentElement.dataset.id.replace(/[()]/g, "")
+      );
       searchInput.value = "";
       searchInput.style.display = "none";
       placeholder.style.display = "block";
@@ -139,6 +146,12 @@ function LoadsheetJS() {
     });
 
     sheetListContainer.classList.add("hidden");
+
+    try {
+      fetchDataFromSheet();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   });
 
   sheetListContainer.addEventListener("click", () => {
