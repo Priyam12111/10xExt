@@ -23,17 +23,15 @@ function fetchDataFromSheet() {
       if (data.values && data.values.length > 0) {
         const [headers, ...allData] = data.values;
         const { storedData, variables } = processData(headers, allData);
+        const Subject = localStorage.getItem("Subject") || "Test Email";
+        const emailBody =
+          localStorage.getItem("EmailBody") || "Hello, Test Emails!";
 
         sessionStorage.setItem("variables", JSON.stringify(variables));
         sessionStorage.setItem(
           "emails",
           JSON.stringify(storedData["Email"] || [])
         );
-
-        const Subject = localStorage.getItem("Subject") || "Test Email";
-        const emailBody =
-          localStorage.getItem("EmailBody") || "Hello, this is a test email.";
-
         if (storedData["Email"] && storedData["Email"].length > 0) {
           setEmailDetails(storedData["Email"], Subject, emailBody);
         }
@@ -73,11 +71,20 @@ function processData(headers, allData) {
 function setEmailDetails(emails, subject, body) {
   const emailField = document.querySelector(".agP.aFw");
   if (emailField.getAttribute("aria-label") === "To recipients") {
-    emailField.value = emails.join(", ");
+    emailField.focus();
+    emailField.value = `${emails.length}-recipients@cmail.in`;
+    emailField.dispatchEvent(new Event("input", { bubbles: true }));
+    setTimeout(() => {
+      document.querySelector(".agJ.aFw").click();
+    }, 1000);
+    const emailDescription = `Emails: ${emails.slice(0, 3).join(", ")}${
+      emails.length > 3 ? ", ..." : ""
+    } | Total: ${emails.length}`;
+    createMsgBox(emailDescription);
     const subjectField = document.querySelector(".aoT");
     subjectField.value =
       subjectField.getAttribute("aria-label") === "To recipients"
-        ? emails.join(", ")
+        ? `${emails.length}-recipients@cmail.in`
         : subject;
   } else {
     emailField.value = subject;
