@@ -540,9 +540,11 @@ sessionStorage.setItem("DelayCheckbox", "1");
 
 const observer = new MutationObserver(() => {
   const composeToolbars = document.querySelectorAll(".gU.Up");
-  const sender = document.title.split(" ")[3];
+  let sender = document.querySelector(".gb_A.gb_Xa.gb_Z");
 
   if (sender && !sessionStorage.getItem("sender")) {
+    sender = sender.getAttribute("aria-label").split("\n");
+    sender = sender[sender.length - 1].replace("(", "").replace(")", "");
     sessionStorage.setItem("sender", sender);
   }
 
