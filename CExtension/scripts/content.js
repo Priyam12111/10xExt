@@ -383,6 +383,25 @@ function updateSchedule(value, scheduleinput) {
   scheduleinput.value = formattedDatetime;
   scheduleinput.disabled = true;
 }
+function messageFunctionality(document) {
+  const dropdownmessages = [
+    "listsecOpenMessageS1",
+    "listsecOpenMessageS2",
+    "listsecOpenMessageS3",
+  ];
+
+  const messages = document.querySelectorAll(".mesagePosi");
+  messages.forEach((message, index) => {
+    message.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const msgdropdown = document.querySelector(`#${dropdownmessages[index]}`);
+      msgdropdown.addEventListener("click", (event) => {
+        event.stopPropagation();
+      });
+      msgdropdown.classList.toggle("hidden");
+    });
+  });
+}
 
 function emailFunctionalities(document) {
   const schedule = document.querySelector("#EUYaSGMassDateDropdown");
@@ -399,6 +418,11 @@ function emailFunctionalities(document) {
   const times = [".timeS1", ".timeS2", ".timeS3"];
   const stageContainers = [".S1", ".S2", ".S3"];
   const followuptime = document.querySelector("#daysS1");
+  try {
+    messageFunctionality(document);
+  } catch (error) {
+    console.error("Error in messageFunctionality:", error);
+  }
 
   followuptime.addEventListener("change", () => {
     sessionStorage.setItem("followuptime", followuptime.value);
@@ -519,6 +543,7 @@ function emailFunctionalities(document) {
       );
     });
   });
+
   if (stagetextarea) {
     const valuesArray = new Array(stagetextarea.length).fill("");
     stagetextarea.forEach((textarea, index) => {
