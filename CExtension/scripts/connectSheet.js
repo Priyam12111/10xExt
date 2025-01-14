@@ -18,6 +18,96 @@ async function createSheetList() {
     console.error("Error creating sheet list:", error);
   }
 }
+
+function createSheetItems(data, parentNode) {
+  return data.map((sheet) => {
+    let sheetItem = document.createElement("li");
+    sheetItem.dataset.id = sheet.id;
+    sheetItem.style.display = "flex";
+    sheetItem.style.alignItems = "center";
+    sheetItem.style.gap = "10px";
+    sheetItem.style.padding = "8px";
+    sheetItem.style.borderBottom = "1px solid #ddd";
+
+    sheetItem.innerHTML = `
+      <img 
+        src="https://cdn.gmass.us/img2017/google-sheets.png" 
+        alt="Google Sheets Icon" 
+        width="50" 
+        height="50"
+        style="border-radius: 4px;"
+      >
+      <span style="font-size: 16px; font-weight: 500; color: #333;">
+        ${sheet.name}
+      </span>
+      <span style="font-size: 14px; color: #666; white-space: nowrap; margin-left: auto;">
+        Created: ${new Date(sheet.createdTime).toLocaleString()}
+      </span>
+    `;
+    parentNode.appendChild(sheetItem);
+
+    return sheetItem;
+  });
+}
+
+function createSheetNames(data, parentNode) {
+  return data.map((sheet) => {
+    let sheetItem = document.createElement("li");
+    sheetItem.dataset.id = sheet;
+    sheetItem.style.display = "flex";
+    sheetItem.style.alignItems = "center";
+    sheetItem.style.gap = "10px";
+    sheetItem.style.padding = "8px";
+    sheetItem.style.borderBottom = "1px solid #ddd";
+
+    sheetItem.innerHTML = `
+      <img 
+        src="https://cdn.gmass.us/img2017/google-sheets.png" 
+        alt="Google Sheets Icon" 
+        width="50" 
+        height="50"
+        style="border-radius: 4px;"
+      >
+      <span style="font-size: 16px; font-weight: 500; color: #333;">
+        ${sheet}
+      </span>
+    `;
+    parentNode.appendChild(sheetItem);
+
+    return sheetItem;
+  });
+}
+async function fetchAndDisplaySheetNames() {
+  let sheetNameResponseData;
+  try {
+    console.log(
+      "https://acaderealty.com/get-sheet-names?sender=" +
+        encodeURIComponent(sessionStorage.getItem("sender")) +
+        "&spreadsheetId=" +
+        sessionStorage.getItem("spreadsheetId")
+    );
+    const sheetNameResponse = await fetch(
+      "https://acaderealty.com/get-sheet-names?sender=" +
+        encodeURIComponent(sessionStorage.getItem("sender")) +
+        "&spreadsheetId=" +
+        sessionStorage.getItem("spreadsheetId")
+    );
+    if (!sheetNameResponse.ok) {
+      throw new Error(
+        "Sheet Name Network response was not ok " + sheetNameResponse.statusText
+      );
+    }
+
+    sheetNameResponseData = await sheetNameResponse.json();
+  } catch (error) {
+    sheetNameResponseData = { sheetNames: ["Sheet1"] };
+    console.error("Error fetching sheet names:", error);
+  }
+  const sheet_dropdown_list = document.querySelector("#sheet-dropdown-list");
+  sheet_dropdown_list.innerHTML = "";
+  createSheetNames(sheetNameResponseData["sheetNames"], sheet_dropdown_list);
+}
+
 async function sheetListJs() {
   try {
     const response = await fetch(
@@ -27,36 +117,12 @@ async function sheetListJs() {
     if (!response.ok) {
       throw new Error("Network response was not ok " + response.statusText);
     }
+
     const data = await response.json();
+
     const sheetList = document.querySelector("#dropdown-list");
     sheetList.innerHTML = "";
-
-    data["result"].forEach((sheet) => {
-      const sheetItem = document.createElement("li");
-      sheetItem.dataset.id = sheet.id;
-      sheetItem.style.display = "flex";
-      sheetItem.style.alignItems = "center";
-      sheetItem.style.gap = "10px";
-      sheetItem.style.padding = "8px";
-      sheetItem.style.borderBottom = "1px solid #ddd";
-
-      sheetItem.innerHTML = `
-        <img 
-          src="https://cdn.gmass.us/img2017/google-sheets.png" 
-          alt="Google Sheets Icon" 
-          width="50" 
-          height="50"
-          style="border-radius: 4px;"
-        >
-        <span style="font-size: 16px; font-weight: 500; color: #333;">
-          ${sheet.name}
-        </span>
-        <span style="font-size: 14px; color: #666; white-space: nowrap; margin-left: auto;">
-          Created: ${new Date(sheet.createdTime).toLocaleString()}
-        </span>
-      `;
-      sheetList.appendChild(sheetItem);
-    });
+    createSheetItems(data["result"], sheetList);
     try {
       LoadsheetJS();
     } catch (error) {
@@ -71,6 +137,47 @@ function LoadsheetJS() {
   const placeholder = document.getElementById("dropdown-placeholder");
   const searchInput = document.getElementById("dropdown-search");
   const dropdownList = document.getElementById("dropdown-list");
+  const sheet_dropdown = document.getElementById("sheet-dropdown");
+  const sheet_placeholder = document.getElementById(
+    "sheet-dropdown-placeholder"
+  );
+  const sheet_searchInput = document.getElementById("sheet-dropdown-search");
+  const sheet_dropdownList = document.getElementById("sheet-dropdown-list");
+
+  sheet_dropdown.addEventListener("click", (event) => {
+    event.stopPropagation();
+    sheet_placeholder.style.display = "none";
+    sheet_searchInput.style.display = "flex";
+    sheet_searchInput.focus();
+    SpreadsheetSave.style.display = "none";
+    sheet_dropdownList.classList.remove("hidden");
+  });
+
+  sheet_searchInput.addEventListener("input", (e) => {
+    const searchValue = e.target.value.toLowerCase();
+    const listItems = sheet_dropdownList.querySelectorAll("li");
+    listItems.forEach((item) => {
+      item.style.display = item.textContent.toLowerCase().includes(searchValue)
+        ? "flex"
+        : "none";
+    });
+  });
+
+  sheet_dropdownList.addEventListener("click", (e) => {
+    const target = e.target.closest("LI, SPAN");
+    if (target) {
+      const selectedItem =
+        target.tagName === "SPAN" ? target.parentElement : target;
+      console.log("Selected tab:", selectedItem.textContent);
+      sheet_placeholder.textContent = selectedItem.textContent;
+      sessionStorage.setItem("range", selectedItem.dataset.id);
+      sheet_searchInput.value = "";
+      sheet_searchInput.style.display = "none";
+      sheet_placeholder.style.display = "block";
+      sheet_dropdownList.classList.add("hidden");
+      SpreadsheetSave.style.display = "flex";
+    }
+  });
   const SpreadsheetSave = document.getElementById("SpreadsheetSave");
   const sheetListContainer = document.querySelector(".sheet-list-container");
   const mainContainer = document.querySelector(".main");
@@ -99,32 +206,38 @@ function LoadsheetJS() {
       searchInput.value = "";
       searchInput.style.display = "none";
       placeholder.style.display = "block";
+      SpreadsheetSave.style.display = "flex";
+    }
+    if (!sheet_dropdown.contains(e.target)) {
+      sheet_searchInput.value = "";
+      sheet_searchInput.style.display = "none";
+      sheet_placeholder.style.display = "block";
+      sheet_dropdownList.classList.add("hidden");
+      SpreadsheetSave.style.display = "flex";
     }
   });
 
   dropdownList.addEventListener("click", (e) => {
-    if (e.target.tagName === "LI") {
-      console.log("Selected sheet:", e.target.textContent);
-      placeholder.textContent = e.target.textContent;
+    const target = e.target.closest("LI, SPAN");
+    if (target) {
+      const selectedItem =
+        target.tagName === "SPAN" ? target.parentElement : target;
+      console.log("Selected sheet:", selectedItem.textContent);
+      placeholder.textContent = selectedItem.textContent;
       sessionStorage.setItem(
         "spreadsheetId",
-        e.target.dataset.id.replace(/[()]/g, "")
+        selectedItem.dataset.id.replace(/[()]/g, "")
       );
       searchInput.value = "";
       searchInput.style.display = "none";
       placeholder.style.display = "block";
       dropdownList.classList.add("hidden");
-    } else if (e.target.tagName === "SPAN") {
-      console.log("Selected sheet:", e.target.parentElement.textContent);
-      placeholder.textContent = e.target.parentElement.textContent;
-      sessionStorage.setItem(
-        "spreadsheetId",
-        e.target.parentElement.dataset.id.replace(/[()]/g, "")
-      );
-      searchInput.value = "";
-      searchInput.style.display = "none";
-      placeholder.style.display = "block";
-      dropdownList.classList.add("hidden");
+      try {
+        fetchAndDisplaySheetNames();
+      } catch (error) {
+        console.error("Error fetching sheet names:", error);
+      }
+      sheet_dropdown.classList.remove("hidden");
     }
   });
 
@@ -161,9 +274,12 @@ function LoadsheetJS() {
   mainContainer.addEventListener("click", (event) => {
     event.stopPropagation();
     placeholder.style.display = "block";
+    sheet_placeholder.style.display = "block";
     searchInput.style.display = "none";
+    sheet_searchInput.style.display = "none";
     SpreadsheetSave.style.display = "block";
     dropdownList.classList.add("hidden");
+    sheet_dropdownList.classList.add("hidden");
   });
 }
 
@@ -210,7 +326,7 @@ async function createSignUp() {
     } catch (error) {
       console.error("Error sending message to background script:", error);
     }
-    
+
     setTimeout(() => {
       document.querySelector("#signGmass").style.display = "none";
     }, 10000);

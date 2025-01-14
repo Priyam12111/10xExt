@@ -5,7 +5,8 @@ function fetchDataFromSheet() {
   const sheetList = document.querySelector(".sheet-list-container");
   const spreadsheetId = sessionStorage.getItem("spreadsheetId");
   const sender = sessionStorage.getItem("sender");
-  const range = "Sheet1!A:Z";
+  const sheetName = sessionStorage.getItem("range") || "Sheet1";
+  const range = `${sheetName}!A:Z`;
   const endpoint = `https://acaderealty.com/sheet-data?sender=${sender}&spreadsheetId=${spreadsheetId}&range=${range}`;
   if (!spreadsheetId) {
     sheetList.classList.remove("hidden");
@@ -31,12 +32,17 @@ function fetchDataFromSheet() {
           "emails",
           JSON.stringify(storedData["Email"] || [])
         );
-        if (storedData["Email"] && storedData["Email"].length > 0) {
-          setEmailDetails(storedData["Email"], Subject, emailBody);
+        try {
+          if (storedData["Email"] && storedData["Email"].length > 0) {
+            setEmailDetails(storedData["Email"], Subject, emailBody);
+          }
+        } catch (error) {
+          console.log("Error setting email details:", error);
         }
       }
     })
     .catch((error) => {
+      createMsgBox("Error fetching data. Please try again.");
       console.log("Error fetching data:", error);
     });
 }
