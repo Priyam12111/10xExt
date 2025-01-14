@@ -55,7 +55,7 @@ function authenticateWithGoogle(sender) {
 }
 
 function sendAuthCodeToBackend(authCode, sender) {
-  fetch("http://localhost:5000/auth", {
+  fetch("https://acaderealty.com/auth", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

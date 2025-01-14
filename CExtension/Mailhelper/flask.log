@@ -85,3 +85,23 @@
 2025-01-14 13:16:41,935 - mail_send - INFO - auth_code: 
 2025-01-14 13:16:41,959 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
 2025-01-14 13:16:43,149 - werkzeug - INFO - 127.0.0.1 - - [14/Jan/2025 13:16:43] "GET /list-sheets?sender=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-14 13:21:29,818 - werkzeug - INFO - 127.0.0.1 - - [14/Jan/2025 13:21:29] "OPTIONS /isUserSigned?user=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-14 13:21:30,009 - werkzeug - INFO - 127.0.0.1 - - [14/Jan/2025 13:21:30] "GET /isUserSigned?user=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-14 13:21:40,742 - werkzeug - INFO - 127.0.0.1 - - [14/Jan/2025 13:21:40] "OPTIONS /auth HTTP/1.1" 200 -
+2025-01-14 13:21:40,998 - mail_send - INFO - auth_code: 4/0AanRRrtR1o4YFPtyrIIkamXuc85tVM0h6bJ6x7-fEtyN4H3uQ--4S8R8H7pdSNyr0_-UGg
+2025-01-14 13:21:41,305 - werkzeug - INFO - 127.0.0.1 - - [14/Jan/2025 13:21:41] "[35m[1mPOST /auth HTTP/1.1[0m" 500 -
+2025-01-14 13:21:43,345 - werkzeug - INFO - 127.0.0.1 - - [14/Jan/2025 13:21:43] "OPTIONS /isUserSigned?user=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-14 13:21:43,586 - werkzeug - INFO - 127.0.0.1 - - [14/Jan/2025 13:21:43] "GET /isUserSigned?user=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-14 13:21:43,663 - werkzeug - INFO - 127.0.0.1 - - [14/Jan/2025 13:21:43] "OPTIONS /list-sheets?sender=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-14 13:21:43,909 - mail_send - INFO - auth_code: 
+2025-01-14 13:21:43,916 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-01-14 13:21:45,373 - werkzeug - INFO - 127.0.0.1 - - [14/Jan/2025 13:21:45] "GET /list-sheets?sender=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-14 13:22:14,524 - werkzeug - INFO - 127.0.0.1 - - [14/Jan/2025 13:22:14] "OPTIONS /auth HTTP/1.1" 200 -
+2025-01-14 13:22:14,791 - mail_send - INFO - auth_code: 4/0AanRRrsibI0tzlz8CUVie9r9bgjIWGSzLUNnSdu6hXhi72lQaFMWpzuSVUjdDOSrFUmQQg
+2025-01-14 13:22:15,090 - werkzeug - INFO - 127.0.0.1 - - [14/Jan/2025 13:22:15] "[35m[1mPOST /auth HTTP/1.1[0m" 500 -
+2025-01-14 13:24:50,620 - werkzeug - INFO - 127.0.0.1 - - [14/Jan/2025 13:24:50] "OPTIONS /auth HTTP/1.1" 200 -
+2025-01-14 13:24:50,883 - mail_send - INFO - auth_code: 4/0AanRRrv_wlqS4pjiInHlHWmQvwr03LqITx8wCwwe_UkaYh-0bsFtmo1tMRHiUKdXcw7PZQ
+2025-01-14 13:24:51,277 - werkzeug - INFO - 127.0.0.1 - - [14/Jan/2025 13:24:51] "[35m[1mPOST /auth HTTP/1.1[0m" 500 -
+2025-01-14 13:26:59,320 - werkzeug - INFO - 127.0.0.1 - - [14/Jan/2025 13:26:59] "OPTIONS /auth HTTP/1.1" 200 -
+2025-01-14 13:26:59,506 - mail_send - INFO - auth_code: 4/0AanRRru1FTlejWJYWUlisCWGesLJIP5wxi5TKVwFMubeJQkhA_Nb-g8I8hLrceL9IsAoPA
+2025-01-14 13:27:00,190 - werkzeug - INFO - 127.0.0.1 - - [14/Jan/2025 13:27:00] "[35m[1mPOST /auth HTTP/1.1[0m" 500 -
