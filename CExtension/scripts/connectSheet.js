@@ -202,13 +202,18 @@ async function createSignUp() {
   document.body.appendChild(modalContainer);
 
   document.querySelector(".signGoogLink").addEventListener("click", () => {
-    chrome.runtime.sendMessage({
-      action: "authenticate",
-      sender: sessionStorage.getItem("sender"),
-    });
+    try {
+      chrome.runtime.sendMessage({
+        action: "authenticate",
+        sender: sessionStorage.getItem("sender"),
+      });
+    } catch (error) {
+      console.error("Error sending message to background script:", error);
+    }
+    
     setTimeout(() => {
       document.querySelector("#signGmass").style.display = "none";
-    }, 2000);
+    }, 10000);
   });
 
   document.querySelector("#signGmass").addEventListener("click", () => {
@@ -232,8 +237,11 @@ async function CheckSignedIn() {
 
     if (!isSignedIn && sender.toLowerCase().includes("acadecraft")) {
       document.querySelector("#signGmass").style.display = "flex";
-    } else {
-      console.log("Your email is not authorized to use this feature.");
+      console.log("Please sign-in with your authorized email.");
+    } else if (!sender.toLowerCase().includes("acadecraft")) {
+      console.log(
+        "Your email is not authorized to use this feature. Please contact the administrator."
+      );
     }
     return isSignedIn;
   } catch (error) {
@@ -244,7 +252,6 @@ async function CheckSignedIn() {
 
 const sheetObserver = new MutationObserver(() => {
   const gmailSearch = document.querySelector("#aso_search_form_anchor");
-
   if (gmailSearch && !document.querySelector("#sheet-button")) {
     createSignUp();
     CheckSignedIn();
