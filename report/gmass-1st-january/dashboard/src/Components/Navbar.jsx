@@ -1,6 +1,7 @@
 import React from 'react'
-
+import { useParams } from "react-router-dom";
 const Navbar = () => {
+    const { name } = useParams();
     return (
         <nav className="navbar navbar-expand-lg gmasNav">
             <div className="container-fluid">
@@ -30,7 +31,7 @@ const Navbar = () => {
                 >
                     <div className="navRightSec" role="search">
                         <a href="" className="mailContent">
-                            shubham@talk2lead.com
+                            {name.replace(":", "").toLowerCase() || "Johndoe@gmail.com"}
                         </a>
                         <div className="divider">&nbsp;</div>
                         <a href="">

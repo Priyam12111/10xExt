@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import axios from "axios";
+import { useParams } from "react-router-dom";
+
 const Section = () => {
     const [data, setData] = useState([]); // State to hold the data
+    const { name } = useParams();
     useEffect(() => {
         const fetchData = async () => {
             try {
