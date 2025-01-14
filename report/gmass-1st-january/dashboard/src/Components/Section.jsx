@@ -5,10 +5,13 @@ import { useParams } from "react-router-dom";
 const Section = () => {
     const [data, setData] = useState([]); // State to hold the data
     const { name } = useParams();
+    const [nameParam, setNameParam] = useState(name.replace(":", "") || "");
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("https://acaderealty.com/fetch-data");
+                console.log("https://acaderealty.com/fetch-data?user=" + nameParam)
+                const response = await axios.get("https://acaderealty.com/fetch-data?user=" + nameParam);
                 setData(response.data);
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -17,6 +20,12 @@ const Section = () => {
 
         fetchData();
     }, []);
+    useEffect(() => {
+        if (name) {
+            setNameParam(name.replace(":", "")); // Remove the colon if needed
+        }
+    }, [name]);
+
     return (
         <section className="bgWhiteSec">
             <div className="container-fluid">
