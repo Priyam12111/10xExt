@@ -5,7 +5,7 @@ const Section = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/fetch-data");
+                const response = await axios.get("https://acaderealty.com/fetch-data");
                 setData(response.data);
             } catch (error) {
                 console.error("Error fetching data:", error);
