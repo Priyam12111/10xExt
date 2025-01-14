@@ -202,7 +202,10 @@ async function createSignUp() {
   document.body.appendChild(modalContainer);
 
   document.querySelector(".signGoogLink").addEventListener("click", () => {
-    sheetListJs();
+    chrome.runtime.sendMessage({
+      action: "authenticate",
+      sender: sessionStorage.getItem("sender"),
+    });
     setTimeout(() => {
       document.querySelector("#signGmass").style.display = "none";
     }, 2000);

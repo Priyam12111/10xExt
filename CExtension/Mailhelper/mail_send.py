@@ -1,3 +1,9 @@
+from flask import Flask, request, send_file
+from flask_cors import CORS
+import io
+from pymongo import MongoClient
+from datetime import datetime
+from flask import jsonify, redirect
 from flask import Flask, request, jsonify, redirect
 from flask_cors import CORS
 from datetime import datetime, timedelta
@@ -12,14 +18,16 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
-import base64, os, re
+import base64, os, re, json
 from time import sleep
 from dotenv import load_dotenv
 from apscheduler.triggers.date import DateTrigger
 from bs4 import BeautifulSoup
 from threading import Thread
+import logging
+from logging import Formatter, FileHandler
 
-load_dotenv(dotenv_path="Mailhelper\.env")
+load_dotenv(dotenv_path=".env")
 
 app = Flask(__name__)
 CORS(app)
@@ -33,20 +41,92 @@ EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD_SMTP", "")
 MONGO_URI = os.environ.get("MONGO_URI")
 DATABASE_NAME = "Camp"
 COLLECTION_NAME = "Maildata"
+REPORT = "Report"
 client = MongoClient(MONGO_URI)
 db = client[DATABASE_NAME]
 collection = db[COLLECTION_NAME]
+report = db[REPORT]
+
+
+auth_code = ""
+app = Flask(__name__)
+CORS(app)
+
+
+# Set up logging
+try:
+    handlers = [
+        logging.FileHandler("/home/ubuntu/Gmass/flask.log"),  # Log to file
+        logging.StreamHandler(),  # Optionally log to console
+    ]
+except Exception as e:
+    handlers = [
+        logging.FileHandler("flask.log"),  # Log to file
+        logging.StreamHandler(),  # Optionally log to console
+    ]
+
+logging.basicConfig(
+    level=logging.INFO,  # Set the logging level
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=handlers,
+)
+
+
+@app.route("/serve", methods=["GET"])
+def home():
+    app.logger.info("Home route accessed")
+    return "Happy to serve"
+
+
+@app.route("/track")
+def track_url():
+    # Extract parameters from the query string
+    name = request.args.get("user", "unknown")
+    idx = int(request.args.get("id", "0"))
+    url = request.args.get("url", "unknown")
+    document = report.find_one({"uploadId": idx})
+
+    datetime_object = datetime.now()
+    date_key = datetime_object.strftime("%Y-%m-%d")
+
+    if document:
+        if "Clicks" in document and f"{name},{url}" not in document["Clicks"]:
+            document["Clicks"].append(f"{name},{url}")
+        if "Clicks" not in document:
+            document["Clicks"] = [f"{name},{url}"]
+        if (
+            date_key + " Clicks" in document
+            and f"{name},{url}" not in document[date_key + " Clicks"]
+        ):
+            document[date_key + " Clicks"].append(f"{name},{url}")
+        if (date_key + " Clicks") not in document:
+            document[date_key + " Clicks"] = [f"{name},{url}"]
+        report.update_one({"uploadId": idx}, {"$set": document})
+
+    else:
+        report.update_one(
+            {"uploadId": idx},
+            {
+                "$set": {
+                    date_key + " Clicks": [f"{name},{url}"],
+                    "Clicks": [f"{name},{url}"],
+                }
+            },
+            upsert=True,
+        )
+    original_url = url
+    return redirect(original_url.strip('"'))
 
 
 def monitor_changes():
-    print("Starting MongoDB change stream...")
+    app.logger.info("Starting MongoDB change stream...")
     try:
         change_stream = db["Report"].watch()
     except Exception:
         change_stream = None
     if change_stream:
         for change in change_stream:
-            print(change)
+            app.logger.info(change)
             updated_fields = change.get("updateDescription", {}).get(
                 "updatedFields", {}
             )
@@ -55,21 +135,26 @@ def monitor_changes():
             for key, value in updated_fields.items():
                 if key.startswith("Clicks"):
                     Field = "Clicks"
-                    print(key, value[-1])
-                    email_info = value[-1]
+                    app.logger.info(f"{key}: {value[-1]}")
+                    try:
+                        email_info = value[-1]
+                    except Exception:
+                        email_info = value
                     newArray[1] = True
                     break
                 elif key.startswith("Opens"):
                     Field = "Opens"
-                    print(key, value[-1])
-
-                    email_info = value[-1]
+                    app.logger.info(f"{key}: {value[-1]}")
+                    try:
+                        email_info = value[-1]
+                    except Exception:
+                        email_info = value
                     newArray[0] = True
                     break
             if updated_fields == {}:
                 email_info = change.get("fullDocument", {}).get("Opens", [])
                 Field = "Opens"
-                print(email_info)
+                app.logger.info(email_info)
             if email_info:
                 emails = re.split(r"[,\s]+", str(email_info))
                 email = (
@@ -80,15 +165,21 @@ def monitor_changes():
             else:
                 email = None
             if email:
-                print(f"Updating Google Sheets for email: {email}")
+                app.logger.info(f"Updating Google Sheets for email: {email}-{Field}")
+                uploadId = report.find_one(
+                    change.get("documentKey", {}).get("_id"), {"_id": 0, "uploadId": 1}
+                ).get("uploadId")
+                doc = collection.find_one({"uploadId": uploadId})
+                sender = doc.get("sender")
+                spreadsheet_id = doc.get("spreadsheetId")
                 update_google_sheet(
-                    "hiten.kapooracadecraft",
-                    "1z8bkxwjds_2tIweZZ1K8WucCqNhzrNvzkEen_5bP610",
+                    sender,
+                    spreadsheet_id,
                     email,
                     Field,
                 )
             else:
-                print("No email found in the updated fields. ")
+                app.logger.info("No email found in the updated fields. ")
 
 
 def start_background_thread():
@@ -97,8 +188,16 @@ def start_background_thread():
     thread.start()
 
 
+start_background_thread()  # Start the monitor in a background thread
+
+
 def update_google_sheet(sender, spreadsheet_id, email, field):
-    service = build("sheets", "v4", credentials=authenticate_gmail(sender))
+    app.logger.info(sender, spreadsheet_id, email, field)
+    service = build(
+        "sheets",
+        "v4",
+        credentials=authenticate_gmail(sender.replace("@", "").replace(".com", "")),
+    )
     sheet = service.spreadsheets()
 
     result = (
@@ -132,7 +231,7 @@ def update_google_sheet(sender, spreadsheet_id, email, field):
             ).execute()
             return
 
-    print("Email not found in the sheet.")
+    app.logger.info("Email not found in the sheet.")
 
 
 @app.route("/create-headers", methods=["GET"])
@@ -173,41 +272,10 @@ def create_headers():
             valueInputOption="RAW",
             body=body,
         ).execute()
-        print(f"Headers added: {missing_headers}")
+        app.logger.info(f"Headers added: {missing_headers}")
     else:
-        print("No new headers to add. All headers are already present.")
+        app.logger.info("No new headers to add. All headers are already present.")
     return jsonify({"status": "success"}), 200
-
-
-def authenticate_gmail(token_file, credentials_file="credentials.json"):
-    creds = None
-    SCOPES = [
-        "https://www.googleapis.com/auth/drive.metadata.readonly",
-        "https://www.googleapis.com/auth/gmail.send",
-        "https://www.googleapis.com/auth/spreadsheets",
-    ]
-    token_file = token_file.replace("@", "").replace(".com", "").replace(".json", "")
-    token_file = f"{token_file}.json"
-
-    print("token_file", token_file)
-    if os.path.exists(token_file):
-        creds = Credentials.from_authorized_user_file(token_file)
-        if not creds or not creds.has_scopes(SCOPES):
-            print(
-                "Existing token does not have the required scopes. Re-authenticating..."
-            )
-            creds = None
-
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(credentials_file, SCOPES)
-            creds = flow.run_local_server(port=0)
-        with open(token_file, "w") as token:
-            token.write(creds.to_json())
-
-    return creds
 
 
 def make_url_tracking(body, idx, to_email):
@@ -219,7 +287,7 @@ def make_url_tracking(body, idx, to_email):
             continue
 
         tracking_url = (
-            f"http://15.207.71.80/track?url={original_url}&id={idx}&user={to_email}"
+            f"https://acaderealty.com/track?url={original_url}&id={idx}&user={to_email}"
         )
         a_tag["href"] = tracking_url
     return str(soup)
@@ -233,15 +301,71 @@ def makeing_unsun_working(body, idx, to_email):
     return body
 
 
+def authenticate_gmail(token, CREDENTIALS_FILE="credentials.json", auth_code=""):
+    creds = None
+    SCOPES = [
+        "https://www.googleapis.com/auth/drive.metadata.readonly",
+        "https://www.googleapis.com/auth/gmail.send",
+        "https://www.googleapis.com/auth/spreadsheets",
+    ]
+    TOKEN_FILE = token.replace("@", "").replace(".com", "") + ".json"
+    app.logger.info(f"auth_code: {auth_code}")
+
+    if auth_code != "":
+        flow = InstalledAppFlow.from_client_secrets_file(
+            CREDENTIALS_FILE,
+            scopes=SCOPES,
+            redirect_uri="https://klbflhgmkohpdgobojmenojiapdogbgi.chromiumapp.org/",
+        )
+        flow.fetch_token(code=auth_code)
+        creds = flow.credentials
+        # save the auth code also
+        with open(TOKEN_FILE, "w") as token:
+            token.write(creds.to_json())
+            creds_json = json.load(token)
+            creds_json["auth_code"] = auth_code
+            token.seek(0)
+            json.dump(creds_json, token, indent=4)
+            token.truncate()
+    else:
+        with open(TOKEN_FILE, "r") as token:
+            creds = Credentials.from_authorized_user_info(
+                info=json.load(token), scopes=SCOPES
+            )
+    return creds
+
+
+@app.route("/auth", methods=["POST"])
+def handle_auth():
+    """Endpoint to handle Google authentication."""
+    try:
+        global auth_code
+        data = request.get_json()
+        auth_code = data.get("code")
+        token = data.get("sender")
+        if not auth_code:
+            return jsonify({"error": "Authorization code is required"}), 400
+        creds = authenticate_gmail(token, auth_code=auth_code)
+        return (
+            jsonify(
+                {"message": "Authenticated successfully", "token": creds.to_json()}
+            ),
+            200,
+        )
+
+    except Exception as e:
+        # Handle errors
+        return jsonify({"error": str(e)}), 500
+
+
 def addsTracking(url, to_email, idx, body_template, variables, track):
     if track:
         tracking_pixel_url = f"{url}/track.png?name={to_email}&idx={idx}"
         variables["tracking_pixel_url"] = tracking_pixel_url
-        print(tracking_pixel_url)
+        app.logger.info(tracking_pixel_url)
         body_template_plain = (
             body_template
             + """
-            <p>This email is tracked by MailSend API.</p>
             <img src="{tracking_pixel_url}" alt="." width="1">
             """
         )
@@ -264,7 +388,7 @@ def send_mails_helper_gcp(
     followup=False,
     thread_data=None,
 ):
-    url = "http://15.207.71.80"
+    url = "https://acaderealty.com"
     creds = authenticate_gmail(token_file.replace("@", "").replace(".com", ""))
     service = build("gmail", "v1", credentials=creds)
     email_count = 0
@@ -272,7 +396,7 @@ def send_mails_helper_gcp(
     thread_idx_2 = None
     for email_data in emails:
         if max_emails != 0 and email_count >= max_emails:
-            print("Max emails limit reached.")
+            app.logger.info("Max emails limit reached.")
             break
         try:
 
@@ -300,7 +424,7 @@ def send_mails_helper_gcp(
             message = {"raw": raw}
 
             if followup and thread_data:
-                print("Sending followup mail")
+                app.logger.info("Sending followup mail")
                 thread_id = next(
                     (
                         data.split(", ")[1]
@@ -325,13 +449,13 @@ def send_mails_helper_gcp(
                     service.users().messages().send(userId="me", body=message).execute()
                 )
             thread_idx_2 = response["threadId"]
-            print("Mail Sent. Thread ID:", thread_idx_2)
+            app.logger.info("Mail Sent. Thread ID:", thread_idx_2)
             results.append({"email": to_email, "status": "sent"})
         except HttpError as e:
-            print("HttpError:", e.response.status_code, e)
+            app.logger.info("HttpError:", e.response.status_code, e)
             results.append({"email": to_email, "status": "failed", "error": str(e)})
         except Exception as e:
-            print("Exception:", e)
+            app.logger.info("Exception:", e)
             results.append({"email": to_email, "status": "failed", "error": str(e)})
         if thread_idx_2:
             mail_data.append(f"{to_email}, {thread_idx_2}")
@@ -339,7 +463,7 @@ def send_mails_helper_gcp(
         delay_durations = {1: 7, 2: 20, 3: 120, 4: 300}
         if delay > 0:
             sleep(delay_durations.get(delay, 0))
-        print("Uploading thread ID to the database", thread_idx_2)
+        app.logger.info("Uploading thread ID to the database", thread_idx_2)
     if thread_idx_2:
         collection.update_one(
             {"uploadId": idx},
@@ -361,7 +485,7 @@ def schedule():
 
     for doc in documents:
         if doc["schedule"] != "Executed" and doc["schedule"] != "":
-            print(
+            app.logger.info(
                 doc["schedule"].time() <= datetime.now().time(),
                 doc["schedule"],
                 datetime.now().time(),
@@ -429,20 +553,25 @@ def followUpSchedule():
 
 
 def processFollowUp(doc, i, stage, result):
-    print(f"Processing {stage} for document ID {doc['_id']} on {datetime.now().date()}")
+    app.logger.info(
+        f"Processing {stage} for document ID {doc['_id']} on {datetime.now().date()}"
+    )
 
     emails = doc["emails"]
     if i < len(doc["stageData"]):
         subject = " Followup For " + doc["subject"]
     else:
         subject = f"Followup For {doc['subject']}"
-    body = doc["stageData"][i] + "Follow up body Mail to " + doc["body"]
+    try:
+        body = doc["stageData"][i] + "Follow up body Mail to " + doc["body"]
+    except Exception:
+        body = "Follow up body Mail to " + doc["body"]
     tracking = doc["tracking"]
     try:
         thread_data_idx = doc["thread_data"]
     except Exception:
         thread_data_idx = None
-    print("Thread data:", thread_data_idx)
+    app.logger.info("Thread data:", thread_data_idx)
     send_mails_helper_gcp(
         doc["uploadId"],
         emails,
@@ -453,6 +582,7 @@ def processFollowUp(doc, i, stage, result):
         result,
         thread_data=thread_data_idx,
         followup=True,
+        delay=doc["DelayCheckbox"],
     )
     if doc["status"][0] == "R":
         newStatus = "1 follow up"
@@ -487,9 +617,9 @@ def timeSchedule(year=None, month=None, day=None, hours=None, minutes=None):
             id=f"Job_fixing_{year}_{month}_{day}_{hours}_{minutes}",
             replace_existing=True,
         )
-        print(f"Job scheduled for {year}-{month}-{day} at {hours}:{minutes}.")
+        app.logger.info(f"Job scheduled for {year}-{month}-{day} at {hours}:{minutes}.")
     except Exception as e:
-        print(f"An error occurred while scheduling: {e}")
+        app.logger.info(f"An error occurred while scheduling: {e}")
 
 
 def followbackSchedule(year=None, month=None, day=None, hours=None, minutes=None):
@@ -513,9 +643,11 @@ def followbackSchedule(year=None, month=None, day=None, hours=None, minutes=None
             id=f"Job_fixing_{year}_{month}_{day}_{hours}_{minutes}",
             replace_existing=True,
         )
-        print(f"Followup scheduled for {year}-{month}-{day} at {hours}:{minutes}.")
+        app.logger.info(
+            f"Followup scheduled for {year}-{month}-{day} at {hours}:{minutes}."
+        )
     except Exception as e:
-        print(f"An error occurred while scheduling: {e}")
+        app.logger.info(f"An error occurred while scheduling: {e}")
 
 
 @app.route("/schedule", methods=["GET"])
@@ -523,7 +655,7 @@ def schedule_job():
     try:
         schedule()
     except Exception as e:
-        print("Schedule Error:", e)
+        app.logger.info("Schedule Error:", e)
         return jsonify({"status": "Checking Failed"}), 500
     return "success", 200
 
@@ -533,7 +665,7 @@ def follow_job():
     try:
         followUpSchedule()
     except Exception as e:
-        print(e)
+        app.logger.error(e)
         return jsonify({"status": "Checking Failed"}), 500
     return "success", 200
 
@@ -552,8 +684,9 @@ def list_google_sheets():
     try:
         cred = authenticate_gmail(sender.replace("@", "").replace(".com", ""))
     except Exception as e:
-        print(e)
+        app.logger.error(e)
         return jsonify({"error": "Authentication failed"}), 403
+
     service = build("drive", "v3", credentials=cred)
     results = (
         service.files()
@@ -565,7 +698,7 @@ def list_google_sheets():
     )
     sheets = results.get("files", [])
     if not sheets:
-        print("No Google Sheets files found.")
+        app.logger.info("No Google Sheets files found.")
     else:
         result = []
         for sheet in sheets:
@@ -588,7 +721,7 @@ def get_sheet_data():
     try:
         cred = authenticate_gmail(sender.replace("@", "").replace(".com", ""))
     except Exception as e:
-        print(f"Authentication error: {e}")
+        app.logger.info(f"Authentication error: {e}")
         return jsonify({"error": "Authentication failed"}), 403
 
     try:
@@ -599,16 +732,16 @@ def get_sheet_data():
         )
         rows = result.get("values", [])
     except Exception as e:
-        print(f"An error occurred while fetching data: {e}")
+        app.logger.info(f"An error occurred while fetching data: {e}")
         return jsonify({"error": "Failed to fetch sheet data"}), 500
 
     if not rows or not isinstance(rows, list) or len(rows) < 1:
-        print("No data found or invalid sheet structure.")
+        app.logger.info("No data found or invalid sheet structure.")
         return jsonify({"error": "No data found"}), 400
 
     headers = rows[0]
     if not any("email" in header.lower() for header in headers):
-        print("No 'Email' column found in the sheet.")
+        app.logger.info("No 'Email' column found in the sheet.")
         return jsonify({"error": "No 'Email' column in the sheet"}), 400
 
     return jsonify({"values": rows}), 200
@@ -690,11 +823,11 @@ def upload_to_mongodb():
         ):
             data["schedule"] = datetime.strptime(data["schedule"], "%d/%m/%Y, %I:%M %p")
             timeSchedule(hours=data["schedule"].hour, minutes=data["schedule"].minute)
-            print("Timing has been set to ", data["schedule"])
+            app.logger.info("Timing has been set to ", data["schedule"])
 
         for stage in ["stage1", "stage2", "stage3"]:
             if stage in data and (type(data[stage]) != bool):
-                print(f"\nSetting up schedule for {stage}")
+                app.logger.info(f"\nSetting up schedule for {stage}")
                 if data[stage] == 0:
                     hour, minute = map(int, data["followuptime"].split(":"))
                     now = datetime.now()
@@ -713,12 +846,12 @@ def upload_to_mongodb():
                     data[stage].hour,
                     data[stage].minute,
                 )
-                print(f"Followup has been set to {data[stage]}")
+                app.logger.info(f"Followup has been set to {data[stage]}")
 
         result = collection.insert_one(data)
         return jsonify({"status": "success", "inserted_id": str(result.inserted_id)})
     except Exception as e:
-        print("Upload Error: ", e)
+        app.logger.info("Upload Error: ", e)
         return jsonify({"status": "failed", "error": str(e)}), 500
 
 
@@ -743,16 +876,11 @@ def get_latest_id():
 def isUserSigned():
     user = request.args.get("user")
     if user:
-        if user:
-            token_file = f"{user.replace('@', '').replace('.com', '')}.json"
-            return (
-                jsonify(
-                    {"status": "success", "isSignedIn": os.path.exists(token_file)}
-                ),
-                200,
-            )
-        else:
-            return "Invalid parameters", 400
+        token_file = f"{user.replace('@', '').replace('.com', '')}.json"
+        return (
+            jsonify({"status": "success", "isSignedIn": os.path.exists(token_file)}),
+            200,
+        )
     else:
         return "Invalid parameters", 400
 
@@ -790,5 +918,4 @@ def unsubscribe():
 
 
 if __name__ == "__main__":
-    sender = "sanjana.agrawal@acadecraft.com"
-    authenticate_gmail(sender.replace("@", "").replace(".com", ""))
+    app.run(host="0.0.0.0", port=5000, debug=True)
