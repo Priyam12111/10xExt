@@ -305,7 +305,7 @@ def authenticate_gmail(token, CREDENTIALS_FILE="credentials.json", auth_code="")
     creds = None
     SCOPES = [
         "https://www.googleapis.com/auth/drive.metadata.readonly",
-        "https://www.googleapis.com/auth/gmail.send",
+        "https://www.googleapis.com/auth/gmail.modify",
         "https://www.googleapis.com/auth/spreadsheets",
     ]
     TOKEN_FILE = token.replace("@", "").replace(".com", "") + ".json"
@@ -917,5 +917,45 @@ def unsubscribe():
         return jsonify({"message": "Email is already unsubscribed."}), 200
 
 
+@app.route("/drafts", methods=["GET"])
+def get_drafts():
+    sender = request.args.get("sender")
+    if not sender:
+        return jsonify({"error": "Missing 'sender' parameter."}), 400
+
+    try:
+        service = build(
+            "gmail",
+            "v1",
+            credentials=authenticate_gmail(sender.replace("@", "").replace(".com", "")),
+        )
+        query = "to:developer@cmail.com"  # Filter drafts for a specific recipient
+        results = (
+            service.users().drafts().list(userId="me", maxResults=10, q=query).execute()
+        )
+        drafts = results.get("drafts", [])
+
+        if not drafts:
+            return (
+                jsonify({"message": "No drafts found for the specified recipient."}),
+                200,
+            )
+
+        drafts_list = []
+        for draft in drafts:
+            draft_id = draft["id"]
+            draft_data = (
+                service.users().drafts().get(userId="me", id=draft_id).execute()
+            )
+            message = draft_data["message"]
+            drafts_list.append(
+                {"draft_id": draft_id, "snippet": message.get("snippet")}
+            )
+        return jsonify({"drafts": drafts_list}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(debug=True)

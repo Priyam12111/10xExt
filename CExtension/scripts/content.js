@@ -8,10 +8,19 @@ function createSendButton() {
   sendButton.addEventListener("click", (event) => {
     event.preventDefault();
     event.stopPropagation();
-    sendMails();
+    if (document.querySelector(".afp").textContent == "developer@cmail.com") {
+      createDraft();
+    } else {
+      sendMails();
+    }
   });
 
   return sendButton;
+}
+
+function createDraft() {
+  createMsgBox("Draft Created Successfully");
+  document.querySelector(".Ha").click();
 }
 
 function createButton(id) {
@@ -183,6 +192,12 @@ function toggleContainerDisplay(container, containerContent) {
     });
   }
 }
+function composeDraft() {
+  document.querySelector(".T-I.T-I-KE.L3").click();
+  setTimeout(() => {
+    document.querySelector(".aoD.hl").textContent = "developer@cmail.com";
+  }, 1000);
+}
 function dropupJs(document) {
   const accordionTitles = document.querySelectorAll(".g_accordian_title");
   const { containerbox, containerContentbox } = createEmailForm();
@@ -199,6 +214,11 @@ function dropupJs(document) {
   const searchInput = dropdownContent.querySelector("input");
   const Fields = dropdownContent.querySelector(".personalize-list");
   const variables = JSON.parse(sessionStorage.getItem("variables") || "{}");
+  const createDraft = document.querySelector("#CreateDraft");
+
+  createDraft.addEventListener("click", () => {
+    composeDraft();
+  });
   const lists = document.createElement("li");
 
   if (variables) {
