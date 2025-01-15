@@ -368,12 +368,7 @@ function updateSchedule(value, scheduleinput) {
       scheduleinput.disabled = false;
       scheduleinput.value = formatIST(datetime);
       scheduleinput.addEventListener("change", () => {
-        const inputDate = new Date(scheduleinput.value);
-        if (!isNaN(inputDate.getTime())) {
-          sessionStorage.setItem("schedule", scheduleinput.value);
-        } else {
-          console.error("Invalid date input.");
-        }
+        sessionStorage.setItem("schedule", scheduleinput.value);
       });
       return;
     default:
@@ -411,16 +406,24 @@ function emailFunctionalities(document) {
   const followUpElement = document.querySelector("#followup");
   const inputDays = document.querySelector("#days");
   const trackingElement = document.querySelector("#iyEIROpenTracking");
-  const stagetextarea = document.querySelectorAll(".stagetextarea");
+  const UrlTrack = document.querySelector("#iyEIROpenClick");
   const unsubLink = document.querySelector("#unsubLink");
   const MaxEmails = document.querySelector("#bqpifMaxEmails");
   const DelayCheckbox = document.querySelector("#bqpifDelayCheckbox");
   const PauseSeconds = document.querySelector("#bqpifPauseSeconds");
+
   const scheduleinput = document.querySelector("#EUYaSGMassDateTime");
+  const followuptime = document.querySelector("#daysS1");
+
+  const showButtons = document.querySelectorAll(".showP");
+  const ClickShowPiece = document.querySelector(".ClickShowPiece");
+  const OpenShowPiece = document.querySelector(".OpenShowPiece");
+  const pauseShowPice = document.querySelector(".pauseShowPice");
+
   const stages = ["stage1", "stage2", "stage3"];
   const times = [".timeS1", ".timeS2", ".timeS3"];
   const stageContainers = [".S1", ".S2", ".S3"];
-  const followuptime = document.querySelector("#daysS1");
+  const stagetextarea = document.querySelectorAll(".stagetextarea");
   try {
     messageFunctionality(document);
   } catch (error) {
@@ -454,12 +457,13 @@ function emailFunctionalities(document) {
     sessionStorage.setItem("MaxEmails", MaxEmails.value);
   });
 
-  const updateDelaySetting = () =>
+  const updateDelaySetting = () => {
+    pauseShowPice.classList.toggle("hidden", !DelayCheckbox.checked);
     sessionStorage.setItem(
       "DelayCheckbox",
       DelayCheckbox.checked ? PauseSeconds.value : "0"
     );
-
+  };
   DelayCheckbox.addEventListener("change", updateDelaySetting);
   PauseSeconds.addEventListener("change", updateDelaySetting);
 
@@ -492,7 +496,13 @@ function emailFunctionalities(document) {
 
   if (trackingElement) {
     trackingElement.addEventListener("change", () => {
+      OpenShowPiece.classList.toggle("hidden", !trackingElement.checked);
       sessionStorage.setItem("tracking", trackingElement.checked);
+    });
+  }
+  if (UrlTrack) {
+    UrlTrack.addEventListener("change", () => {
+      ClickShowPiece.classList.toggle("hidden", !UrlTrack.checked);
     });
   }
 
@@ -520,6 +530,8 @@ function emailFunctionalities(document) {
     if (stage) {
       stage.addEventListener("change", () => {
         timeSelector.style.display = stage.checked ? "block" : "none";
+        showButtons[index].classList.toggle("hidden", !stage.checked);
+
         if (nextStageContainer) {
           nextStageContainer.classList.toggle("hidden", !stage.checked);
         }
@@ -564,7 +576,9 @@ function emailFunctionalities(document) {
 }
 sessionStorage.setItem("tracking", true);
 sessionStorage.removeItem("schedule");
-sessionStorage.setItem("DelayCheckbox", "1");
+sessionStorage.removeItem("stage1");
+sessionStorage.removeItem("stage2");
+sessionStorage.removeItem("stage3");
 
 const observer = new MutationObserver(() => {
   const composeToolbars = document.querySelectorAll(".gU.Up");

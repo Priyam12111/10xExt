@@ -80,7 +80,17 @@ const Section = () => {
                             />
                             Filter
                         </a>
-                        <a href="" className="tbFilBtn">
+                        <a href="#" className="tbFilBtn" onClick={() => {
+                            fetch('https://acaderealty.com/refresh', { method: 'GET' })
+                                .then(response => {
+                                    if (response.ok) {
+                                        console.log("Data refreshed successfully.");
+                                    } else {
+                                        console.error("Failed to refresh data.");
+                                    }
+                                })
+                                .catch(error => console.error("Error:", error));
+                        }}>
                             <img
                                 src="./assets/images/refresh-icon.svg"
                                 alt=""

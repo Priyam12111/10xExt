@@ -253,6 +253,7 @@ function uploadMailData(
   const spreadsheetId = sessionStorage.getItem("spreadsheetId") || false;
   const SendDaysOn = JSON.parse(sessionStorage.getItem("SendDaysOn") || false);
   const followuptime = sessionStorage.getItem("followuptime") || false;
+  const range = sessionStorage.getItem("range") || false;
 
   let checkedDays, stageData;
   if (SendDaysOn) {
@@ -299,6 +300,7 @@ function uploadMailData(
       stage3,
       checkedDays,
       spreadsheetId,
+      range,
       emails: emailData,
       date: "currentdate",
       status: "Ready",

@@ -18,6 +18,7 @@
       href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap"
       rel="stylesheet"
     />
+
     <title>Dropup Menu</title>
     <style>
       #sendrich {
@@ -289,8 +290,8 @@
       }
 
       .droupOpenSec {
-        position: relative;
-        bottom: 10px;
+        position: absolute;
+        top: 65px;
         background-color: #fff;
         border: 1px solid #b9b9b9;
         border-radius: 4px;
@@ -299,6 +300,8 @@
         max-height: 200px;
         min-height: 200px;
         overflow-y: auto;
+        z-index: 15;
+        width: 95%;
       }
 
       .widhSetup {
@@ -1464,8 +1467,7 @@
         border-top-right-radius: var(--bs-modal-inner-border-radius);
       }
 
-      #test-send,
-      #configure-button {
+      #test-send {
         background: linear-gradient(
           0deg,
           rgba(29, 33, 48, 1) 0%,
@@ -1794,11 +1796,11 @@
             <button style="width: 30%" id="test-send">Send</button>
           </div>
         </div>
-        <hr />
-        <div class="change-template">
+        <!-- <hr /> -->
+        <!-- <div class="change-template">
           <span style="margin: 12px" class="labelText">Choose Templates:</span>
           <button id="configure-button">Template</button>
-        </div>
+        </div> -->
 
         <hr />
         <div class="send-test-section">
@@ -1870,8 +1872,8 @@
             class="buttonshowpice"
             style="border-top: 1px solid #d0d4e4; padding-top: 12px"
           >
-            <button>Open</button>
-            <button>Click</button>
+            <button class="OpenShowPiece">Open</button>
+            <button class="ClickShowPiece">Click</button>
           </div>
           <div class="g_accordian_content">
             <hr />
@@ -1914,9 +1916,9 @@
             class="buttonshowpice"
             style="border-top: 1px solid #d0d4e4; padding-top: 12px"
           >
-            <button>Stage 1</button>
-            <button>Stage 2</button>
-            <button>Stage 3</button>
+            <button class="showP hidden">Stage 1</button>
+            <button class="showP hidden">Stage 2</button>
+            <button class="showP hidden">Stage 3</button>
           </div>
           <div class="g_accordian_content">
             <div class="g_hide_on_collapse">
@@ -2020,6 +2022,7 @@
                               alt=""
                               width="28"
                               height="28"
+                              id="configure-button"
                             />
                           </span>
                         </label>
@@ -2499,9 +2502,8 @@
             class="buttonshowpice"
             style="border-top: 1px solid #d0d4e4; padding-top: 12px"
           >
-            <button>Send days</button>
-            <button>Pause between emails</button>
-            <button>Repeat</button>
+            <button class="daysShowPice hidden">Send days</button>
+            <button class="pauseShowPice hidden">Pause between emails</button>
           </div>
           <div class="g_accordian_content">
             <hr />
@@ -2531,12 +2533,14 @@
                   <input
                     size="30"
                     type="text"
+                    placeholder="DD/MM/YYYY, hh:mm am/pm"
                     id="EUYaSGMassDateTime"
                     value=""
                     data-oval="schedule set"
                     disabled=""
                     style="width: 85%"
                   />
+
                   <div class="gmass-calendar-icon" style="height: 30px"></div>
                 </div>
                 <div
@@ -2745,7 +2749,6 @@
                       id="bqpifDelayCheckbox"
                       name="DelayCheckbox"
                       data-oval="pause between emails"
-                      checked
                     />
                     <span class="checkbox-text">
                       Pause
