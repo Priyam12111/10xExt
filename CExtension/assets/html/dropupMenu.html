@@ -33,7 +33,9 @@
         border-radius: 8px;
         border: none;
       }
-
+      .plusIcon {
+        cursor: pointer;
+      }
       .gMassSec .modal-header {
         background: linear-gradient(
           0deg,
@@ -596,7 +598,9 @@
         cursor: pointer;
       }
 
-      .refresIcon {
+      .refresIcon,
+      .editIcon,
+      .viewfollowup {
         border: 1px solid #d0d4e4;
         background-color: #fff;
         color: #4a4a4a;
@@ -2039,6 +2043,29 @@
                               />
                             </a>
                           </div>
+
+                          <div class="editIcon">
+                            <a href="">
+                              <img
+                                src="https://www.svgrepo.com/show/42233/pencil-edit-button.svg"
+                                alt=""
+                                width="14"
+                                height="14"
+                              />
+                            </a>
+                          </div>
+                          <div class="viewfollowup">
+                            <a href="">
+                              <img
+                                src="https://www.svgrepo.com/show/12044/eye.svg"
+                                alt=""
+                                width="14"
+                                height="14"
+                              />
+                            </a>
+                          </div>
+                        </div>
+
                         </div>
                         <!-- = Dropdown = -->
                         <div
@@ -2051,17 +2078,7 @@
                             ></span>
                             <input type="text" placeholder="Search" />
                           </div>
-                          <ul class="listWidIcons listmesaageshow">
-                            <li>
-                              <span>Auto Followup Stage 1 Template</span>
-                            </li>
-                            <li>
-                              <span>Auto Followup Stage 2 Template</span>
-                            </li>
-                            <li>
-                              <span>Auto Followup Stage 3 Template</span>
-                            </li>
-                          </ul>
+                          <ul class="listWidIcons listmesaageshow"></ul>
                         </div>
                         <!-- == -->
                       </div>
@@ -2165,7 +2182,7 @@
                           name="sendoris2"
                         >
                           Send rich-text email in same thread &nbsp;
-                          <span
+                          <span class="plusIcon"
                             ><img
                               src="https://drkcrypt.github.io/Dropmenu/assets/images/plus-icon.svg"
                               alt=""

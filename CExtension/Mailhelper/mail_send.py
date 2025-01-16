@@ -53,20 +53,20 @@ app = Flask(__name__)
 CORS(app)
 
 
-# Set up logging
+
 try:
     handlers = [
-        logging.FileHandler("/home/ubuntu/Gmass/flask.log"),  # Log to file
-        logging.StreamHandler(),  # Optionally log to console
+        logging.FileHandler("/home/ubuntu/Gmass/flask.log"),  
+        logging.StreamHandler(),  
     ]
 except Exception as e:
     handlers = [
-        logging.FileHandler("flask.log"),  # Log to file
-        logging.StreamHandler(),  # Optionally log to console
+        logging.FileHandler("flask.log"),  
+        logging.StreamHandler(),  
     ]
 
 logging.basicConfig(
-    level=logging.INFO,  # Set the logging level
+    level=logging.INFO,  
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=handlers,
 )
@@ -80,7 +80,7 @@ def home():
 
 @app.route("/track")
 def track_url():
-    # Extract parameters from the query string
+    
     name = request.args.get("user", "unknown")
     idx = int(request.args.get("id", "0"))
     url = request.args.get("url", "unknown")
@@ -188,7 +188,7 @@ def start_background_thread():
     thread.start()
 
 
-start_background_thread()  # Start the monitor in a background thread
+start_background_thread()  
 
 
 def update_google_sheet(sender, spreadsheet_id, email, field):
@@ -306,6 +306,7 @@ def authenticate_gmail(token, CREDENTIALS_FILE="credentials.json", auth_code="")
     SCOPES = [
         "https://www.googleapis.com/auth/drive.metadata.readonly",
         "https://www.googleapis.com/auth/gmail.modify",
+        "https://www.googleapis.com/auth/gmail.compose",
         "https://www.googleapis.com/auth/spreadsheets",
     ]
     TOKEN_FILE = token.replace("@", "").replace(".com", "") + ".json"
@@ -319,7 +320,7 @@ def authenticate_gmail(token, CREDENTIALS_FILE="credentials.json", auth_code="")
         )
         flow.fetch_token(code=auth_code)
         creds = flow.credentials
-        # save the auth code also
+        
         with open(TOKEN_FILE, "w") as token:
             token.write(creds.to_json())
             creds_json = json.load(token)
@@ -354,7 +355,7 @@ def handle_auth():
         )
 
     except Exception as e:
-        # Handle errors
+        
         return jsonify({"error": str(e)}), 500
 
 
@@ -929,7 +930,7 @@ def get_drafts():
             "v1",
             credentials=authenticate_gmail(sender.replace("@", "").replace(".com", "")),
         )
-        query = "to:developer@cmail.com"  # Filter drafts for a specific recipient
+        query = "to:developer@cmail.com"  
         results = (
             service.users().drafts().list(userId="me", maxResults=10, q=query).execute()
         )
@@ -952,6 +953,51 @@ def get_drafts():
                 {"draft_id": draft_id, "snippet": message.get("snippet")}
             )
         return jsonify({"drafts": drafts_list}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/create_draft", methods=["POST"])
+def create_draft():
+    sender = request.json.get("sender")
+    recipient = request.json.get("recipient")
+    subject = request.json.get("subject", "No Subject")
+    body = request.json.get("body", "")
+
+    if not sender or not recipient:
+        return jsonify({"error": "Missing 'sender' or 'recipient' parameter."}), 400
+
+    try:
+        service = build(
+            "gmail",
+            "v1",
+            credentials=authenticate_gmail(sender.replace("@", "").replace(".com", "")),
+        )
+
+        
+        message = {
+            "raw": base64.urlsafe_b64encode(
+                f"To: {recipient}\r\n"
+                f"Subject: {subject}\r\n\r\n"
+                f"{body}".encode("utf-8")
+            ).decode("utf-8")
+        }
+
+        
+        draft = (
+            service.users()
+            .drafts()
+            .create(userId="me", body={"message": message})
+            .execute()
+        )
+
+        return (
+            jsonify(
+                {"message": "Draft created successfully.", "draft_id": draft["id"]}
+            ),
+            201,
+        )
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

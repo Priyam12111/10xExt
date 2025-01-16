@@ -8,7 +8,8 @@ function createSendButton() {
   sendButton.addEventListener("click", (event) => {
     event.preventDefault();
     event.stopPropagation();
-    if (document.querySelector(".afp").textContent == "developer@cmail.com") {
+    let Composebox = document.querySelectorAll(".agP.aFw");
+    if (Composebox[Composebox.length - 1].value == "developer@cmail.com") {
       createDraft();
     } else {
       sendMails();
@@ -20,7 +21,41 @@ function createSendButton() {
 
 function createDraft() {
   createMsgBox("Draft Created Successfully");
-  document.querySelector(".Ha").click();
+  const createDraft = async () => {
+    const url = "https://acaderealty.com/create_draft";
+    const subject = document.querySelectorAll(".aoT");
+    const emailBody = window.document.querySelectorAll(
+      ".Am.aiL.Al.editable.LW-avf.tS-tW"
+    );
+    const draftData = {
+      sender: sessionStorage.getItem("sender"),
+      recipient: "developer@cmail.com",
+      subject: subject[subject.length - 1]?.value || "",
+      body: emailBody[emailBody.length - 1]?.innerText || "",
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(draftData),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Draft created successfully:", result);
+      } else {
+        const error = await response.json();
+        console.error("Error creating draft:", error);
+      }
+    } catch (err) {
+      console.error("Network or unexpected error:", err);
+    }
+  };
+
+  createDraft();
 }
 
 function createButton(id) {
@@ -124,7 +159,6 @@ function createEmailForm() {
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
-      console.log("ESC Key Pressed");
       const trackingElement = document.querySelector("#iyEIROpenTracking");
       const followUpElement = document.querySelector("#followup");
 
@@ -171,9 +205,10 @@ function appendConnectButton() {
   });
 
   const targetElement = document.querySelector(".baT");
-  if (targetElement) {
+  const existingConnectButton = targetElement.querySelector("#connect-button");
+  if (targetElement && !existingConnectButton) {
     targetElement.appendChild(connect);
-  } else {
+  } else if (!targetElement) {
     console.error("Element with class '.baT' not found");
   }
 }
@@ -195,9 +230,75 @@ function toggleContainerDisplay(container, containerContent) {
 function composeDraft() {
   document.querySelector(".T-I.T-I-KE.L3").click();
   setTimeout(() => {
-    document.querySelector(".aoD.hl").textContent = "developer@cmail.com";
+    let SubjectBox = document.querySelectorAll(".aoT");
+    const emailBody = window.document.querySelectorAll(
+      ".Am.aiL.Al.editable.LW-avf.tS-tW"
+    );
+    SubjectBox[SubjectBox.length - 1].value = "Auto Page Template 1";
+    emailBody[
+      emailBody.length - 1
+    ].innerHTML = `<p>Replace this entire message (including this line) with your template, and set a Subject to later identify this template.<br><br>Compose the message to be used as your auto follow-up template. You can use <strong>fonts, colors, images, attachments, and any personalization variables</strong> from your original campaign message.<br><br>The address in the To field is a special address to save auto follow-up templates, so don't change that.<br><br>When you're done, <strong>click the GMass button just to save the auto follow-up template</strong> into your account. No emails will be sent when you hit the GMass button.<br><br>Then go back to your original campaign, <strong>refresh the Auto Followup dropdown</strong> and select this message. <a target="_blog" href="https://www.gmass.co/blog/rich-content-auto-follow-up-email-sequence/">More instructions here</a>, including a <a href="https://youtu.be/zBHzOe0BDf0" target="_blog">video</a> of this process.</p>`;
+  }, 10);
+  setTimeout(() => {
+    let Composebox = document.querySelectorAll(".agP.aFw");
+    Composebox[Composebox.length - 1].value = "developer@cmail.com";
   }, 1000);
 }
+function showDraft(document) {
+  const listmesaageshow = document.querySelector(".listmesaageshow");
+  const slectMessage = document.querySelector(".slectMessage");
+  const droupOpenSec = document.querySelector(".droupOpenSec");
+
+  
+  fetch(
+    `https://acaderealty.com/drafts?sender=${sessionStorage.getItem("sender")}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.drafts && Array.isArray(data.drafts)) {
+        
+        const uniqueDrafts = [];
+        const seenIds = new Set();
+
+        data.drafts.forEach((draft) => {
+          if (!seenIds.has(draft.id)) {
+            uniqueDrafts.push(draft);
+            seenIds.add(draft.id);
+          }
+        });
+
+        
+        const draftsToShow = uniqueDrafts.slice(0, 5);
+
+        draftsToShow.forEach((draft) => {
+          const draftLi = document.createElement("li");
+          draftLi.innerHTML = `
+            <span>${draft.subject || "No Subject"}</span>
+          `;
+
+          
+          draftLi.addEventListener("click", () => {
+            slectMessage.innerHTML = draft.subject || "No Subject"; 
+            droupOpenSec.classList.add("hidden");
+          });
+
+          listmesaageshow.appendChild(draftLi);
+        });
+      } else {
+        console.error("No drafts found in the response");
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching drafts:", error);
+    });
+}
+
 function dropupJs(document) {
   const accordionTitles = document.querySelectorAll(".g_accordian_title");
   const { containerbox, containerContentbox } = createEmailForm();
@@ -215,6 +316,8 @@ function dropupJs(document) {
   const Fields = dropdownContent.querySelector(".personalize-list");
   const variables = JSON.parse(sessionStorage.getItem("variables") || "{}");
   const createDraft = document.querySelector("#CreateDraft");
+
+  showDraft(document);
 
   createDraft.addEventListener("click", () => {
     composeDraft();

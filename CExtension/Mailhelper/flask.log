@@ -244,3 +244,99 @@
 2025-01-16 02:14:16,643 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 02:14:16] "GET /isUserSigned?user=hiten.kapoor@acadecraft.com HTTP/1.1" 200 -
 2025-01-16 02:15:46,434 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 02:15:46] "OPTIONS /isUserSigned?user=hiten.kapoor@acadecraft.com HTTP/1.1" 200 -
 2025-01-16 02:15:46,724 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 02:15:46] "GET /isUserSigned?user=hiten.kapoor@acadecraft.com HTTP/1.1" 200 -
+2025-01-16 14:48:12,692 - mail_send - INFO - Starting MongoDB change stream...
+2025-01-16 14:48:13,195 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-01-16 14:48:13,198 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-01-16 14:48:13,216 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 14:48:18,184 - mail_send - INFO - Starting MongoDB change stream...
+2025-01-16 14:48:18,245 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 14:48:18,264 - werkzeug - INFO -  * Debugger PIN: 138-727-214
+2025-01-16 14:49:13,977 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 14:49:13] "OPTIONS /drafts HTTP/1.1" 200 -
+2025-01-16 14:49:14,253 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 14:49:14] "[31m[1mPOST /drafts HTTP/1.1[0m" 405 -
+2025-01-16 14:50:54,429 - mail_send - INFO - Starting MongoDB change stream...
+2025-01-16 14:50:54,494 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-01-16 14:50:54,495 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-01-16 14:50:54,500 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 14:50:58,168 - mail_send - INFO - Starting MongoDB change stream...
+2025-01-16 14:50:58,220 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 14:50:58,229 - werkzeug - INFO -  * Debugger PIN: 138-727-214
+2025-01-16 14:50:58,353 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 14:50:58] "OPTIONS /create_draft HTTP/1.1" 200 -
+2025-01-16 14:50:58,670 - mail_send - INFO - auth_code: 
+2025-01-16 14:50:58,671 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 14:50:58] "[35m[1mPOST /create_draft HTTP/1.1[0m" 500 -
+2025-01-16 14:56:14,186 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 14:56:14] "OPTIONS /create_draft HTTP/1.1" 200 -
+2025-01-16 14:56:14,295 - mail_send - INFO - auth_code: 
+2025-01-16 14:56:14,478 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-01-16 14:56:15,359 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 14:56:15] "[35m[1mPOST /create_draft HTTP/1.1[0m" 500 -
+2025-01-16 14:57:46,062 - werkzeug - INFO -  * Detected change in 'D:\\Code\\CMail\\CExtension\\Mailhelper\\mail_send.py', reloading
+2025-01-16 14:57:49,311 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 14:57:58,618 - mail_send - INFO - Starting MongoDB change stream...
+2025-01-16 14:57:58,675 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 14:57:58,700 - werkzeug - INFO -  * Debugger PIN: 138-727-214
+2025-01-16 15:01:00,681 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:01:00] "OPTIONS /isUserSigned?user=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-16 15:01:00,728 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:01:00] "GET /isUserSigned?user=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-16 15:01:46,219 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:01:46] "OPTIONS /create_draft HTTP/1.1" 200 -
+2025-01-16 15:01:46,468 - mail_send - INFO - auth_code: 
+2025-01-16 15:01:46,507 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-01-16 15:01:46,961 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:01:46] "[35m[1mPOST /create_draft HTTP/1.1[0m" 500 -
+2025-01-16 15:01:54,508 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:01:54] "OPTIONS /create_draft HTTP/1.1" 200 -
+2025-01-16 15:01:54,744 - mail_send - INFO - auth_code: 
+2025-01-16 15:01:54,751 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-01-16 15:01:55,115 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:01:55] "[35m[1mPOST /create_draft HTTP/1.1[0m" 500 -
+2025-01-16 15:02:26,671 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:02:26] "OPTIONS /isUserSigned?user=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-16 15:02:26,976 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:02:26] "GET /isUserSigned?user=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-16 15:04:49,276 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:04:49] "OPTIONS /isUserSigned?user=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-16 15:04:49,490 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:04:49] "GET /isUserSigned?user=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-16 15:06:06,827 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:06:06] "OPTIONS /isUserSigned?user=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-16 15:06:07,089 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:06:07] "GET /isUserSigned?user=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-16 15:07:31,601 - werkzeug - INFO -  * Detected change in 'D:\\Code\\CMail\\CExtension\\Mailhelper\\mail_send.py', reloading
+2025-01-16 15:07:34,302 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 15:07:43,088 - mail_send - INFO - Starting MongoDB change stream...
+2025-01-16 15:07:43,138 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 15:07:43,206 - werkzeug - INFO -  * Debugger PIN: 138-727-214
+2025-01-16 15:10:14,093 - werkzeug - INFO -  * Detected change in 'D:\\Code\\CMail\\CExtension\\Mailhelper\\mail_send.py', reloading
+2025-01-16 15:10:14,708 - werkzeug - INFO -  * Restarting with stat
+2025-01-16 15:10:18,003 - mail_send - INFO - Starting MongoDB change stream...
+2025-01-16 15:10:18,050 - werkzeug - WARNING -  * Debugger is active!
+2025-01-16 15:10:18,058 - werkzeug - INFO -  * Debugger PIN: 138-727-214
+2025-01-16 15:11:43,313 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:11:43] "OPTIONS /isUserSigned?user=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-16 15:11:43,466 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:11:43] "GET /isUserSigned?user=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-16 15:12:04,241 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:12:04] "OPTIONS /auth HTTP/1.1" 200 -
+2025-01-16 15:12:04,674 - mail_send - INFO - auth_code: 4/0AanRRrt9xKYeHRSZ-g1idKjnOmD8SgRTJmYvDT8Ww5h8u7sdZPdyHhhS8SHgl9pQGsIZMQ
+2025-01-16 15:12:05,121 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:12:05] "[35m[1mPOST /auth HTTP/1.1[0m" 500 -
+2025-01-16 15:12:32,801 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:12:32] "OPTIONS /create_draft HTTP/1.1" 200 -
+2025-01-16 15:12:33,065 - mail_send - INFO - auth_code: 
+2025-01-16 15:12:33,124 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-01-16 15:12:33,904 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:12:33] "[35m[1mPOST /create_draft HTTP/1.1[0m" 201 -
+2025-01-16 15:21:15,110 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:21:15] "GET /isUserSigned?user=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-16 15:21:57,120 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:21:57] "OPTIONS /create_draft HTTP/1.1" 200 -
+2025-01-16 15:21:57,790 - mail_send - INFO - auth_code: 
+2025-01-16 15:21:58,594 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-01-16 15:22:00,584 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:22:00] "[35m[1mPOST /create_draft HTTP/1.1[0m" 201 -
+2025-01-16 15:22:12,610 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:22:12] "OPTIONS /create_draft HTTP/1.1" 200 -
+2025-01-16 15:22:12,868 - mail_send - INFO - auth_code: 
+2025-01-16 15:22:12,875 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-01-16 15:22:13,582 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:22:13] "[35m[1mPOST /create_draft HTTP/1.1[0m" 201 -
+2025-01-16 15:22:19,069 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:22:19] "OPTIONS /create_draft HTTP/1.1" 200 -
+2025-01-16 15:22:19,310 - mail_send - INFO - auth_code: 
+2025-01-16 15:22:19,326 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-01-16 15:22:20,091 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:22:20] "[35m[1mPOST /create_draft HTTP/1.1[0m" 201 -
+2025-01-16 15:22:35,438 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:22:35] "OPTIONS /create_draft HTTP/1.1" 200 -
+2025-01-16 15:22:35,689 - mail_send - INFO - auth_code: 
+2025-01-16 15:22:35,695 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-01-16 15:22:36,485 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:22:36] "[35m[1mPOST /create_draft HTTP/1.1[0m" 201 -
+2025-01-16 15:26:44,008 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:26:44] "OPTIONS /isUserSigned?user=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-16 15:26:44,270 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:26:44] "GET /isUserSigned?user=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-16 15:30:18,197 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:30:18] "OPTIONS /isUserSigned?user=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-16 15:30:18,355 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:30:18] "GET /isUserSigned?user=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-16 15:30:50,831 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:30:50] "OPTIONS /create_draft HTTP/1.1" 200 -
+2025-01-16 15:30:51,169 - mail_send - INFO - auth_code: 
+2025-01-16 15:30:51,207 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-01-16 15:30:52,038 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:30:52] "[35m[1mPOST /create_draft HTTP/1.1[0m" 201 -
+2025-01-16 15:32:16,222 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:32:16] "OPTIONS /isUserSigned?user=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-16 15:32:16,476 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:32:16] "GET /isUserSigned?user=sanjana.agrawal@acadecraft.com HTTP/1.1" 200 -
+2025-01-16 15:32:26,976 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:32:26] "OPTIONS /create_draft HTTP/1.1" 200 -
+2025-01-16 15:32:27,238 - mail_send - INFO - auth_code: 
+2025-01-16 15:32:27,246 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-01-16 15:32:27,854 - werkzeug - INFO - 127.0.0.1 - - [16/Jan/2025 15:32:27] "[35m[1mPOST /create_draft HTTP/1.1[0m" 201 -

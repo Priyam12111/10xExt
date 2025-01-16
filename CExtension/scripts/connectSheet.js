@@ -322,6 +322,7 @@ async function createSignUp() {
 
   document.querySelector(".signGoogLink").addEventListener("click", () => {
     try {
+      createMsgBox("Initiating Google Sign-In process...");
       chrome.runtime.sendMessage({
         action: "authenticate",
         sender: sessionStorage.getItem("sender"),
