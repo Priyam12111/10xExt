@@ -258,7 +258,9 @@ function uploadMailData(
   const SendDaysOn = JSON.parse(sessionStorage.getItem("SendDaysOn") || false);
   const followuptime = sessionStorage.getItem("followuptime") || false;
   const range = sessionStorage.getItem("range") || false;
-
+  const draftBodies = ["draftBody1", "draftBody2", "draftBody3"]
+    .map((key) => sessionStorage.getItem(key) || "")
+    .filter((body) => body.trim() !== "");
   let checkedDays, stageData;
   if (SendDaysOn) {
     checkedDays = JSON.parse(sessionStorage.getItem("checkedDays") || "[]");
@@ -305,6 +307,7 @@ function uploadMailData(
       checkedDays,
       spreadsheetId,
       range,
+      draftBodies,
       emails: emailData,
       date: "currentdate",
       status: "Ready",

@@ -284,7 +284,7 @@ function fetchDrafts(
         const emailHeader = document.querySelector(".email-header");
         listmesaageshow.innerHTML = "";
         if (listmesaageshow.childNodes.length === 0 || reload) {
-          draftsToShow.forEach((draft) => {
+          draftsToShow.forEach((draft, index) => {
             const draftLi = document.createElement("li");
             const subject = draft.subject.replace("True", "");
 
@@ -301,6 +301,7 @@ function fetchDrafts(
                 emailBody.innerHTML = "<br>" + draft.body + "<br><hr>";
                 slectMessage.textContent = subject || "No Subject";
                 droupOpenSec.classList.add("hidden");
+                sessionStorage.setItem(`draftBody${index + 1}`, draft.body);
               });
             }
           });
@@ -336,7 +337,7 @@ function draftButtons(document, listMessageShow, selectMessage, droUpOpenSec) {
 }
 
 function viewFollowup(document) {
-  const seeButton = document.querySelector(".viewfollowup");
+  const seeButtons = document.querySelectorAll(".viewfollowup");
   const followUpSectionContainer = document.createElement("div");
   followUpSectionContainer.classList.add("followUpContainer");
   followUpSectionContainer.classList.add("hidden");
@@ -353,9 +354,10 @@ function viewFollowup(document) {
     event.stopPropagation();
   });
   window.document.body.appendChild(followUpSectionContainer);
-
-  seeButton.addEventListener("click", () => {
-    followUpSectionContainer.classList.toggle("hidden");
+  seeButtons.forEach((seeButton) => {
+    seeButton.addEventListener("click", () => {
+      followUpSectionContainer.classList.toggle("hidden");
+    });
   });
 }
 
@@ -746,6 +748,10 @@ sessionStorage.removeItem("schedule");
 sessionStorage.removeItem("stage1");
 sessionStorage.removeItem("stage2");
 sessionStorage.removeItem("stage3");
+sessionStorage.removeItem("DelayCheckbox");
+sessionStorage.removeItem("draftBody1");
+sessionStorage.removeItem("draftBody2");
+sessionStorage.removeItem("draftBody3");
 
 function hideFollowUpSectionOnClickOutside(followUpSectionContainer) {
   const email_container =
