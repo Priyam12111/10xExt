@@ -24,6 +24,14 @@
       #sendrich {
         display: flex;
       }
+      .folloupBut{
+        display: flex;
+        gap: 2px;
+      }
+      .folloupBut div{
+        cursor: pointer;
+      }
+
     </style>
   </head>
 
@@ -33,7 +41,7 @@
         border-radius: 8px;
         border: none;
       }
-      .plusIcon {
+      .plusIcon,CreateDraft {
         cursor: pointer;
       }
       .gMassSec .modal-header {
@@ -292,20 +300,33 @@
       }
 
       .droupOpenSec {
-        position: absolute;
-        top: 65px;
-        background-color: #fff;
-        border: 1px solid #b9b9b9;
-        border-radius: 4px;
-        padding: 6px;
-        height: 100%;
-        max-height: 200px;
-        min-height: 200px;
-        overflow-y: auto;
-        z-index: 15;
-        width: 95%;
+        background-color: rgb(255, 255, 255);
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        padding: 10px;
+        height: auto;
+        max-height: 300px;
+        min-height: 150px;
+        overflow: hidden;
+        z-index: 40;
+        width: 50%;
       }
 
+      #listsecOpenMessageS1{
+        position: absolute;
+        top: 396px;
+        left: 53px;
+      }
+      #listsecOpenMessageS2 {
+        position: absolute;
+        top: 762px;
+        left: 61px;
+      }
+      #listsecOpenMessageS3 {
+        position: absolute;
+        top: 1138px;
+        left: 53px;
+      }
       .widhSetup {
         z-index: 2;
         width: 93%;
@@ -2015,7 +2036,7 @@
                           name="sendoris1"
                         >
                           Send rich-text email in same thread &nbsp;
-                          <span
+                          <span class="plusIcon"
                             ><img
                               src="https://drkcrypt.github.io/Dropmenu/assets/images/plus-icon.svg"
                               alt=""
@@ -2033,36 +2054,34 @@
                             <!-- <input type="" placeholder=""> -->
                             <span><i class="mdi mdi-menu-down"></i></span>
                           </div>
-                          <div class="refresIcon">
-                            <a href="">
-                              <img
-                                src="https://drkcrypt.github.io/Dropmenu/assets/images/refresh-icon.svg"
-                                alt=""
-                                width="14"
-                                height="14"
-                              />
-                            </a>
-                          </div>
+                          <div class="folloupBut">
+                            <div class="refresIcon" role="button">
+                              <a href="#">
+                                <img
+                                  src="https://drkcrypt.github.io/Dropmenu/assets/images/refresh-icon.svg"
+                                  alt=""
+                                  width="14"
+                                  height="14"
+                                />
+                              </a>
+                            </div>
 
-                          <div class="editIcon">
-                            <a href="">
+                            <div class="editIcon" role="button">
                               <img
                                 src="https://www.svgrepo.com/show/42233/pencil-edit-button.svg"
                                 alt=""
                                 width="14"
                                 height="14"
                               />
-                            </a>
-                          </div>
-                          <div class="viewfollowup">
-                            <a href="">
+                            </div>
+                            <div class="viewfollowup" role="button">
                               <img
                                 src="https://www.svgrepo.com/show/12044/eye.svg"
                                 alt=""
                                 width="14"
                                 height="14"
                               />
-                            </a>
+                            </div>
                           </div>
                         </div>
 
@@ -2086,698 +2105,618 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="g_hide_on_collapse S2 hidden">
-              <hr />
-
-              <div
-                class="tackCheckLable"
-                style="max-width: 400px; width: 398px"
-              >
-                <div class="satgeSec" style="width: 100%">
-                  <h5>Stage 2</h5>
-                  <div
-                    class="form-check"
-                    style="width: 50px; padding-top: 10px"
-                  >
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="stage2"
-                    />
-                    <label class="form-check-label" for="stage2"> If </label>
-                    <div class="iconArrowSelect">
-                      <select name="No Reply" id="No Reply" class="norepselect">
-                        <option value="No Reply">No Reply</option>
-                        <option value="No Open">No Open</option>
-                        <option value="No Click">No Click</option>
-                        <option value="No Reply or Click">
-                          No Reply or Click
-                        </option>
-                      </select>
-                    </div>
-
-                    <label class="form-check-label" for="stage2"> after </label>
-                    <input
-                      type="number"
-                      name="quantity"
-                      min="1"
-                      max="1000"
-                      placeholder="0"
-                      class="stageNumberinputS2"
-                    />
-                    <span>days</span>
-                    <a href="#" class="settime">Set time</a>
-                  </div>
-                  <div class="timesec timeS2">
-                    <div class="form-check hidden">
-                      <label class="form-check-label" for="stage2"> at </label>
-                      <input
-                        class="inputTimeSec"
-                        type="time"
-                        id="daysS2"
-                        value="00:00"
-                      />
-                    </div>
-
-                    <div class="form-check setmargn-org">
-                      <input
-                        class="form-check-input sendoriginal"
-                        type="radio"
-                        name="sendoris2"
-                      />
-                      <label
-                        class="form-check-label"
-                        for="sendoriginal"
-                        id="sendoriginalS2"
-                        name="sendoris2"
-                      >
-                        Send text above original
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <textarea
-                        id="w3reviewS2"
-                        name="w3review"
-                        rows="4"
-                        cols="50"
-                        placeholder="Maybe a friendly nudge or a witty remark?"
-                        class="stagetextarea"
-                      ></textarea>
-                    </div>
-                    <div class="form-check setmargn">
-                      <div style="display: flex; gap: 10px; margin: 5px">
-                        <input
-                          class="form-check-input"
-                          type="radio"
-                          name="sendoris2"
-                          id="sendrich"
-                          checked=""
-                        />
-                        <label
-                          class="form-check-label"
-                          for="sendrich"
-                          id="sendrich"
-                          name="sendoris2"
-                        >
-                          Send rich-text email in same thread &nbsp;
-                          <span class="plusIcon"
-                            ><img
-                              src="https://drkcrypt.github.io/Dropmenu/assets/images/plus-icon.svg"
-                              alt=""
-                              width="28"
-                              height="28"
-                            />
-                          </span>
-                        </label>
-                      </div>
-                      <div class="droPosision mesagePosi">
-                        <div class="messageDiv">
-                          <div class="droupSec slectMessage">
-                            <span>Select Message</span>
-                            <!-- <input type="" placeholder=""> -->
-                            <span><i class="mdi mdi-menu-down"></i></span>
-                          </div>
-                          <div class="refresIcon">
-                            <a href="">
-                              <img
-                                src="https://drkcrypt.github.io/Dropmenu/assets/images/refresh-icon.svg"
-                                alt=""
-                                width="14"
-                                height="14"
-                              />
-                            </a>
-                          </div>
-                        </div>
-                        <!-- = Dropdown = -->
-                        <div
-                          class="droupOpenSec ms-4 hidden"
-                          id="listsecOpenMessageS2"
-                        >
-                          <div class="droupSec">
-                            <span class="searchIcon"
-                              ><i class="mdi mdi-magnify"></i
-                            ></span>
-                            <input type="text" placeholder="Search" />
-                          </div>
-                          <ul class="listWidIcons listmesaageshow">
-                            <li>
-                              <span>Auto Followup Stage 1 Template</span>
-                              <span class="iconsListUp"
-                                ><a href=""
-                                  ><svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      d="M2.42969 5.85938L3.46754 18.3881C3.54191 19.2916 4.31152 20 5.21848 20H14.7812C15.6881 20 16.4577 19.2916 16.5321 18.3881L17.5699 5.85938H2.42969ZM7.06957 17.6562C6.76285 17.6562 6.5048 17.4177 6.48535 17.1069L5.89941 7.65379C5.87937 7.33051 6.12484 7.05242 6.44758 7.03238C6.7823 7.00891 7.0484 7.25727 7.06898 7.58055L7.65492 17.0337C7.67566 17.3684 7.41078 17.6562 7.06957 17.6562ZM10.5857 17.0703C10.5857 17.3942 10.3237 17.6562 9.9998 17.6562C9.67594 17.6562 9.41387 17.3942 9.41387 17.0703V7.61719C9.41387 7.29332 9.67594 7.03125 9.9998 7.03125C10.3237 7.03125 10.5857 7.29332 10.5857 7.61719V17.0703ZM14.1002 7.65383L13.5143 17.107C13.495 17.4145 13.2386 17.6709 12.8929 17.6551C12.5701 17.6351 12.3246 17.357 12.3447 17.0337L12.9306 7.58059C12.9507 7.2573 13.2339 7.02211 13.552 7.03242C13.8748 7.05246 14.1202 7.33055 14.1002 7.65383Z"
-                                      fill="black"
-                                    />
-                                    <path
-                                      d="M17.6172 2.34375H14.1016V1.75781C14.1016 0.788516 13.313 0 12.3438 0H7.65625C6.68695 0 5.89844 0.788516 5.89844 1.75781V2.34375H2.38281C1.73559 2.34375 1.21094 2.8684 1.21094 3.51562C1.21094 4.16277 1.73559 4.6875 2.38281 4.6875C7.77211 4.6875 12.2281 4.6875 17.6172 4.6875C18.2644 4.6875 18.7891 4.16277 18.7891 3.51562C18.7891 2.8684 18.2644 2.34375 17.6172 2.34375ZM12.9297 2.34375H7.07031V1.75781C7.07031 1.43453 7.33297 1.17188 7.65625 1.17188H12.3438C12.667 1.17188 12.9297 1.43453 12.9297 1.75781V2.34375Z"
-                                      fill="black"
-                                    />
-                                  </svg>
-                                </a>
-                                <a href="">
-                                  <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <g clip-path="url(#clip0_3514_3334)">
-                                      <path
-                                        d="M7.70828 0H1.45828C0.654144 0 0 0.654144 0 1.45828V5.20828C0 6.01257 0.654144 6.66672 1.45828 6.66672H7.70828C8.51257 6.66672 9.16672 6.01257 9.16672 5.20828V1.45828C9.16672 0.654144 8.51257 0 7.70828 0Z"
-                                        fill="black"
-                                      />
-                                      <path
-                                        d="M7.70828 8.33328H1.45828C0.654144 8.33328 0 8.98743 0 9.79172V18.5417C0 19.3459 0.654144 20 1.45828 20H7.70828C8.51257 20 9.16672 19.3459 9.16672 18.5417V9.79172C9.16672 8.98743 8.51257 8.33328 7.70828 8.33328Z"
-                                        fill="black"
-                                      />
-                                      <path
-                                        d="M18.5414 13.3333H12.2914C11.4872 13.3333 10.833 13.9874 10.833 14.7917V18.5417C10.833 19.3459 11.4872 20 12.2914 20H18.5414C19.3456 20 19.9997 19.3459 19.9997 18.5417V14.7917C19.9997 13.9874 19.3456 13.3333 18.5414 13.3333Z"
-                                        fill="black"
-                                      />
-                                      <path
-                                        d="M18.5414 0H12.2914C11.4872 0 10.833 0.654144 10.833 1.45828V10.2083C10.833 11.0126 11.4872 11.6667 12.2914 11.6667H18.5414C19.3456 11.6667 19.9997 11.0126 19.9997 10.2083V1.45828C19.9997 0.654144 19.3456 0 18.5414 0Z"
-                                        fill="black"
-                                      />
-                                    </g>
-                                    <defs>
-                                      <clipPath id="clip0_3514_3334">
-                                        <rect
-                                          width="20"
-                                          height="20"
-                                          fill="white"
-                                        />
-                                      </clipPath>
-                                    </defs>
-                                  </svg>
-                                </a>
-                                <a href="" class="numpink"> 0 </a>
-                              </span>
-                            </li>
-                          </ul>
-                        </div>
-                        <!-- == -->
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="g_hide_on_collapse S3 hidden">
-              <hr />
-
-              <div
-                class="tackCheckLable"
-                style="max-width: 400px; width: 398px"
-              >
-                <div class="satgeSec" style="width: 100%">
-                  <h5>Stage 3</h5>
-                  <div
-                    class="form-check"
-                    style="width: 50px; padding-top: 10px"
-                  >
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="stage3"
-                    />
-                    <label class="form-check-label" for="stage1"> If </label>
-                    <div class="iconArrowSelect">
-                      <select name="No Reply" id="No Reply" class="norepselect">
-                        <option value="No Reply">No Reply</option>
-                        <option value="No Open">No Open</option>
-                        <option value="No Click">No Click</option>
-                        <option value="No Reply or Click">
-                          No Reply or Click
-                        </option>
-                      </select>
-                    </div>
-
-                    <label class="form-check-label" for="stage3"> after </label>
-                    <input
-                      type="number"
-                      name="quantity"
-                      min="1"
-                      max="1000"
-                      placeholder="0"
-                      class="stageNumberinputS3"
-                    />
-                    <span>days</span>
-                    <a href="#" class="settime">Set time</a>
-                  </div>
-                  <div class="timesec timeS3">
-                    <div class="form-check hidden">
-                      <label class="form-check-label" for="stage3"> at </label>
-                      <input
-                        class="inputTimeSec"
-                        type="time"
-                        id="daysS3"
-                        value="00:00"
-                      />
-                    </div>
-
-                    <div class="form-check setmargn-org sendoriginal">
+              <div class="S2 hidden">
+                <hr />
+                <div
+                  class="tackCheckLable"
+                  style="max-width: 400px; width: 398px"
+                >
+                  <div class="satgeSec" style="width: 100%">
+                    <h5>Stage 2</h5>
+                    <div
+                      class="form-check"
+                      style="width: 50px; padding-top: 10px"
+                    >
                       <input
                         class="form-check-input"
-                        type="radio"
-                        name="sendoris3"
-                        checked=""
+                        type="checkbox"
+                        value=""
+                        id="stage2"
                       />
-                      <label
-                        class="form-check-label"
-                        for="sendoriginal"
-                        id="sendoriginalS3"
-                        name="sendoris3"
-                      >
-                        Send text above original
-                      </label>
+                      <label class="form-check-label" for="stage2"> If </label>
+                      <div class="iconArrowSelect">
+                        <select name="No Reply" id="No Reply" class="norepselect">
+                          <option value="No Reply">No Reply</option>
+                          <option value="No Open">No Open</option>
+                          <option value="No Click">No Click</option>
+                          <option value="No Reply or Click">
+                            No Reply or Click
+                          </option>
+                        </select>
+                      </div>
+
+                      <label class="form-check-label" for="stage2"> after </label>
+                      <input
+                        type="number"
+                        name="quantity"
+                        min="1"
+                        max="1000"
+                        placeholder="0"
+                        class="stageNumberinputS2"
+                      />
+                      <span>days</span>
+                      <a href="#" class="settime">Set time</a>
                     </div>
-                    <div class="form-check">
-                      <textarea
-                        id="w3reviewS3"
-                        name="w3review"
-                        rows="4"
-                        cols="50"
-                        placeholder="A gentle reminder to:"
-                        class="stagetextarea"
-                      ></textarea>
+                    <div class="timesec timeS2">
+                      <div class="form-check hidden">
+                        <label class="form-check-label" for="stage2"> at </label>
+                        <input
+                          class="inputTimeSec"
+                          type="time"
+                          id="daysS2"
+                          value="00:00"
+                        />
+                      </div>
+
+                      <div class="form-check setmargn-org">
+                        <input
+                          class="form-check-input sendoriginal"
+                          type="radio"
+                          name="sendoris2"
+                        />
+                        <label
+                          class="form-check-label"
+                          for="sendoriginal"
+                          id="sendoriginalS2"
+                          name="sendoris2"
+                        >
+                          Send text above original
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <textarea
+                          id="w3reviewS2"
+                          name="w3review"
+                          rows="4"
+                          cols="50"
+                          placeholder="Maybe a friendly nudge or a witty remark?"
+                          class="stagetextarea"
+                        ></textarea>
+                      </div>
+                      <div class="form-check setmargn">
+                        <div style="display: flex; gap: 10px; margin: 5px">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            name="sendoris2"
+                            id="sendrich"
+                            checked=""
+                          />
+                          <label
+                            class="form-check-label"
+                            for="sendrich"
+                            id="sendrich"
+                            name="sendoris2"
+                          >
+                            Send rich-text email in same thread &nbsp;
+                            <span class="plusIcon"
+                              ><img
+                                src="https://drkcrypt.github.io/Dropmenu/assets/images/plus-icon.svg"
+                                alt=""
+                                width="28"
+                                height="28"
+                              />
+                            </span>
+                          </label>
+                        </div>
+                        <div class="droPosision mesagePosi">
+                          <div class="messageDiv">
+                            <div class="droupSec slectMessage">
+                              <span>Select Message</span>
+                              <!-- <input type="" placeholder=""> -->
+                              <span><i class="mdi mdi-menu-down"></i></span>
+                            </div>
+                            <div class="folloupBut">
+                              <div class="refresIcon" role="button">
+                                <a href="#">
+                                  <img
+                                    src="https://drkcrypt.github.io/Dropmenu/assets/images/refresh-icon.svg"
+                                    alt=""
+                                    width="14"
+                                    height="14"
+                                  />
+                                </a>
+                              </div>
+  
+                              <div class="editIcon" role="button">
+                                <img
+                                  src="https://www.svgrepo.com/show/42233/pencil-edit-button.svg"
+                                  alt=""
+                                  width="14"
+                                  height="14"
+                                />
+                              </div>
+                              <div class="viewfollowup" role="button">
+                                <img
+                                  src="https://www.svgrepo.com/show/12044/eye.svg"
+                                  alt=""
+                                  width="14"
+                                  height="14"
+                                />
+                              </div>
+                            </div>
+                          </div>
+  
+                          </div>
+                          <!-- = Dropdown = -->
+                          <div
+                            class="droupOpenSec ms-4 hidden"
+                            id="listsecOpenMessageS2"
+                          >
+                            <div class="droupSec">
+                              <span class="searchIcon"
+                                ><i class="mdi mdi-magnify"></i
+                              ></span>
+                              <input type="text" placeholder="Search" />
+                            </div>
+                            <ul class="listWidIcons listmesaageshow"></ul>
+                          </div>
+                          <!-- == -->
+                        </div>
+                      </div>
                     </div>
-                    <div class="form-check setmargn">
-                      <div style="display: flex; gap: 10px; margin: 5px">
+                  </div>
+                </div>
+              </div>
+              <div class="S3 hidden">
+                <hr />
+              
+                <div
+                  class="tackCheckLable"
+                  style="max-width: 400px; width: 398px"
+                >
+                  <div class="satgeSec" style="width: 100%">
+                    <h5>Stage 3</h5>
+                    <div
+                      class="form-check"
+                      style="width: 50px; padding-top: 10px"
+                    >
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="stage3"
+                      />
+                      <label class="form-check-label" for="stage1"> If </label>
+                      <div class="iconArrowSelect">
+                        <select name="No Reply" id="No Reply" class="norepselect">
+                          <option value="No Reply">No Reply</option>
+                          <option value="No Open">No Open</option>
+                          <option value="No Click">No Click</option>
+                          <option value="No Reply or Click">
+                            No Reply or Click
+                          </option>
+                        </select>
+                      </div>
+
+                      <label class="form-check-label" for="stage3"> after </label>
+                      <input
+                        type="number"
+                        name="quantity"
+                        min="1"
+                        max="1000"
+                        placeholder="0"
+                        class="stageNumberinputS3"
+                      />
+                      <span>days</span>
+                      <a href="#" class="settime">Set time</a>
+                    </div>
+                    <div class="timesec timeS3">
+                      <div class="form-check hidden">
+                        <label class="form-check-label" for="stage3"> at </label>
+                        <input
+                          class="inputTimeSec"
+                          type="time"
+                          id="daysS3"
+                          value="00:00"
+                        />
+                      </div>
+
+                      <div class="form-check setmargn-org sendoriginal">
                         <input
                           class="form-check-input"
                           type="radio"
                           name="sendoris3"
-                          id="sendrich"
                           checked=""
                         />
                         <label
                           class="form-check-label"
-                          for="sendrich"
-                          id="sendrich"
+                          for="sendoriginal"
+                          id="sendoriginalS3"
                           name="sendoris3"
                         >
-                          Send rich-text email in same thread &nbsp;
-                          <span
-                            ><img
-                              src="https://drkcrypt.github.io/Dropmenu/assets/images/plus-icon.svg"
-                              alt=""
-                              width="28"
-                              height="28"
-                            />
+                          Send text above original
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <textarea
+                          id="w3reviewS3"
+                          name="w3review"
+                          rows="4"
+                          cols="50"
+                          placeholder="A gentle reminder to:"
+                          class="stagetextarea"
+                        ></textarea>
+                      </div>
+                      <div class="form-check setmargn">
+                        <div style="display: flex; gap: 10px; margin: 5px">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            name="sendoris3"
+                            id="sendrich"
+                            checked=""
+                          />
+                          <label
+                            class="form-check-label"
+                            for="sendrich"
+                            id="sendrich"
+                            name="sendoris3"
+                          >
+                            Send rich-text email in same thread &nbsp;
+                            <span class="plusIcon"
+                              ><img
+                                src="https://drkcrypt.github.io/Dropmenu/assets/images/plus-icon.svg"
+                                alt=""
+                                width="28"
+                                height="28"
+                              />
+                            </span>
+                          </label>
+                        </div>
+                        <div class="droPosision mesagePosi">
+                          <div class="messageDiv">
+                            <div class="droupSec slectMessage">
+                              <span>Select Message</span>
+                              <!-- <input type="" placeholder=""> -->
+                              <span><i class="mdi mdi-menu-down"></i></span>
+                            </div>
+                            <div class="folloupBut">
+                              <div class="refresIcon" role="button">
+                                <a href="#">
+                                  <img
+                                    src="https://drkcrypt.github.io/Dropmenu/assets/images/refresh-icon.svg"
+                                    alt=""
+                                    width="14"
+                                    height="14"
+                                  />
+                                </a>
+                              </div>
+  
+                              <div class="editIcon" role="button">
+                                <img
+                                  src="https://www.svgrepo.com/show/42233/pencil-edit-button.svg"
+                                  alt=""
+                                  width="14"
+                                  height="14"
+                                />
+                              </div>
+                              <div class="viewfollowup" role="button">
+                                <img
+                                  src="https://www.svgrepo.com/show/12044/eye.svg"
+                                  alt=""
+                                  width="14"
+                                  height="14"
+                                />
+                              </div>
+                            </div>
+                          </div>
+  
+                          </div>
+                          <!-- = Dropdown = -->
+                          <div
+                            class="droupOpenSec ms-4 hidden"
+                            id="listsecOpenMessageS3"
+                          >
+                            <div class="droupSec">
+                              <span class="searchIcon"
+                                ><i class="mdi mdi-magnify"></i
+                              ></span>
+                              <input type="text" placeholder="Search" />
+                            </div>
+                            <ul class="listWidIcons listmesaageshow"></ul>
+                          </div>
+                          <!-- == -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="g2_tracking g_accordian" style="padding: 5px">
+                <div class="g_accordian_title">
+                  <img
+                    src="https://drkcrypt.github.io/Dropmenu/assets/images/schedule.svg"
+                  />
+                  <span>
+                    <span style="padding: 3px">Schedule</span>
+                  </span>
+                  <span id="zjDCLmainspread" style="font-weight: normal"></span>
+                </div>
+                <div
+                  class="buttonshowpice"
+                  style="border-top: 1px solid #d0d4e4; padding-top: 12px"
+                >
+                  <button class="daysShowPice hidden">Send days</button>
+                  <button class="pauseShowPice hidden">Pause between emails</button>
+                </div>
+                <div class="g_accordian_content">
+                  <hr />
+                  <div style="display: flex">
+                    <h5 class="g_col_label" style="float: none">Time:</h5>
+                    <div style="margin-left: 25px">
+                      <select id="EUYaSGMassDateDropdown" style="margin-bottom: 5px">
+                        <option selected="" disabled="" hidden="" value=""></option>
+                        <option value="Now" selected="">Now</option>
+                        <option value="FiveMinutes" [fiveminutes]="">
+                          In 5 minutes
+                        </option>
+                        <option value="OneHour" [onehour]="">In 1 hour</option>
+                        <option value="ThreeHours" [threehours]="">In 3 hours</option>
+                        <option value="TomorrowMor" [tomrrowmor]="">
+                          Tomorrow morning at 8am
+                        </option>
+                        <option value="TomorrowAft" [tomorrowaft]="">
+                          Tomorrow afternoon at 1pm
+                        </option>
+                        <option value="TomorrowEve" [tomorroweve]="">
+                          Tomorrow evening at 7pm
+                        </option>
+                        <option value="Custom" [custom]="">Custom date/time</option>
+                      </select>
+                      <div class="gmass-expand-field hidden">
+                        <input
+                          size="30"
+                          type="text"
+                          placeholder="DD/MM/YYYY, hh:mm am/pm"
+                          id="EUYaSGMassDateTime"
+                          value=""
+                          data-oval="schedule set"
+                          disabled=""
+                          style="width: 85%"
+                        />
+      
+                        <div class="gmass-calendar-icon" style="height: 30px"></div>
+                      </div>
+                      <div
+                        style="margin-top: 5px; display: none"
+                        id="EUYaSSkipWeekendsDiv"
+                        class="not-inline-reply-form"
+                      >
+                        <label class="g2_checkbox">
+                          <input
+                            type="checkbox"
+                            name="SkipWeekends"
+                            id="EUYaSSkipWeekends"
+                            [skipweekendson]=""
+                            data-oval="skip weekends"
+                          />
+                          <span>Skip weekends</span>
+                        </label>
+                      </div>
+                      <div style="margin-top: 5px" class="not-inline-reply-form">
+                        <label class="g2_checkbox">
+                          <input
+                            type="checkbox"
+                            name="SkipHolidays"
+                            id="EUYaSSkipHolidays"
+                            [skipholidayson]=""
+                            data-oval="skip holidays"
+                          />
+                          <span>Skip holidays</span>
+                        </label>
+                      </div>
+                      <div style="margin-top: 5px" class="not-inline-reply-form">
+                        <label class="g2_checkbox">
+                          <input
+                            type="checkbox"
+                            [senddayson]=""
+                            style="position: relative"
+                            name="SendDaysOn"
+                            value="true"
+                            id="EUYaSSendDaysOn"
+                            data-oval="send days"
+                          />
+                          <span>Choose specific days</span>
+                        </label>
+                        <div class="droPosisionDays">
+                          <div>
+                            <div class="droupSec senddays hidden">
+                              <span>Select sending days</span>
+                              <!-- <input type="" placeholder=""> -->
+                              <span><i class="mdi mdi-menu-down"></i></span>
+                            </div>
+                          </div>
+                          <!-- = Dropdown = -->
+                          <div
+                            class="droupOpenSec hidden"
+                            id="listsecOpenDays"
+                            style="width: 100%"
+                          >
+                            <ul class="listWidIcons listdaysShow">
+                              <li>
+                                <div class="form-check">
+                                  <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value=""
+                                    id="removedays"
+                                  />
+                                  <label class="form-check-label" for="removedays">
+                                    Select/Remove all days
+                                  </label>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="form-check">
+                                  <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value=""
+                                    id="weekdays"
+                                  />
+                                  <label class="form-check-label" for="weekdays">
+                                    Select weekdays only
+                                  </label>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="form-check">
+                                  <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="Monday"
+                                    id="monday"
+                                  />
+                                  <label class="form-check-label" for="monday">
+                                    Monday
+                                  </label>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="form-check">
+                                  <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="Tuesday"
+                                    id="tuesday"
+                                  />
+                                  <label class="form-check-label" for="tuesday">
+                                    Tuesday
+                                  </label>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="form-check">
+                                  <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="Wednesday"
+                                    id="wednesday"
+                                  />
+                                  <label class="form-check-label" for="wednesday">
+                                    Wednesday
+                                  </label>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="form-check">
+                                  <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="Thursday"
+                                    id="thursday"
+                                  />
+                                  <label class="form-check-label" for="thursday">
+                                    Thursday
+                                  </label>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="form-check">
+                                  <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="Friday"
+                                    id="friday"
+                                  />
+                                  <label class="form-check-label" for="friday">
+                                    Friday
+                                  </label>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="form-check">
+                                  <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="Saturday"
+                                    id="saturday"
+                                  />
+                                  <label class="form-check-label" for="saturday">
+                                    Saturday
+                                  </label>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="form-check">
+                                  <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="Sunday"
+                                    id="sunday"
+                                  />
+                                  <label class="form-check-label" for="sunday">
+                                    Sunday
+                                  </label>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                          <!-- == -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="email-settings-container">
+                    <h5 class="label">Speed:</h5>
+                    <div class="settings-content">
+                      <div class="email-limit">
+                        <label for="bqpifMaxEmails">
+                          <span>Send</span>
+                          <input
+                            type="text"
+                            placeholder="Max"
+                            size="4"
+                            id="bqpifMaxEmails"
+                            name="MaxEmails"
+                            value=""
+                            data-oval="daily limit"
+                          />
+                          <span>Emails/day</span>
+                        </label>
+                      </div>
+                      <div class="pause-settings">
+                        <label class="checkbox-label">
+                          <input
+                            type="checkbox"
+                            id="bqpifDelayCheckbox"
+                            name="DelayCheckbox"
+                            data-oval="pause between emails"
+                          />
+                          <span class="checkbox-text">
+                            Pause
+                            <select id="bqpifPauseSeconds" name="PauseSeconds">
+                              <option value="1">5-10 seconds</option>
+                              <option value="2">10-60 seconds</option>
+                              <option value="3">1-5 minutes</option>
+                              <option value="5">5-10 minutes</option>
+                            </select>
+                            between emails
                           </span>
                         </label>
                       </div>
-                      <div class="droPosision mesagePosi">
-                        <div class="messageDiv">
-                          <div class="droupSec slectMessage">
-                            <span>Select Message</span>
-                            <!-- <input type="" placeholder=""> -->
-                            <span><i class="mdi mdi-menu-down"></i></span>
-                          </div>
-                          <div class="refresIcon">
-                            <a href="">
-                              <img
-                                src="https://drkcrypt.github.io/Dropmenu/assets/images/refresh-icon.svg"
-                                alt=""
-                                width="14"
-                                height="14"
-                              />
-                            </a>
-                          </div>
-                        </div>
-                        <!-- = Dropdown = -->
-                        <div
-                          class="droupOpenSec ms-4 hidden"
-                          id="listsecOpenMessageS3"
-                        >
-                          <div class="droupSec">
-                            <span class="searchIcon"
-                              ><i class="mdi mdi-magnify"></i
-                            ></span>
-                            <input type="text" placeholder="Search" />
-                          </div>
-                          <ul class="listWidIcons listmesaageshow">
-                            <li>
-                              <span>Auto Followup Stage 1 Template</span>
-                              <span class="iconsListUp"
-                                ><a href=""
-                                  ><svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      d="M2.42969 5.85938L3.46754 18.3881C3.54191 19.2916 4.31152 20 5.21848 20H14.7812C15.6881 20 16.4577 19.2916 16.5321 18.3881L17.5699 5.85938H2.42969ZM7.06957 17.6562C6.76285 17.6562 6.5048 17.4177 6.48535 17.1069L5.89941 7.65379C5.87937 7.33051 6.12484 7.05242 6.44758 7.03238C6.7823 7.00891 7.0484 7.25727 7.06898 7.58055L7.65492 17.0337C7.67566 17.3684 7.41078 17.6562 7.06957 17.6562ZM10.5857 17.0703C10.5857 17.3942 10.3237 17.6562 9.9998 17.6562C9.67594 17.6562 9.41387 17.3942 9.41387 17.0703V7.61719C9.41387 7.29332 9.67594 7.03125 9.9998 7.03125C10.3237 7.03125 10.5857 7.29332 10.5857 7.61719V17.0703ZM14.1002 7.65383L13.5143 17.107C13.495 17.4145 13.2386 17.6709 12.8929 17.6551C12.5701 17.6351 12.3246 17.357 12.3447 17.0337L12.9306 7.58059C12.9507 7.2573 13.2339 7.02211 13.552 7.03242C13.8748 7.05246 14.1202 7.33055 14.1002 7.65383Z"
-                                      fill="black"
-                                    />
-                                    <path
-                                      d="M17.6172 2.34375H14.1016V1.75781C14.1016 0.788516 13.313 0 12.3438 0H7.65625C6.68695 0 5.89844 0.788516 5.89844 1.75781V2.34375H2.38281C1.73559 2.34375 1.21094 2.8684 1.21094 3.51562C1.21094 4.16277 1.73559 4.6875 2.38281 4.6875C7.77211 4.6875 12.2281 4.6875 17.6172 4.6875C18.2644 4.6875 18.7891 4.16277 18.7891 3.51562C18.7891 2.8684 18.2644 2.34375 17.6172 2.34375ZM12.9297 2.34375H7.07031V1.75781C7.07031 1.43453 7.33297 1.17188 7.65625 1.17188H12.3438C12.667 1.17188 12.9297 1.43453 12.9297 1.75781V2.34375Z"
-                                      fill="black"
-                                    />
-                                  </svg>
-                                </a>
-                                <a href="">
-                                  <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <g clip-path="url(#clip0_3514_3334)">
-                                      <path
-                                        d="M7.70828 0H1.45828C0.654144 0 0 0.654144 0 1.45828V5.20828C0 6.01257 0.654144 6.66672 1.45828 6.66672H7.70828C8.51257 6.66672 9.16672 6.01257 9.16672 5.20828V1.45828C9.16672 0.654144 8.51257 0 7.70828 0Z"
-                                        fill="black"
-                                      />
-                                      <path
-                                        d="M7.70828 8.33328H1.45828C0.654144 8.33328 0 8.98743 0 9.79172V18.5417C0 19.3459 0.654144 20 1.45828 20H7.70828C8.51257 20 9.16672 19.3459 9.16672 18.5417V9.79172C9.16672 8.98743 8.51257 8.33328 7.70828 8.33328Z"
-                                        fill="black"
-                                      />
-                                      <path
-                                        d="M18.5414 13.3333H12.2914C11.4872 13.3333 10.833 13.9874 10.833 14.7917V18.5417C10.833 19.3459 11.4872 20 12.2914 20H18.5414C19.3456 20 19.9997 19.3459 19.9997 18.5417V14.7917C19.9997 13.9874 19.3456 13.3333 18.5414 13.3333Z"
-                                        fill="black"
-                                      />
-                                      <path
-                                        d="M18.5414 0H12.2914C11.4872 0 10.833 0.654144 10.833 1.45828V10.2083C10.833 11.0126 11.4872 11.6667 12.2914 11.6667H18.5414C19.3456 11.6667 19.9997 11.0126 19.9997 10.2083V1.45828C19.9997 0.654144 19.3456 0 18.5414 0Z"
-                                        fill="black"
-                                      />
-                                    </g>
-                                    <defs>
-                                      <clipPath id="clip0_3514_3334">
-                                        <rect
-                                          width="20"
-                                          height="20"
-                                          fill="white"
-                                        />
-                                      </clipPath>
-                                    </defs>
-                                  </svg>
-                                </a>
-                                <a href="" class="numpink"> 0 </a>
-                              </span>
-                            </li>
-                          </ul>
-                        </div>
-                        <!-- == -->
-                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+            
           </div>
-        </div>
-        <div class="g2_tracking g_accordian" style="padding: 5px">
-          <div class="g_accordian_title">
-            <img
-              src="https://drkcrypt.github.io/Dropmenu/assets/images/schedule.svg"
-            />
-            <span>
-              <span style="padding: 3px">Schedule</span>
-            </span>
-            <span id="zjDCLmainspread" style="font-weight: normal"></span>
-          </div>
-          <div
-            class="buttonshowpice"
-            style="border-top: 1px solid #d0d4e4; padding-top: 12px"
-          >
-            <button class="daysShowPice hidden">Send days</button>
-            <button class="pauseShowPice hidden">Pause between emails</button>
-          </div>
-          <div class="g_accordian_content">
-            <hr />
-            <div style="display: flex">
-              <h5 class="g_col_label" style="float: none">Time:</h5>
-              <div style="margin-left: 25px">
-                <select id="EUYaSGMassDateDropdown" style="margin-bottom: 5px">
-                  <option selected="" disabled="" hidden="" value=""></option>
-                  <option value="Now" selected="">Now</option>
-                  <option value="FiveMinutes" [fiveminutes]="">
-                    In 5 minutes
-                  </option>
-                  <option value="OneHour" [onehour]="">In 1 hour</option>
-                  <option value="ThreeHours" [threehours]="">In 3 hours</option>
-                  <option value="TomorrowMor" [tomrrowmor]="">
-                    Tomorrow morning at 8am
-                  </option>
-                  <option value="TomorrowAft" [tomorrowaft]="">
-                    Tomorrow afternoon at 1pm
-                  </option>
-                  <option value="TomorrowEve" [tomorroweve]="">
-                    Tomorrow evening at 7pm
-                  </option>
-                  <option value="Custom" [custom]="">Custom date/time</option>
-                </select>
-                <div class="gmass-expand-field hidden">
-                  <input
-                    size="30"
-                    type="text"
-                    placeholder="DD/MM/YYYY, hh:mm am/pm"
-                    id="EUYaSGMassDateTime"
-                    value=""
-                    data-oval="schedule set"
-                    disabled=""
-                    style="width: 85%"
-                  />
 
-                  <div class="gmass-calendar-icon" style="height: 30px"></div>
-                </div>
-                <div
-                  style="margin-top: 5px; display: none"
-                  id="EUYaSSkipWeekendsDiv"
-                  class="not-inline-reply-form"
-                >
-                  <label class="g2_checkbox">
-                    <input
-                      type="checkbox"
-                      name="SkipWeekends"
-                      id="EUYaSSkipWeekends"
-                      [skipweekendson]=""
-                      data-oval="skip weekends"
-                    />
-                    <span>Skip weekends</span>
-                  </label>
-                </div>
-                <div style="margin-top: 5px" class="not-inline-reply-form">
-                  <label class="g2_checkbox">
-                    <input
-                      type="checkbox"
-                      name="SkipHolidays"
-                      id="EUYaSSkipHolidays"
-                      [skipholidayson]=""
-                      data-oval="skip holidays"
-                    />
-                    <span>Skip holidays</span>
-                  </label>
-                </div>
-                <div style="margin-top: 5px" class="not-inline-reply-form">
-                  <label class="g2_checkbox">
-                    <input
-                      type="checkbox"
-                      [senddayson]=""
-                      style="position: relative"
-                      name="SendDaysOn"
-                      value="true"
-                      id="EUYaSSendDaysOn"
-                      data-oval="send days"
-                    />
-                    <span>Choose specific days</span>
-                  </label>
-                  <div class="droPosisionDays">
-                    <div>
-                      <div class="droupSec senddays hidden">
-                        <span>Select sending days</span>
-                        <!-- <input type="" placeholder=""> -->
-                        <span><i class="mdi mdi-menu-down"></i></span>
-                      </div>
-                    </div>
-                    <!-- = Dropdown = -->
-                    <div
-                      class="droupOpenSec hidden"
-                      id="listsecOpenDays"
-                      style="width: 100%"
-                    >
-                      <ul class="listWidIcons listdaysShow">
-                        <li>
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              value=""
-                              id="removedays"
-                            />
-                            <label class="form-check-label" for="removedays">
-                              Select/Remove all days
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              value=""
-                              id="weekdays"
-                            />
-                            <label class="form-check-label" for="weekdays">
-                              Select weekdays only
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              value="Monday"
-                              id="monday"
-                            />
-                            <label class="form-check-label" for="monday">
-                              Monday
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              value="Tuesday"
-                              id="tuesday"
-                            />
-                            <label class="form-check-label" for="tuesday">
-                              Tuesday
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              value="Wednesday"
-                              id="wednesday"
-                            />
-                            <label class="form-check-label" for="wednesday">
-                              Wednesday
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              value="Thursday"
-                              id="thursday"
-                            />
-                            <label class="form-check-label" for="thursday">
-                              Thursday
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              value="Friday"
-                              id="friday"
-                            />
-                            <label class="form-check-label" for="friday">
-                              Friday
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              value="Saturday"
-                              id="saturday"
-                            />
-                            <label class="form-check-label" for="saturday">
-                              Saturday
-                            </label>
-                          </div>
-                        </li>
-                        <li>
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              value="Sunday"
-                              id="sunday"
-                            />
-                            <label class="form-check-label" for="sunday">
-                              Sunday
-                            </label>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                    <!-- == -->
-                  </div>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div class="email-settings-container">
-              <h5 class="label">Speed:</h5>
-              <div class="settings-content">
-                <div class="email-limit">
-                  <label for="bqpifMaxEmails">
-                    <span>Send</span>
-                    <input
-                      type="text"
-                      placeholder="Max"
-                      size="4"
-                      id="bqpifMaxEmails"
-                      name="MaxEmails"
-                      value=""
-                      data-oval="daily limit"
-                    />
-                    <span>Emails/day</span>
-                  </label>
-                </div>
-                <div class="pause-settings">
-                  <label class="checkbox-label">
-                    <input
-                      type="checkbox"
-                      id="bqpifDelayCheckbox"
-                      name="DelayCheckbox"
-                      data-oval="pause between emails"
-                    />
-                    <span class="checkbox-text">
-                      Pause
-                      <select id="bqpifPauseSeconds" name="PauseSeconds">
-                        <option value="1">5-10 seconds</option>
-                        <option value="2">10-60 seconds</option>
-                        <option value="3">1-5 minutes</option>
-                        <option value="5">5-10 minutes</option>
-                      </select>
-                      between emails
-                    </span>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
+        
       </div>
     </div>
   </body>

@@ -961,11 +961,6 @@ select.norepselect:focus {
   top: 4px;
 }
 
-select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
-
 .set120 .norepselect {
   width: 120px;
 }
@@ -1043,9 +1038,14 @@ select {
 }
 #dropdown-list,
 #sheet-dropdown-list {
+  max-height: fit-content;
+  overflow-x: hidden;
+}
+
+#dropdown-list,
+#sheet-dropdown-list {
   position: absolute;
   top: 270px;
-  max-height: 120px;
   height: 120px;
   width: 100%;
   background: white;

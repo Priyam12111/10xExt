@@ -69,14 +69,18 @@ function processData(headers, allData) {
 
 function setEmailDetails(emails, subject, body) {
   const emailField = document.querySelector(".agP.aFw");
-  if (emailField && emailField.getAttribute("aria-label") === "To recipients") {
+  const senderField = document.querySelector(".aGb.mS5Pff");
+  if (
+    emailField &&
+    emailField.getAttribute("aria-label") === "To recipients" &&
+    senderField.textContent == ""
+  ) {
     emailField.focus();
     emailField.value = `${emails.length}-recipients@cmail.in`;
     emailField.dispatchEvent(new Event("input", { bubbles: true }));
     try {
       document.querySelector(".agJ.aFw").click();
     } catch (error) {
-      console.log("Error clicking on send button:", error);
       setTimeout(() => {
         try {
           document.querySelector(".agJ.aFw").click();
@@ -88,16 +92,16 @@ function setEmailDetails(emails, subject, body) {
     const emailDescription = `Emails: ${emails.slice(0, 3).join(", ")}${
       emails.length > 3 ? ", ..." : ""
     } | Total: ${emails.length}`;
-    createMsgBox(emailDescription);
-    const subjectField = document.querySelector(".aoT");
-    if (subjectField) {
-      subjectField.value =
-        subjectField.getAttribute("aria-label") === "To recipients"
-          ? `${emails.length}-recipients@cmail.in`
-          : subject;
+    if (senderField.textContent == "") {
+      createMsgBox(emailDescription);
+      const subjectField = document.querySelector(".aoT");
+      if (subjectField) {
+        subjectField.value =
+          subjectField.getAttribute("aria-label") === "To recipients"
+            ? `${emails.length}-recipients@cmail.in`
+            : subject;
+      }
     }
-  } else {
-    emailField.value = subject;
   }
 
   const bodyField = document.querySelector(".Am.aiL.Al.editable.LW-avf.tS-tW");

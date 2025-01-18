@@ -20,7 +20,6 @@ function createSendButton() {
 }
 
 function createDraft() {
-  createMsgBox("Draft Created Successfully");
   const createDraft = async () => {
     const url = "https://acaderealty.com/create_draft";
     const subject = document.querySelectorAll(".aoT");
@@ -30,8 +29,8 @@ function createDraft() {
     const draftData = {
       sender: sessionStorage.getItem("sender"),
       recipient: "developer@cmail.com",
-      subject: subject[subject.length - 1]?.value || "",
-      body: emailBody[emailBody.length - 1]?.innerText || "",
+      subject: subject[subject.length - 1]?.value + " True" || "",
+      body: emailBody[emailBody.length - 1]?.innerHTML || "",
     };
 
     try {
@@ -46,6 +45,7 @@ function createDraft() {
       if (response.ok) {
         const result = await response.json();
         console.log("Draft created successfully:", result);
+        createMsgBox("Draft Created Successfully");
       } else {
         const error = await response.json();
         console.error("Error creating draft:", error);
@@ -126,63 +126,63 @@ function toggleDropupMenu(dropupMenu) {
     dropupMenu.style.display === "none" ? "block" : "none";
 }
 
-function createEmailForm() {
-  const container = document.createElement("div");
-  container.style.display = "none";
+// function createEmailForm() {
+//   const container = document.createElement("div");
+//   container.style.display = "none";
 
-  const containerContent = document.createElement("div");
-  containerContent.style.display = "none";
-  containerContent.innerHTML = `
-    <div class="form-container containerContent">
-      <div class="template">
-        <button id="close-button" aria-label="Close">×</button>
-        <div class="form-content">
-          <input
-            type="text"
-            id="email-subject"
-            placeholder="Subject"
-            aria-label="Email Subject"
-          />
-          <textarea
-            id="email-body"
-            placeholder="Email Body"
-            aria-label="Email Body"
-          ></textarea>
-          <button id="save-button">Save</button>
-        </div>
-      </div>
-    </div>
-  `;
+//   const containerContent = document.createElement("div");
+//   containerContent.style.display = "none";
+//   containerContent.innerHTML = `
+//     <div class="form-container containerContent">
+//       <div class="template">
+//         <button id="close-button" aria-label="Close">×</button>
+//         <div class="form-content">
+//           <input
+//             type="text"
+//             id="email-subject"
+//             placeholder="Subject"
+//             aria-label="Email Subject"
+//           />
+//           <textarea
+//             id="email-body"
+//             placeholder="Email Body"
+//             aria-label="Email Body"
+//           ></textarea>
+//           <button id="save-button">Save</button>
+//         </div>
+//       </div>
+//     </div>
+//   `;
 
-  container.appendChild(containerContent);
-  document.body.appendChild(container);
+//   container.appendChild(containerContent);
+//   document.body.appendChild(container);
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      const trackingElement = document.querySelector("#iyEIROpenTracking");
-      const followUpElement = document.querySelector("#followup");
+//   document.addEventListener("keydown", (event) => {
+//     if (event.key === "Escape") {
+//       const trackingElement = document.querySelector("#iyEIROpenTracking");
+//       const followUpElement = document.querySelector("#followup");
 
-      console.log(!trackingElement);
-      if (!trackingElement) {
-        sessionStorage.setItem("tracking", false);
-      }
-      if (!followUpElement) {
-        sessionStorage.setItem("followup", 0);
-      }
-      try {
-        container.style.display = "none";
-        containerContent.style.display = "none";
-      } catch (e) {
-        console.error("Error handling Escape key:", e);
-      }
-    }
-  });
+//       console.log(!trackingElement);
+//       if (!trackingElement) {
+//         sessionStorage.setItem("tracking", false);
+//       }
+//       if (!followUpElement) {
+//         sessionStorage.setItem("followup", 0);
+//       }
+//       try {
+//         container.style.display = "none";
+//         containerContent.style.display = "none";
+//       } catch (e) {
+//         console.error("Error handling Escape key:", e);
+//       }
+//     }
+//   });
 
-  const saveButton = document.getElementById("save-button");
-  saveButton.addEventListener("click", () => saveEmailForm(containerContent));
+//   const saveButton = document.getElementById("save-button");
+//   saveButton.addEventListener("click", () => saveEmailForm(containerContent));
 
-  return { containerbox: container, containerContentbox: containerContent };
-}
+//   return { containerbox: container, containerContentbox: containerContent };
+// }
 
 function saveEmailForm(containerContent) {
   const emailSubjectInput = document.getElementById("email-subject");
@@ -244,12 +244,19 @@ function composeDraft() {
     Composebox[Composebox.length - 1].value = "developer@cmail.com";
   }, 1000);
 }
-function showDraft(document) {
-  const listmesaageshow = document.querySelector(".listmesaageshow");
-  const slectMessage = document.querySelector(".slectMessage");
-  const droupOpenSec = document.querySelector(".droupOpenSec");
 
-  
+function viewAllDrafts(slectMessage, droupOpenSec) {
+  slectMessage.addEventListener("click", () => {
+    droupOpenSec.classList.toggle("hidden");
+  });
+}
+
+function fetchDrafts(
+  listmesaageshow,
+  slectMessage,
+  droupOpenSec,
+  reload = false
+) {
   fetch(
     `https://acaderealty.com/drafts?sender=${sessionStorage.getItem("sender")}`,
     {
@@ -262,34 +269,42 @@ function showDraft(document) {
     .then((response) => response.json())
     .then((data) => {
       if (data.drafts && Array.isArray(data.drafts)) {
-        
         const uniqueDrafts = [];
         const seenIds = new Set();
 
         data.drafts.forEach((draft) => {
-          if (!seenIds.has(draft.id)) {
+          if (!seenIds.has(draft.subject)) {
             uniqueDrafts.push(draft);
-            seenIds.add(draft.id);
+            seenIds.add(draft.subject);
           }
         });
 
-        
         const draftsToShow = uniqueDrafts.slice(0, 5);
+        const emailBody = document.querySelector(".email-body");
+        const emailHeader = document.querySelector(".email-header");
+        listmesaageshow.innerHTML = "";
+        if (listmesaageshow.childNodes.length === 0 || reload) {
+          draftsToShow.forEach((draft) => {
+            const draftLi = document.createElement("li");
+            const subject = draft.subject.replace("True", "");
 
-        draftsToShow.forEach((draft) => {
-          const draftLi = document.createElement("li");
-          draftLi.innerHTML = `
-            <span>${draft.subject || "No Subject"}</span>
-          `;
+            draftLi.setAttribute("data-body", draft.body);
+            if (draft.subject.includes("True")) {
+              draftLi.innerHTML = `
+                <span>${subject || "No Subject"}</span>
+              `;
 
-          
-          draftLi.addEventListener("click", () => {
-            slectMessage.innerHTML = draft.subject || "No Subject"; 
-            droupOpenSec.classList.add("hidden");
+              listmesaageshow.appendChild(draftLi);
+              draftLi.addEventListener("click", (e) => {
+                e.stopPropagation();
+                emailHeader.textContent = subject || "No Subject";
+                emailBody.innerHTML = "<br>" + draft.body + "<br><hr>";
+                slectMessage.textContent = subject || "No Subject";
+                droupOpenSec.classList.add("hidden");
+              });
+            }
           });
-
-          listmesaageshow.appendChild(draftLi);
-        });
+        }
       } else {
         console.error("No drafts found in the response");
       }
@@ -298,10 +313,124 @@ function showDraft(document) {
       console.error("Error fetching drafts:", error);
     });
 }
+function showDraft(listMessageShow, selectMessage, droUpOpenSec) {
+  listMessageShow.forEach((list, index) => {
+    viewAllDrafts(selectMessage[index], droUpOpenSec[index]);
+    fetchDrafts(list, selectMessage[index], droUpOpenSec[index]);
+  });
+}
 
+function draftButtons(document, listMessageShow, selectMessage, droUpOpenSec) {
+  refresIcon = document.querySelectorAll(".refresIcon");
+  refresIcon.forEach((icon, index) => {
+    icon.addEventListener("click", () => {
+      fetchDrafts(
+        listMessageShow[index],
+        selectMessage[index],
+        droUpOpenSec[index],
+        true
+      );
+      createMsgBox("Drafts Refreshed Successfully");
+    });
+  });
+}
+
+function viewFollowup(document) {
+  const seeButton = document.querySelector(".viewfollowup");
+  const followUpSectionContainer = document.createElement("div");
+  followUpSectionContainer.classList.add("followUpContainer");
+  followUpSectionContainer.classList.add("hidden");
+  followUpSectionContainer.innerHTML = `
+      <div class="email-container">
+      <div class="email-header">India - L&DF1</div>
+      <div class="email-body">
+        
+      </div>
+      </div>
+      </div>
+  `;
+  followUpSectionContainer.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
+  window.document.body.appendChild(followUpSectionContainer);
+
+  seeButton.addEventListener("click", () => {
+    followUpSectionContainer.classList.toggle("hidden");
+  });
+}
+
+function populateVariablesList(Fields, variables) {
+  const lists = document.createElement("li");
+  if (variables && Object.keys(variables).length > 0) {
+    Object.entries(variables).forEach(([key, value]) => {
+      const listItem = document.createElement("li");
+      listItem.innerHTML = `<span>${key}</span>`;
+      Fields.appendChild(listItem);
+    });
+  } else {
+    lists.innerHTML = `
+    <li><span>No variables found</span></li>
+    `;
+    Fields.appendChild(lists);
+  }
+}
+
+function handleDayItemClick(trigger, dropdowndays, item) {
+  return function () {
+    console.log("item clicked");
+    trigger.querySelector("span").textContent = item.textContent;
+    dropdowndays.classList.add("hidden");
+  };
+}
+
+function setupDaysDropdown(trigger, dropdowndays, items) {
+  items.forEach((item) => {
+    item.addEventListener(
+      "click",
+      handleDayItemClick(trigger, dropdowndays, item)
+    );
+  });
+}
+
+const toggleDropdown = (dropdownContent) => () => {
+  dropdownContent.style.display =
+    dropdownContent.style.display === "block" ? "none" : "block";
+};
+
+const filterListItems = (listItems) => (event) => {
+  const filter = event.target.value.toLowerCase();
+  listItems.forEach((item) => {
+    if (item.textContent.toLowerCase().includes(filter)) {
+      item.style.display = "";
+    } else {
+      item.style.display = "none";
+    }
+  });
+};
+
+const setupDropdown = (dropdownHeader, dropdownContent, searchInput) => {
+  const listItems = Array.from(
+    dropdownContent.querySelectorAll(".dropdown-list li")
+  );
+  dropdownHeader.addEventListener("click", toggleDropdown(dropdownContent));
+  searchInput.addEventListener("input", filterListItems(listItems));
+};
+
+function setupAccordionToggle(accordionTitles) {
+  accordionTitles.forEach((title) => {
+    title.addEventListener("click", () => {
+      const content = title.nextElementSibling;
+      if (content.classList.contains("buttonshowpice")) {
+        content.classList.toggle("hidden");
+        content.nextElementSibling.classList.toggle("active");
+      } else {
+        content.classList.toggle("active");
+      }
+    });
+  });
+}
 function dropupJs(document) {
   const accordionTitles = document.querySelectorAll(".g_accordian_title");
-  const { containerbox, containerContentbox } = createEmailForm();
   const SendDaysOn = document.querySelector("#EUYaSSendDaysOn");
   const dropdowndays = document.getElementById("listsecOpenDays");
   const triggerdays = document.querySelector(".senddays");
@@ -316,46 +445,17 @@ function dropupJs(document) {
   const Fields = dropdownContent.querySelector(".personalize-list");
   const variables = JSON.parse(sessionStorage.getItem("variables") || "{}");
   const createDraft = document.querySelector("#CreateDraft");
-
-  showDraft(document);
-
-  createDraft.addEventListener("click", () => {
-    composeDraft();
-  });
-  const lists = document.createElement("li");
-
-  if (variables) {
-    Object.entries(variables).forEach(([key, value]) => {
-      const listItem = document.createElement("li");
-      listItem.innerHTML = `<span>${key}</span>`;
-      Fields.appendChild(listItem);
-    });
-  } else {
-    lists.innerHTML = `
-    <li><span>No variables found</span></li>
-  `;
-  }
-
-  Fields.appendChild(lists);
-
-  const listItems = Array.from(
-    dropdownContent.querySelectorAll(".dropdown-list li")
-  );
-
-  dropdownHeader.addEventListener("click", () => {
-    dropdownContent.style.display =
-      dropdownContent.style.display === "block" ? "none" : "block";
-  });
-  searchInput.addEventListener("input", (event) => {
-    const filter = event.target.value.toLowerCase();
-    listItems.forEach((item) => {
-      if (item.textContent.toLowerCase().includes(filter)) {
-        item.style.display = "";
-      } else {
-        item.style.display = "none";
-      }
-    });
-  });
+  const listMessageShow = document.querySelectorAll(".listmesaageshow");
+  const selectMessage = document.querySelectorAll(".slectMessage");
+  const droUpOpenSec = document.querySelectorAll(".droupOpenSec");
+  createDraft.addEventListener("click", () => composeDraft());
+  draftButtons(document, listMessageShow, selectMessage, droUpOpenSec);
+  showDraft(listMessageShow, selectMessage, droUpOpenSec);
+  populateVariablesList(Fields, variables);
+  setupDaysDropdown(triggerdays, dropdowndays, itemsdays);
+  setupDropdown(dropdownHeader, dropdownContent, searchInput);
+  setupAccordionToggle(accordionTitles);
+  viewFollowup(document);
   document.addEventListener("click", (event) => {
     if (
       !dropdownHeader.contains(event.target) &&
@@ -380,14 +480,6 @@ function dropupJs(document) {
     }
   });
 
-  itemsdays.forEach((item) => {
-    item.addEventListener("click", () => {
-      console.log("item clicked");
-      triggerdays.querySelector("span").textContent = item.textContent;
-      dropdowndays.classList.add("hidden");
-    });
-  });
-
   checkboxes.forEach((checkbox) => {
     checkbox.addEventListener("change", () => {
       const updatedCheckedDays = Array.from(checkboxes)
@@ -397,35 +489,12 @@ function dropupJs(document) {
     });
   });
 
-  accordionTitles.forEach((title) => {
-    title.addEventListener("click", () => {
-      const content = title.nextElementSibling;
-      if (content.classList.contains("buttonshowpice")) {
-        content.classList.toggle("hidden");
-        content.nextElementSibling.classList.toggle("active");
-      } else {
-        content.classList.toggle("active");
-      }
-    });
-  });
-
   if (sendButton && testInput) {
     sendButton.addEventListener("click", () => {
       const email = testInput.value;
       sendTestMail();
       alert(`Test email sent to ${email}`);
     });
-  }
-
-  if (configureButton) {
-    const newConfigureButton = configureButton.cloneNode(true);
-    configureButton.parentNode.replaceChild(
-      newConfigureButton,
-      configureButton
-    );
-    newConfigureButton.addEventListener("click", () =>
-      toggleContainerDisplay(containerbox, containerContentbox)
-    );
   }
 }
 function updateSchedule(value, scheduleinput) {
@@ -504,25 +573,6 @@ function updateSchedule(value, scheduleinput) {
   scheduleinput.value = formattedDatetime;
   scheduleinput.disabled = true;
 }
-function messageFunctionality(document) {
-  const dropdownmessages = [
-    "listsecOpenMessageS1",
-    "listsecOpenMessageS2",
-    "listsecOpenMessageS3",
-  ];
-
-  const messages = document.querySelectorAll(".mesagePosi");
-  messages.forEach((message, index) => {
-    message.addEventListener("click", (event) => {
-      event.stopPropagation();
-      const msgdropdown = document.querySelector(`#${dropdownmessages[index]}`);
-      msgdropdown.addEventListener("click", (event) => {
-        event.stopPropagation();
-      });
-      msgdropdown.classList.toggle("hidden");
-    });
-  });
-}
 
 function emailFunctionalities(document) {
   const schedule = document.querySelector("#EUYaSGMassDateDropdown");
@@ -547,11 +597,6 @@ function emailFunctionalities(document) {
   const times = [".timeS1", ".timeS2", ".timeS3"];
   const stageContainers = [".S1", ".S2", ".S3"];
   const stagetextarea = document.querySelectorAll(".stagetextarea");
-  try {
-    messageFunctionality(document);
-  } catch (error) {
-    console.error("Error in messageFunctionality:", error);
-  }
 
   followuptime.addEventListener("change", () => {
     sessionStorage.setItem("followuptime", followuptime.value);
@@ -591,14 +636,13 @@ function emailFunctionalities(document) {
   PauseSeconds.addEventListener("change", updateDelaySetting);
 
   unsubLink.addEventListener("click", () => {
-    createMsgBox("Unsubscribe link added");
-    console.log("Adding unsubscribe link");
     const emailBody = window.document.querySelector(
       ".Am.aiL.Al.editable.LW-avf.tS-tW"
     );
     if (emailBody) {
       emailBody.innerHTML += `\n\n<a href="https://acaderealty.com/unsubscribe?Email=#&userID=#">Unsubscribe</a>`;
       sessionStorage.setItem("unsubscribed", true);
+      createMsgBox("Unsubscribe link added");
     } else {
       console.error("Email body element not found.");
     }
@@ -703,9 +747,29 @@ sessionStorage.removeItem("stage1");
 sessionStorage.removeItem("stage2");
 sessionStorage.removeItem("stage3");
 
+function hideFollowUpSectionOnClickOutside(followUpSectionContainer) {
+  const email_container =
+    followUpSectionContainer.querySelector(".email-container");
+  const handler = (event) => {
+    if (!email_container.contains(event.target)) {
+      followUpSectionContainer.classList.add("hidden");
+    }
+  };
+  followUpSectionContainer.addEventListener("click", handler);
+  email_container.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
+  document.addEventListener("click", handler);
+}
+
 const observer = new MutationObserver(() => {
   const composeToolbars = document.querySelectorAll(".gU.Up");
   let sender = document.querySelector(".gb_A.gb_Xa.gb_Z");
+  const followUpSectionContainer = document.querySelector(".followUpContainer");
+
+  if (followUpSectionContainer) {
+    hideFollowUpSectionOnClickOutside(followUpSectionContainer);
+  }
 
   if (sender && !sessionStorage.getItem("sender")) {
     sender = sender.getAttribute("aria-label").split("\n");
