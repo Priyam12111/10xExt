@@ -440,17 +440,19 @@ function dropupJs(document) {
   const checkboxes = document.querySelectorAll(".form-check-input");
   const sendButton = document.getElementById("test-send");
   const testInput = document.getElementById("test-input");
-  const configureButton = document.getElementById("configure-button");
   const dropdownHeader = document.querySelector(".dropdown-header");
   const dropdownContent = document.querySelector(".dropdown-content");
   const searchInput = dropdownContent.querySelector("input");
   const Fields = dropdownContent.querySelector(".personalize-list");
   const variables = JSON.parse(sessionStorage.getItem("variables") || "{}");
-  const createDraft = document.querySelector("#CreateDraft");
+  const createDrafts = document.querySelectorAll(".CreateDrafts");
   const listMessageShow = document.querySelectorAll(".listmesaageshow");
-  const selectMessage = document.querySelectorAll(".slectMessage");
-  const droUpOpenSec = document.querySelectorAll(".droupOpenSec");
-  createDraft.addEventListener("click", () => composeDraft());
+  const selectMessage = Array.from(document.querySelectorAll(".slectMessage"));
+  const droUpOpenSec = Array.from(document.querySelectorAll(".droupOpenSec"));
+  createDrafts.forEach((draft) => {
+    draft.addEventListener("click", () => composeDraft());
+  });
+
   draftButtons(document, listMessageShow, selectMessage, droUpOpenSec);
   showDraft(listMessageShow, selectMessage, droUpOpenSec);
   populateVariablesList(Fields, variables);
@@ -475,10 +477,14 @@ function dropupJs(document) {
     e.stopPropagation();
     dropdowndays.classList.toggle("hidden");
   });
-
   document.addEventListener("click", (e) => {
-    if (!dropdowndays.contains(e.target) && !triggerdays.contains(e.target)) {
+    if (
+      !dropdowndays.contains(e.target) &&
+      !triggerdays.contains(e.target) &&
+      !selectMessage.some((el) => el.contains(e.target))
+    ) {
       dropdowndays.classList.add("hidden");
+      droUpOpenSec.forEach((section) => section.classList.add("hidden"));
     }
   });
 
