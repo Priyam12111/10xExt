@@ -66,7 +66,7 @@ function sendAuthCodeToBackend(authCode, sender) {
     .then((response) => response.json())
     .then((data) => {
       if (data.error) {
-        console.error("Backend Error:", data.error);
+        console.log("Backend Error:", data.error);
       } else {
         console.log("Backend Response:", data.message);
       }

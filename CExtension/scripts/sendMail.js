@@ -256,7 +256,7 @@ function uploadMailData(
   const stage3 = JSON.parse(sessionStorage.getItem("stage3") || false);
   const spreadsheetId = sessionStorage.getItem("spreadsheetId") || false;
   const SendDaysOn = JSON.parse(sessionStorage.getItem("SendDaysOn") || false);
-  const followuptime = sessionStorage.getItem("followuptime") || false;
+  const followuptime = sessionStorage.getItem("followuptime") || [];
   const range = sessionStorage.getItem("range") || false;
   const draftBodies = ["draftBody1", "draftBody2", "draftBody3"]
     .map((key) => sessionStorage.getItem(key) || "")

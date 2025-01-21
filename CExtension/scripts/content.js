@@ -73,6 +73,7 @@ function createButton(id) {
   button.style.position = "relative";
   dropupMenu.style.position = "fixed";
   dropupMenu.style.display = "none";
+  dropupMenu.style.zIndex = "9999";
 
   fetchAndInjectDropupMenu(dropupMenu);
 
@@ -255,6 +256,7 @@ function fetchDrafts(
   listmesaageshow,
   slectMessage,
   droupOpenSec,
+  index,
   reload = false
 ) {
   fetch(
@@ -280,8 +282,8 @@ function fetchDrafts(
         });
 
         const draftsToShow = uniqueDrafts.slice(0, 5);
-        const emailBody = document.querySelector(".email-body");
-        const emailHeader = document.querySelector(".email-header");
+        const emailBody = document.querySelectorAll(".email-body")[index];
+        const emailHeader = document.querySelectorAll(".email-header")[index];
         listmesaageshow.innerHTML = "";
         if (listmesaageshow.childNodes.length === 0 || reload) {
           draftsToShow.forEach((draft, index) => {
@@ -307,7 +309,7 @@ function fetchDrafts(
           });
         }
       } else {
-        console.error("No drafts found in the response");
+        console.log("No drafts found in the response");
       }
     })
     .catch((error) => {
@@ -317,7 +319,7 @@ function fetchDrafts(
 function showDraft(listMessageShow, selectMessage, droUpOpenSec) {
   listMessageShow.forEach((list, index) => {
     viewAllDrafts(selectMessage[index], droUpOpenSec[index]);
-    fetchDrafts(list, selectMessage[index], droUpOpenSec[index]);
+    fetchDrafts(list, selectMessage[index], droUpOpenSec[index], index);
   });
 }
 
@@ -329,6 +331,7 @@ function draftButtons(document, listMessageShow, selectMessage, droUpOpenSec) {
         listMessageShow[index],
         selectMessage[index],
         droUpOpenSec[index],
+        index,
         true
       );
       createMsgBox("Drafts Refreshed Successfully");
@@ -341,22 +344,47 @@ function viewFollowup(document) {
   const followUpSectionContainer = document.createElement("div");
   followUpSectionContainer.classList.add("followUpContainer");
   followUpSectionContainer.classList.add("hidden");
+
   followUpSectionContainer.innerHTML = `
-      <div class="email-container">
-      <div class="email-header">India - L&DF1</div>
-      <div class="email-body">
-        
+      <div class="followUpContainer1 hidden">
+        <div class="email-container">
+          <div class="email-header"></div>
+            <div class="email-body"></div>
+          </div>
+        </div>
       </div>
+      <div class="followUpContainer2 hidden">
+        <div class="email-container">
+          <div class="email-header"></div>
+            <div class="email-body"></div>
+          </div>
+        </div>
       </div>
+      <div class="followUpContainer3 hidden">
+        <div class="email-container">
+          <div class="email-header"></div>
+            <div class="email-body"></div>
+          </div>
+        </div>
       </div>
   `;
   followUpSectionContainer.addEventListener("click", (event) => {
     event.stopPropagation();
   });
+
   window.document.body.appendChild(followUpSectionContainer);
-  seeButtons.forEach((seeButton) => {
+
+  seeButtons.forEach((seeButton, index) => {
     seeButton.addEventListener("click", () => {
-      followUpSectionContainer.classList.toggle("hidden");
+      followUpSectionContainer.classList.remove("hidden");
+      const mainContainer = window.document.querySelector(
+        `.followUpContainer${index + 1}`
+      );
+
+      mainContainer.classList.toggle("hidden");
+      if (mainContainer) {
+        hideFollowUpSectionOnClickOutside(mainContainer);
+      }
     });
   });
 }
@@ -594,7 +622,9 @@ function emailFunctionalities(document) {
   const PauseSeconds = document.querySelector("#bqpifPauseSeconds");
 
   const scheduleinput = document.querySelector("#EUYaSGMassDateTime");
-  const followuptime = document.querySelector("#daysS1");
+  const followuptime1 = document.querySelector("#daysS1");
+  const followuptime2 = document.querySelector("#daysS2");
+  const followuptime3 = document.querySelector("#daysS3");
 
   const showButtons = document.querySelectorAll(".showP");
   const ClickShowPiece = document.querySelector(".ClickShowPiece");
@@ -606,8 +636,23 @@ function emailFunctionalities(document) {
   const stageContainers = [".S1", ".S2", ".S3"];
   const stagetextarea = document.querySelectorAll(".stagetextarea");
 
-  followuptime.addEventListener("change", () => {
-    sessionStorage.setItem("followuptime", followuptime.value);
+  followuptime1.addEventListener("change", () => {
+    followuptime = [followuptime1.value, "", ""] || '["", "", ""]';
+    sessionStorage.setItem("followuptime", JSON.stringify(followuptime));
+  });
+  followuptime2.addEventListener("change", () => {
+    const followuptime = JSON.parse(
+      sessionStorage.getItem("followuptime") || '["", "", ""]'
+    );
+    followuptime[1] = followuptime2.value;
+    sessionStorage.setItem("followuptime", JSON.stringify(followuptime));
+  });
+  followuptime3.addEventListener("change", () => {
+    const followuptime = JSON.parse(
+      sessionStorage.getItem("followuptime") || '["", "", ""]'
+    );
+    followuptime[2] = followuptime3.value;
+    sessionStorage.setItem("followuptime", JSON.stringify(followuptime));
   });
 
   const stageInputs = [
@@ -758,13 +803,18 @@ sessionStorage.removeItem("DelayCheckbox");
 sessionStorage.removeItem("draftBody1");
 sessionStorage.removeItem("draftBody2");
 sessionStorage.removeItem("draftBody3");
+sessionStorage.removeItem("followuptime");
+sessionStorage.removeItem("sender");
 
 function hideFollowUpSectionOnClickOutside(followUpSectionContainer) {
   const email_container =
     followUpSectionContainer.querySelector(".email-container");
   const handler = (event) => {
     if (!email_container.contains(event.target)) {
-      followUpSectionContainer.classList.add("hidden");
+      followUpSectionContainer.parentElement.classList.add("hidden");
+      document.querySelectorAll(".email-container").forEach((container) => {
+        container.parentElement.classList.add("hidden");
+      });
     }
   };
   followUpSectionContainer.addEventListener("click", handler);
@@ -777,11 +827,6 @@ function hideFollowUpSectionOnClickOutside(followUpSectionContainer) {
 const observer = new MutationObserver(() => {
   const composeToolbars = document.querySelectorAll(".gU.Up");
   let sender = document.querySelector(".gb_A.gb_Xa.gb_Z");
-  const followUpSectionContainer = document.querySelector(".followUpContainer");
-
-  if (followUpSectionContainer) {
-    hideFollowUpSectionOnClickOutside(followUpSectionContainer);
-  }
 
   if (sender && !sessionStorage.getItem("sender")) {
     sender = sender.getAttribute("aria-label").split("\n");
