@@ -32,10 +32,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": [
-        "assets/html/dropupMenu.html",
-        "assets/html/sheetList.html"
-      ],
+      "resources": ["assets/html/dropmenu.html", "assets/html/sheetlist.html"],
       "matches": ["<all_urls>"]
     }
   ],

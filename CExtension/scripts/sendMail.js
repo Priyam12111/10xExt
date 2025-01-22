@@ -322,9 +322,17 @@ function uploadMailData(
 function handleUploadResponse(response, schedule, DelayCheckbox) {
   if (response.ok) {
     console.log("Upload Success:", response);
+    followuptime = JSON.parse(sessionStorage.getItem("followuptime") || "[]");
     var msg = `Mail has been scheduled for ${schedule} ${
-      DelayCheckbox ? `with a delay of ${DelayCheckbox} seconds` : "immediately"
+      DelayCheckbox
+        ? `with a delay of ${parseInt(DelayCheckbox, 0) * 5} seconds`
+        : "immediately"
     }`;
+    followuptime.forEach((time, index) => {
+      if (time !== "") {
+        msg += `\nFollowup ${index + 1} will be sent on ${time} `;
+      }
+    });
   } else {
     var msg = `Mail has not been Scheduled`;
     console.log("Upload Failed:", response);

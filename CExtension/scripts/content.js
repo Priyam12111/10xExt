@@ -94,7 +94,7 @@ function createButton(id) {
   return { button, dropupMenu };
 }
 function fetchAndInjectDropupMenu(dropupMenu) {
-  const htmlUrl = chrome.runtime.getURL("assets/html/dropupMenu.html");
+  const htmlUrl = chrome.runtime.getURL("assets/html/dropmenu.html");
   fetch(htmlUrl)
     .then((response) => response.text())
     .then((htmlContent) => {
@@ -286,7 +286,7 @@ function fetchDrafts(
         const emailHeader = document.querySelectorAll(".email-header")[index];
         listmesaageshow.innerHTML = "";
         if (listmesaageshow.childNodes.length === 0 || reload) {
-          draftsToShow.forEach((draft, index) => {
+          draftsToShow.forEach((draft) => {
             const draftLi = document.createElement("li");
             const subject = draft.subject.replace("True", "");
 
@@ -438,7 +438,8 @@ const filterListItems = (listItems) => (event) => {
   });
 };
 
-const setupDropdown = (dropdownHeader, dropdownContent, searchInput) => {
+const setupDropdown = (dropdownHeader, dropdownContent) => {
+  const searchInput = dropdownContent.querySelector("input");
   const listItems = Array.from(
     dropdownContent.querySelectorAll(".dropdown-list li")
   );
@@ -470,7 +471,6 @@ function dropupJs(document) {
   const testInput = document.getElementById("test-input");
   const dropdownHeader = document.querySelector(".dropdown-header");
   const dropdownContent = document.querySelector(".dropdown-content");
-  const searchInput = dropdownContent.querySelector("input");
   const Fields = dropdownContent.querySelector(".personalize-list");
   const variables = JSON.parse(sessionStorage.getItem("variables") || "{}");
   const createDrafts = document.querySelectorAll(".CreateDrafts");
@@ -485,7 +485,11 @@ function dropupJs(document) {
   showDraft(listMessageShow, selectMessage, droUpOpenSec);
   populateVariablesList(Fields, variables);
   setupDaysDropdown(triggerdays, dropdowndays, itemsdays);
-  setupDropdown(dropdownHeader, dropdownContent, searchInput);
+  try {
+    setupDropdown(dropdownHeader, dropdownContent);
+  } catch (e) {
+    console.log(e);
+  }
   setupAccordionToggle(accordionTitles);
   viewFollowup(document);
   document.addEventListener("click", (event) => {

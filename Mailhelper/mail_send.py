@@ -42,6 +42,7 @@ MONGO_URI = os.environ.get("MONGO_URI")
 DATABASE_NAME = "Camp"
 COLLECTION_NAME = "Maildata"
 REPORT = "Report"
+
 client = MongoClient(MONGO_URI)
 db = client[DATABASE_NAME]
 collection = db[COLLECTION_NAME]
@@ -53,20 +54,19 @@ app = Flask(__name__)
 CORS(app)
 
 
-
 try:
     handlers = [
-        logging.FileHandler("/home/ubuntu/Gmass/flask.log"),  
-        logging.StreamHandler(),  
+        logging.FileHandler("/home/ubuntu/Gmass/flask.log"),
+        logging.StreamHandler(),
     ]
 except Exception as e:
     handlers = [
-        logging.FileHandler("flask.log"),  
-        logging.StreamHandler(),  
+        logging.FileHandler("flask.log"),
+        logging.StreamHandler(),
     ]
 
 logging.basicConfig(
-    level=logging.INFO,  
+    level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=handlers,
 )
@@ -80,7 +80,7 @@ def home():
 
 @app.route("/track")
 def track_url():
-    
+
     name = request.args.get("user", "unknown")
     idx = int(request.args.get("id", "0"))
     url = request.args.get("url", "unknown")
@@ -188,7 +188,7 @@ def start_background_thread():
     thread.start()
 
 
-start_background_thread()  
+start_background_thread()
 
 
 def update_google_sheet(sender, spreadsheet_id, email, field):
@@ -320,7 +320,7 @@ def authenticate_gmail(token, CREDENTIALS_FILE="credentials.json", auth_code="")
         )
         flow.fetch_token(code=auth_code)
         creds = flow.credentials
-        
+
         with open(TOKEN_FILE, "w") as token:
             token.write(creds.to_json())
             creds_json = json.load(token)
@@ -355,7 +355,7 @@ def handle_auth():
         )
 
     except Exception as e:
-        
+
         return jsonify({"error": str(e)}), 500
 
 
@@ -930,7 +930,7 @@ def get_drafts():
             "v1",
             credentials=authenticate_gmail(sender.replace("@", "").replace(".com", "")),
         )
-        query = "to:developer@cmail.com"  
+        query = "to:developer@cmail.com"
         results = (
             service.users().drafts().list(userId="me", maxResults=10, q=query).execute()
         )
@@ -975,7 +975,6 @@ def create_draft():
             credentials=authenticate_gmail(sender.replace("@", "").replace(".com", "")),
         )
 
-        
         message = {
             "raw": base64.urlsafe_b64encode(
                 f"To: {recipient}\r\n"
@@ -984,7 +983,6 @@ def create_draft():
             ).decode("utf-8")
         }
 
-        
         draft = (
             service.users()
             .drafts()
@@ -1001,6 +999,43 @@ def create_draft():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@app.route("/list_bounced_emails", methods=["GET"])
+def list_bounced_emails():
+    sender = request.args.get("sender")
+    service = build(
+        "gmail",
+        "v1",
+        credentials=authenticate_gmail(sender.replace("@", "").replace(".com", "")),
+    )
+    results = service.users().messages().list(userId="me", maxResults=10).execute()
+    messages = results.get("messages", [])
+    bounced_emails = []
+    for message in messages:
+        msg = (
+            service.users()
+            .messages()
+            .get(userId="me", id=message["id"], format="full")
+            .execute()
+        )
+        payload = msg["payload"]
+        headers = payload.get("headers", [])
+
+        # Extract subject and snippet
+        subject = next(
+            (header["value"] for header in headers if header["name"] == "Subject"), ""
+        )
+        snippet = msg.get("snippet", "")
+
+        # Check if it's a bounce email
+        if "undeliverable" in subject.lower() or "address not found" in snippet.lower():
+            emails = re.findall(r"[\w\.-]+@[\w\.-]+", snippet)
+            bounced_emails.append(
+                {"subject": subject, "snippet": snippet, "emails": emails}
+            )
+
+    return jsonify({"bounced_emails": bounced_emails}), 200
 
 
 if __name__ == "__main__":

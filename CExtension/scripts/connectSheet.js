@@ -2,7 +2,7 @@ console.log("Executing Sheet Script");
 async function createSheetList() {
   const sheetListContainer = document.createElement("div");
   sheetListContainer.className = "sheet-list-container hidden";
-  const sheetListHtmlUrl = chrome.runtime.getURL("assets/html/sheetList.html");
+  const sheetListHtmlUrl = chrome.runtime.getURL("assets/html/sheetlist.html");
 
   try {
     const response = await fetch(sheetListHtmlUrl);
@@ -175,7 +175,7 @@ function LoadsheetJS() {
       sheet_searchInput.style.display = "none";
       sheet_placeholder.style.display = "block";
       sheet_dropdownList.classList.add("hidden");
-      SpreadsheetSave.style.display = "flex";
+      SpreadsheetSave.style.display = "block";
     }
   });
   const SpreadsheetSave = document.getElementById("SpreadsheetSave");
@@ -206,14 +206,14 @@ function LoadsheetJS() {
       searchInput.value = "";
       searchInput.style.display = "none";
       placeholder.style.display = "block";
-      SpreadsheetSave.style.display = "flex";
+      SpreadsheetSave.style.display = "block";
     }
     if (!sheet_dropdown.contains(e.target)) {
       sheet_searchInput.value = "";
       sheet_searchInput.style.display = "none";
       sheet_placeholder.style.display = "block";
       sheet_dropdownList.classList.add("hidden");
-      SpreadsheetSave.style.display = "flex";
+      SpreadsheetSave.style.display = "block";
     }
   });
 
@@ -264,7 +264,19 @@ function LoadsheetJS() {
     sheetListContainer.classList.add("hidden");
 
     try {
-      fetchDataFromSheet();
+      const bodyField = document.querySelector(
+        ".Am.aiL.Al.editable.LW-avf.tS-tW"
+      );
+      if (!bodyField) {
+        const compose = document.querySelector(".T-I.T-I-KE.L3");
+        if (compose) {
+          compose.click();
+        }
+      }
+
+      setTimeout(() => {
+        fetchDataFromSheet();
+      }, 1000);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
