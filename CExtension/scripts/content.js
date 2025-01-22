@@ -116,7 +116,9 @@ function fetchAndInjectDropupMenu(dropupMenu) {
         }
         try {
           emailFunctionalities(doc);
-        } catch (error) {}
+        } catch (error) {
+          console.error("Error:", error);
+        }
       };
     })
     .catch((error) => {
