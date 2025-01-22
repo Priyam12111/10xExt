@@ -389,7 +389,8 @@ function viewFollowup(document) {
   });
 }
 
-function populateVariablesList(Fields, variables) {
+function populateVariablesList(dropdownContent, variables) {
+  const Fields = dropdownContent.querySelector(".personalize-list");
   const lists = document.createElement("li");
   if (variables && Object.keys(variables).length > 0) {
     Object.entries(variables).forEach(([key, value]) => {
@@ -471,7 +472,6 @@ function dropupJs(document) {
   const testInput = document.getElementById("test-input");
   const dropdownHeader = document.querySelector(".dropdown-header");
   const dropdownContent = document.querySelector(".dropdown-content");
-  const Fields = dropdownContent.querySelector(".personalize-list");
   const variables = JSON.parse(sessionStorage.getItem("variables") || "{}");
   const createDrafts = document.querySelectorAll(".CreateDrafts");
   const listMessageShow = document.querySelectorAll(".listmesaageshow");
@@ -483,13 +483,14 @@ function dropupJs(document) {
 
   draftButtons(document, listMessageShow, selectMessage, droUpOpenSec);
   showDraft(listMessageShow, selectMessage, droUpOpenSec);
-  populateVariablesList(Fields, variables);
-  setupDaysDropdown(triggerdays, dropdowndays, itemsdays);
-  try {
-    setupDropdown(dropdownHeader, dropdownContent);
-  } catch (e) {
-    console.log(e);
+  if (dropdownContent) {
+    populateVariablesList(dropdownContent, variables);
   }
+  setupDaysDropdown(triggerdays, dropdowndays, itemsdays);
+  if (dropdownHeader && dropdownContent) {
+    setupDropdown(dropdownHeader, dropdownContent);
+  }
+
   setupAccordionToggle(accordionTitles);
   viewFollowup(document);
   document.addEventListener("click", (event) => {
