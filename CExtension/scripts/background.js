@@ -20,8 +20,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 function authenticateWithGoogle(sender) {
   const clientId =
     "196149102149-bncutk5her237nmbikbiuhp72enlfilr.apps.googleusercontent.com";
-  const redirectUri =
-    "https://klbflhgmkohpdgobojmenojiapdogbgi.chromiumapp.org/";
+  const redirectUri = chrome.identity.getRedirectURL();
 
   const scopes = [
     "https://www.googleapis.com/auth/drive.metadata.readonly",
