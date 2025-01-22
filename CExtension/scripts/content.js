@@ -494,11 +494,13 @@ function dropupJs(document) {
   setupAccordionToggle(accordionTitles);
   viewFollowup(document);
   document.addEventListener("click", (event) => {
-    if (
-      !dropdownHeader.contains(event.target) &&
-      !dropdownContent.contains(event.target)
-    ) {
-      dropdownContent.style.display = "none";
+    if (dropdownHeader && dropdownContent) {
+      const isClickInside =
+        dropdownHeader.contains(event.target) ||
+        dropdownContent.contains(event.target);
+      if (!isClickInside) {
+        dropdownContent.style.display = "none";
+      }
     }
   });
   SendDaysOn.addEventListener("change", () => {
