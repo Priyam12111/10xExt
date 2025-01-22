@@ -109,8 +109,14 @@ function fetchAndInjectDropupMenu(dropupMenu) {
 
       iframe.onload = () => {
         const doc = iframe.contentWindow.document;
-        dropupJs(doc);
-        emailFunctionalities(doc);
+        try {
+          dropupJs(doc);
+        } catch (error) {
+          console.error("Error:", error);
+        }
+        try {
+          emailFunctionalities(doc);
+        } catch (error) {}
       };
     })
     .catch((error) => {
