@@ -9,7 +9,10 @@ function createSendButton() {
     event.preventDefault();
     event.stopPropagation();
     let Composebox = document.querySelectorAll(".agP.aFw");
-    if (Composebox[Composebox.length - 1].value == "developer@cmail.com") {
+    if (
+      Composebox[Composebox.length - 1].value == "developer@cmail.com" ||
+      Composebox[0].value == "developer@cmail.in"
+    ) {
       createDraft();
     } else {
       sendMails();
@@ -348,6 +351,10 @@ function draftButtons(document, listMessageShow, selectMessage, droUpOpenSec) {
 }
 
 function viewFollowup(document) {
+  const followContainer = document.querySelector(".followUpContainer");
+  if (followContainer) {
+    return;
+  }
   const seeButtons = document.querySelectorAll(".viewfollowup");
   const followUpSectionContainer = document.createElement("div");
   followUpSectionContainer.classList.add("followUpContainer");
@@ -566,7 +573,7 @@ function updateSchedule(value, scheduleinput) {
 
   switch (value) {
     case "Now":
-      datetime = now;
+      datetime = new Date(now.getTime() + 1 * 60 * 1000);
       break;
     case "FiveMinutes":
       datetime = new Date(now.getTime() + 5 * 60 * 1000);
