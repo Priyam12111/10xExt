@@ -252,6 +252,7 @@ function LoadsheetJS() {
         "Opens",
         "Clicks",
         "Unsubscribed",
+        "Bounced",
       ]}`
     ).then((response) => {
       if (response.ok) {
@@ -392,9 +393,10 @@ const sheetObserver = new MutationObserver(() => {
     const buttonContainer = document.createElement("div");
     const sheetButton = document.createElement("div");
     const report = document.createElement("a");
-    report.href = `https://dashboard-q37k43n07-priyam12111s-projects.vercel.app/:${sessionStorage.getItem(
+    report.href = `https://dashboard-k5c048840-priyam12111s-projects.vercel.app/:${sessionStorage.getItem(
       "sender"
     )}`;
+    report.target = "_blank"; // Open link in a new tab
     report.id = "reportdata";
 
     sheetButton.id = "sheet-button";
