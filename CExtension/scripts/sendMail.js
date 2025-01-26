@@ -123,40 +123,54 @@ async function sendMails() {
     const body = document.querySelector(
       ".Am.aiL.Al.editable.LW-avf.tS-tW"
     ).innerHTML;
-    const schedule = sessionStorage.getItem("schedule") || "";
 
-    if (schedule === "" || schedule === "Now") {
-      const sendMailResponse = await sendEmailRequest(
-        sender,
-        uploadId,
-        subject,
-        body,
-        track
-      );
-      console.log(sendMailResponse);
-      if (sendingAnimation) {
-        sendingAnimation.remove();
-      }
-      if ("error" in sendMailResponse["results"][0]) {
-        await handleSendMailResponse({ status: "error" });
-      } else {
-        await handleSendMailResponse({ status: "success" });
-      }
-    }
+    // if (schedule === "" || schedule === "Now") {
+    //   const sendMailResponse = await sendEmailRequest(
+    //     sender,
+    //     uploadId,
+    //     subject,
+    //     body,
+    //     track
+    //   );
+    //   console.log(sendMailResponse);
+    //   if (sendingAnimation) {
+    //     sendingAnimation.remove();
+    //   }
+    //   if ("error" in sendMailResponse["results"][0]) {
+    //     await handleSendMailResponse({ status: "error" });
+    //   } else {
+    //     await handleSendMailResponse({ status: "success" });
+    //   }
+    // }
 
     console.log("Uploading Mail Data...");
+    const formatIST = (date) => {
+      return new Intl.DateTimeFormat("en-IN", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+        timeZone: "Asia/Kolkata",
+      }).format(date);
+    };
+    const now = new Date();
+    const schedule = sessionStorage.getItem("schedule") || "";
+    let current_schedule =
+      schedule === ""
+        ? formatIST(new Date(now.getTime() + 1 * 60 * 1000))
+        : schedule;
     const uploadResponse = await uploadMailData(
       sender,
       uploadId,
       subject,
       body,
-      schedule,
+      current_schedule,
       DelayCheckbox
     );
-    if (schedule !== "" && schedule !== "Now") {
-      handleUploadResponse(uploadResponse, schedule, DelayCheckbox);
-      setTimeout(() => sendingAnimation.remove(), 4000);
-    }
+    handleUploadResponse(uploadResponse, schedule, DelayCheckbox);
+    setTimeout(() => sendingAnimation.remove(), 4000);
   } catch (error) {
     console.log("Error:", error);
     setTimeout(() => sendingAnimation.remove(), 5000);

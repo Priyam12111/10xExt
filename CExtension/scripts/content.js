@@ -243,9 +243,21 @@ function composeDraft() {
   document.querySelector(".T-I.T-I-KE.L3").click();
   setTimeout(() => {
     let SubjectBox = document.querySelectorAll(".aoT");
+    let sendButtons = document.querySelectorAll("#send-button");
+    sendButtons[sendButtons.length - 1].textContent = `Save`;
+    const gmailSend = document.querySelectorAll(
+      ".T-I.J-J5-Ji.aoO.v7.T-I-atl.L3"
+    );
     const emailBody = window.document.querySelectorAll(
       ".Am.aiL.Al.editable.LW-avf.tS-tW"
     );
+    const TTLS = document.querySelectorAll(".T-I.J-J5-Ji.aoO.v7.T-I-atl.L3");
+    const lastTTL = TTLS[TTLS.length - 1];
+    lastTTL.style.pointerEvents = "none";
+    lastTTL.style.width = "10px";
+    lastTTL.style.minWidth = "0px";
+    gmailSend[gmailSend.length - 1].textContent = ":";
+
     SubjectBox[SubjectBox.length - 1].value = "Auto Page Template 1";
     emailBody[
       emailBody.length - 1
@@ -254,6 +266,7 @@ function composeDraft() {
   setTimeout(() => {
     let Composebox = document.querySelectorAll(".agP.aFw");
     Composebox[Composebox.length - 1].value = "developer@cmail.com";
+    Composebox[Composebox.length - 1].setAttribute("readonly", "true");
   }, 1000);
 }
 
@@ -351,7 +364,7 @@ function draftButtons(document, listMessageShow, selectMessage, droUpOpenSec) {
 }
 
 function viewFollowup(document) {
-  const followContainer = document.querySelector(".followUpContainer");
+  const followContainer = window.document.querySelector(".followUpContainer");
   if (followContainer) {
     return;
   }
