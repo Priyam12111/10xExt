@@ -189,7 +189,7 @@ function createSendingAnimation(msg) {
   return div;
 }
 
-async function createMsgBox(msg) {
+async function createMsgBox(msg, duration = 3000) {
   return new Promise((resolve) => {
     const msgBox = document.createElement("div");
     msgBox.classList.add("msg-box");
@@ -201,7 +201,7 @@ async function createMsgBox(msg) {
     setTimeout(() => {
       msgBox.remove();
       resolve();
-    }, 3000);
+    }, duration);
   });
 }
 
