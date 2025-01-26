@@ -17,6 +17,12 @@ async function createSheetList() {
   } catch (error) {
     console.error("Error creating sheet list:", error);
   }
+
+  try {
+    LoadsheetJS();
+  } catch (error) {
+    console.error("Error loading sheet list:", error);
+  }
 }
 
 function createSheetItems(data, parentNode) {
@@ -123,11 +129,6 @@ async function sheetListJs() {
     const sheetList = document.querySelector("#dropdown-list");
     sheetList.innerHTML = "";
     createSheetItems(data["result"], sheetList);
-    try {
-      LoadsheetJS();
-    } catch (error) {
-      console.error("Error loading sheet list:", error);
-    }
   } catch (error) {
     console.error("Error fetching sheet list:", error);
   }
@@ -201,6 +202,11 @@ function LoadsheetJS() {
     });
   });
 
+  closeButton = document.querySelector("#close-btn");
+  closeButton.addEventListener("click", () => {
+    console.log("Close Button Clicked");
+    sheetListContainer.classList.toggle("hidden");
+  });
   document.addEventListener("click", (e) => {
     if (!dropdown.contains(e.target)) {
       searchInput.value = "";
@@ -252,6 +258,7 @@ function LoadsheetJS() {
         "Opens",
         "Clicks",
         "Unsubscribed",
+        "Bounced",
       ]}`
     ).then((response) => {
       if (response.ok) {
@@ -392,9 +399,10 @@ const sheetObserver = new MutationObserver(() => {
     const buttonContainer = document.createElement("div");
     const sheetButton = document.createElement("div");
     const report = document.createElement("a");
-    report.href = `https://dashboard-q37k43n07-priyam12111s-projects.vercel.app/:${sessionStorage.getItem(
+    report.href = `https://dashboard-k5c048840-priyam12111s-projects.vercel.app/:${sessionStorage.getItem(
       "sender"
     )}`;
+    report.target = "_blank"; // Open link in a new tab
     report.id = "reportdata";
 
     sheetButton.id = "sheet-button";

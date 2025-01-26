@@ -711,11 +711,13 @@ function emailFunctionalities(document) {
   PauseSeconds.addEventListener("change", updateDelaySetting);
 
   unsubLink.addEventListener("click", () => {
-    const emailBody = window.document.querySelector(
+    const emailBody = window.document.querySelectorAll(
       ".Am.aiL.Al.editable.LW-avf.tS-tW"
     );
     if (emailBody) {
-      emailBody.innerHTML += `\n\n<a href="https://acaderealty.com/unsubscribe?Email=#&userID=#">Unsubscribe</a>`;
+      emailBody[
+        emailBody.length - 1
+      ].innerHTML += `\n\n<a href="https://acaderealty.com/unsubscribe?Email=#&userID=#">Unsubscribe</a>`;
       sessionStorage.setItem("unsubscribed", true);
       createMsgBox("Unsubscribe link added");
     } else {
