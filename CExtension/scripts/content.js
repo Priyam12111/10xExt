@@ -550,8 +550,7 @@ function dropupJs(document) {
   if (sendButton && testInput) {
     sendButton.addEventListener("click", () => {
       const email = testInput.value;
-      sendTestMail();
-      alert(`Test email sent to ${email}`);
+      sendTestMail(email);
     });
   }
 }
@@ -639,6 +638,8 @@ function emailFunctionalities(document) {
   const trackingElement = document.querySelector("#iyEIROpenTracking");
   const UrlTrack = document.querySelector("#iyEIROpenClick");
   const unsubLink = document.querySelector("#unsubLink");
+  const copyunsub = document.querySelector(".copy-content");
+
   const MaxEmails = document.querySelector("#bqpifMaxEmails");
   const DelayCheckbox = document.querySelector("#bqpifDelayCheckbox");
   const PauseSeconds = document.querySelector("#bqpifPauseSeconds");
@@ -658,8 +659,14 @@ function emailFunctionalities(document) {
   const stageContainers = [".S1", ".S2", ".S3"];
   const stagetextarea = document.querySelectorAll(".stagetextarea");
 
+  copyunsub.addEventListener("click", () => {
+    createMsgBox("Copied to clipboard");
+    navigator.clipboard.writeText(
+      "https://acaderealty.com/unsubscribe?Email=#&userID=#"
+    );
+  });
   followuptime1.addEventListener("change", () => {
-    followuptime = [followuptime1.value, "", ""] || '["", "", ""]';
+    const followuptime = [followuptime1.value, "", ""] || '["", "", ""]';
     sessionStorage.setItem("followuptime", JSON.stringify(followuptime));
   });
   followuptime2.addEventListener("change", () => {

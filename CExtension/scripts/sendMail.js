@@ -336,33 +336,46 @@ function handleUploadResponse(response, schedule, DelayCheckbox) {
   createMsgBox(msg);
 }
 
-function sendTestMail() {
+function sendTestMail(testEmail) {
   console.log("Sending Test Email");
-  const testEmail = sessionStorage.getItem("test_email");
   const emailData = [
     {
       email: testEmail,
       variables: { name: "Test User" },
     },
   ];
-
+  const sender = sessionStorage.getItem("sender");
+  const subject = document.querySelector(".aoT").value || "Testing Subject";
+  const body =
+    document.querySelector(".Am.aiL.Al.editable.LW-avf.tS-tW").innerHTML ||
+    "Testing Mail Body";
+  const uploadId = fetch(`https://acaderealty.com/latest_id?subject=${subject}`)
+    .then((res) => res.text())
+    .then((id) => JSON.parse(id).Latest_id + 1);
   fetch("https://acaderealty.com/send-mails", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      subject: document.querySelector(".aoT").value,
-      body: "This is a test email.",
+      sender,
+      uploadId,
+      subject: subject,
+      body: body,
       emails: emailData,
       tracking: false,
+      DelayCheckbox: 0,
     }),
   })
     .then((response) => response.json())
     .then((data) => {
       console.log("Success:", data);
-      alert("Test Mail Sent!");
+      createMsgBox(
+        `Test mail sent successfully to ${testEmail}. Check your inbox!`
+      );
     })
     .catch((error) => {
       console.log("Error:", error);
-      alert("Test Mail Not Sent!");
+      createMsgBox(
+        `Test mail failed to send to ${testEmail}. Please try again or check your internet connection.`
+      );
     });
 }
