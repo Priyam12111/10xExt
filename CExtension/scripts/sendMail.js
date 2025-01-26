@@ -23,10 +23,6 @@ function fetchDataFromSheet() {
       if (data.values && data.values.length > 0) {
         const [headers, ...allData] = data.values;
         const { storedData, variables } = processData(headers, allData);
-        const Subject = localStorage.getItem("Subject") || "Test Email";
-        const emailBody =
-          localStorage.getItem("EmailBody") || "Hello, Test Emails!";
-
         sessionStorage.setItem("variables", JSON.stringify(variables));
         sessionStorage.setItem(
           "emails",
@@ -34,7 +30,7 @@ function fetchDataFromSheet() {
         );
         try {
           if (storedData["Email"] && storedData["Email"].length > 0) {
-            setEmailDetails(storedData["Email"], Subject, emailBody);
+            setEmailDetails(storedData["Email"], "", "");
           }
         } catch (error) {
           console.log("Error setting email details:", error);
@@ -96,7 +92,7 @@ function setEmailDetails(emails, subject, body) {
       createMsgBox(emailDescription);
       const subjectField = document.querySelector(".aoT");
       if (subjectField) {
-        subjectField.value =
+        subjectField.value +=
           subjectField.getAttribute("aria-label") === "To recipients"
             ? `${emails.length}-recipients@cmail.in`
             : subject;
@@ -106,7 +102,7 @@ function setEmailDetails(emails, subject, body) {
 
   const bodyField = document.querySelector(".Am.aiL.Al.editable.LW-avf.tS-tW");
   if (bodyField) {
-    bodyField.innerHTML = body;
+    bodyField.innerHTML += body;
   }
 }
 
