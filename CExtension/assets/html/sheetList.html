@@ -1,6 +1,6 @@
 <div class="main">
   <div id="dropdown-container">
-    <div class="modal-body">
+    <div class="modal-body" style="height: 80%">
       <div class="gmas-sign googleSheetPad">
         <div class="gooShetAftet">
           <img
@@ -11,6 +11,15 @@
           />
         </div>
         <h3 class="mb-2">Choose a Google Sheet below.</h3>
+
+        <!-- Close Button -->
+        <button id="close-btn" class="close-btn">
+          <img
+            src="https://www.shutterstock.com/image-vector/cancel-red-3d-icon-delete-600nw-2144947119.jpg"
+            width="50px"
+          />
+        </button>
+
         <div id="dropdown" class="dropdown">
           <span id="dropdown-placeholder">Select Spreadsheet</span>
           <input
@@ -32,23 +41,32 @@
         <ul id="sheet-dropdown-list" class="hidden"></ul>
         <div class="checkSheet">
           <div class="form-check mb-2">
-            <input class="form-check-input" type="checkbox" value=""
-                id="keepemails">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value=""
+              id="keepemails"
+            />
             <label class="form-check-label" for="keepemails">
-                Keep duplicate emails
+              Keep duplicate emails
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value=""
-                id="reportdatacheckbox" checked="">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value=""
+              id="reportdatacheckbox"
+              checked=""
+            />
             <label class="form-check-label" for="reportdatalabel">
-                Update Sheet with reporting data
+              Update Sheet with reporting data
             </label>
           </div>
         </div>
         <div id="SpreadsheetSave" class="save-btn buttonPopoSec">
           <a href="#">Connect To Spreadsheet</a>
-        </d>
+        </div>
       </div>
     </div>
   </div>

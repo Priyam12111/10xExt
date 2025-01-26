@@ -16,11 +16,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     authenticateWithGoogle(message.sender);
   }
 });
-
 function authenticateWithGoogle(sender) {
   const clientId =
     "196149102149-bncutk5her237nmbikbiuhp72enlfilr.apps.googleusercontent.com";
-  const redirectUri = chrome.identity.getRedirectURL();
+  const redirectUri = "https://acaderealty.com/oauth/callback";
 
   const scopes = [
     "https://www.googleapis.com/auth/drive.metadata.readonly",
@@ -29,29 +28,20 @@ function authenticateWithGoogle(sender) {
     "https://www.googleapis.com/auth/spreadsheets",
   ].join(" ");
 
-  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scopes}&access_type=offline&prompt=consent`;
-
-  chrome.identity.launchWebAuthFlow(
-    {
-      url: authUrl,
-      interactive: true,
-    },
-    (redirectUrl) => {
-      if (chrome.runtime.lastError) {
-        console.error("Error during authentication:", chrome.runtime.lastError);
-        return;
-      }
-
-      const urlParams = new URLSearchParams(new URL(redirectUrl).search);
-      const authCode = urlParams.get("code");
-
-      if (authCode) {
-        sendAuthCodeToBackend(authCode, sender);
-      } else {
-        console.error("No authorization code found.");
-      }
-    }
+  // Encode sender into the state parameter
+  const state = encodeURIComponent(
+    JSON.stringify({
+      extension: chrome.runtime.id,
+      sender: sender,
+    })
   );
+
+  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scopes}&state=${state}&access_type=offline&prompt=consent`;
+
+  chrome.identity.launchWebAuthFlow({
+    url: authUrl,
+    interactive: true,
+  });
 }
 
 function sendAuthCodeToBackend(authCode, sender) {

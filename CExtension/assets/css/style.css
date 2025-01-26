@@ -746,6 +746,9 @@ textarea:focus {
 }
 
 .gmas-sign {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   text-align: center;
   margin: 70px auto 60px;
 }
@@ -973,7 +976,7 @@ select.norepselect:focus {
   width: 5px;
   height: 5px;
 }
-::-webkit-scrollbar-button {
+/* ::-webkit-scrollbar-button {
   background: #ccc;
 }
 ::-webkit-scrollbar-track-piece {
@@ -981,7 +984,7 @@ select.norepselect:focus {
 }
 ::-webkit-scrollbar-thumb {
   background: #eee;
-}
+} */
 
 #signGmass {
   position: absolute;
@@ -1007,6 +1010,7 @@ select.norepselect:focus {
   width: 65vw;
   margin: auto;
   margin-top: 60px;
+  height: 80%;
 }
 
 #dropdown,
@@ -1046,7 +1050,7 @@ select.norepselect:focus {
 #sheet-dropdown-list {
   position: absolute;
   top: 270px;
-  height: 120px;
+  height: 50%;
   width: 100%;
   background: white;
   border-radius: 8px;

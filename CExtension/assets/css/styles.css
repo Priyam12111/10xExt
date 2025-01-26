@@ -461,7 +461,7 @@ iframe {
   width: 5px;
   height: 5px;
 }
-::-webkit-scrollbar-button {
+/* ::-webkit-scrollbar-button {
   background: #ccc;
 }
 ::-webkit-scrollbar-track-piece {
@@ -469,7 +469,7 @@ iframe {
 }
 ::-webkit-scrollbar-thumb {
   background: #eee;
-}
+} */
 
 .msg-box {
   background-color: #2a2a2a;
@@ -596,4 +596,21 @@ iframe {
 .social-icons img {
   width: 20px;
   margin: 0 5px;
+}
+
+.close-btn {
+  position: absolute;
+  top: -50px;
+  right: -24px;
+  background: transparent;
+  border: none;
+  color: #333;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #f44336;
 }

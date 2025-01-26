@@ -17,6 +17,12 @@ async function createSheetList() {
   } catch (error) {
     console.error("Error creating sheet list:", error);
   }
+
+  try {
+    LoadsheetJS();
+  } catch (error) {
+    console.error("Error loading sheet list:", error);
+  }
 }
 
 function createSheetItems(data, parentNode) {
@@ -123,11 +129,6 @@ async function sheetListJs() {
     const sheetList = document.querySelector("#dropdown-list");
     sheetList.innerHTML = "";
     createSheetItems(data["result"], sheetList);
-    try {
-      LoadsheetJS();
-    } catch (error) {
-      console.error("Error loading sheet list:", error);
-    }
   } catch (error) {
     console.error("Error fetching sheet list:", error);
   }
@@ -201,6 +202,11 @@ function LoadsheetJS() {
     });
   });
 
+  closeButton = document.querySelector("#close-btn");
+  closeButton.addEventListener("click", () => {
+    console.log("Close Button Clicked");
+    sheetListContainer.classList.toggle("hidden");
+  });
   document.addEventListener("click", (e) => {
     if (!dropdown.contains(e.target)) {
       searchInput.value = "";
