@@ -150,7 +150,6 @@ function LoadsheetJS() {
     sheet_placeholder.style.display = "none";
     sheet_searchInput.style.display = "flex";
     sheet_searchInput.focus();
-    SpreadsheetSave.style.display = "none";
     sheet_dropdownList.classList.remove("hidden");
   });
 
@@ -166,6 +165,7 @@ function LoadsheetJS() {
 
   sheet_dropdownList.addEventListener("click", (e) => {
     const target = e.target.closest("LI, SPAN");
+    SpreadsheetSave.style.display = "block";
     if (target) {
       const selectedItem =
         target.tagName === "SPAN" ? target.parentElement : target;
@@ -176,7 +176,6 @@ function LoadsheetJS() {
       sheet_searchInput.style.display = "none";
       sheet_placeholder.style.display = "block";
       sheet_dropdownList.classList.add("hidden");
-      SpreadsheetSave.style.display = "block";
     }
   });
   const SpreadsheetSave = document.getElementById("SpreadsheetSave");
@@ -188,8 +187,8 @@ function LoadsheetJS() {
     placeholder.style.display = "none";
     searchInput.style.display = "flex";
     searchInput.focus();
-    SpreadsheetSave.style.display = "none";
     dropdownList.classList.remove("hidden");
+    sheet_dropdownList.classList.add("hidden");
   });
 
   searchInput.addEventListener("input", (e) => {
@@ -212,14 +211,12 @@ function LoadsheetJS() {
       searchInput.value = "";
       searchInput.style.display = "none";
       placeholder.style.display = "block";
-      SpreadsheetSave.style.display = "block";
     }
     if (!sheet_dropdown.contains(e.target)) {
       sheet_searchInput.value = "";
       sheet_searchInput.style.display = "none";
       sheet_placeholder.style.display = "block";
       sheet_dropdownList.classList.add("hidden");
-      SpreadsheetSave.style.display = "block";
     }
   });
 
@@ -295,11 +292,12 @@ function LoadsheetJS() {
 
   mainContainer.addEventListener("click", (event) => {
     event.stopPropagation();
+    // placeholder.textContent = "Select Spreadsheet";
+    // sheet_placeholder.textContent = "Select Sheet";
     placeholder.style.display = "block";
     sheet_placeholder.style.display = "block";
     searchInput.style.display = "none";
     sheet_searchInput.style.display = "none";
-    SpreadsheetSave.style.display = "block";
     dropdownList.classList.add("hidden");
     sheet_dropdownList.classList.add("hidden");
   });
