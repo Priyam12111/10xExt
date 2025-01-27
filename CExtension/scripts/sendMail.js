@@ -64,8 +64,9 @@ function processData(headers, allData) {
 }
 
 function setEmailDetails(emails, subject, body) {
-  const emailField = document.querySelector(".agP.aFw");
+  const emailField = document.querySelector(".agP");
   const senderField = document.querySelector(".aGb.mS5Pff");
+
   if (
     emailField &&
     emailField.getAttribute("aria-label") === "To recipients" &&
