@@ -420,11 +420,19 @@ function viewFollowup(document) {
 function populateVariablesList(dropdownContent, variables) {
   const Fields = dropdownContent.querySelector(".personalize-list");
   const lists = document.createElement("li");
-  if (variables && Object.keys(variables).length > 0) {
-    Object.entries(variables).forEach(([key, value]) => {
+  Fields.innerHTML = "";
+  const uniqueVariables = Array.from(
+    new Set(Object.keys(variables).map((key) => key))
+  );
+  if (uniqueVariables.length > 0) {
+    uniqueVariables.forEach((key) => {
       const listItem = document.createElement("li");
       listItem.innerHTML = `<span>${key}</span>`;
       Fields.appendChild(listItem);
+      listItem.addEventListener("click", () => {
+        navigator.clipboard.writeText(`{${key}}`);
+        createMsgBox(`Copied ${key} to clipboard`);
+      });
     });
   } else {
     lists.innerHTML = `
@@ -505,15 +513,25 @@ function dropupJs(document) {
   const listMessageShow = document.querySelectorAll(".listmesaageshow");
   const selectMessage = Array.from(document.querySelectorAll(".slectMessage"));
   const droUpOpenSec = Array.from(document.querySelectorAll(".droupOpenSec"));
+  const refreshBtn = document.querySelector("#refreshBtn");
+
+  if (refreshBtn) {
+    refreshBtn.addEventListener("click", () => {
+      if (dropdownContent) {
+        populateVariablesList(dropdownContent, variables);
+      }
+    });
+  } else {
+    console.error("refreshBtn not found");
+  }
+
   createDrafts.forEach((draft) => {
     draft.addEventListener("click", () => composeDraft());
   });
 
   draftButtons(document, listMessageShow, selectMessage, droUpOpenSec);
   showDraft(listMessageShow, selectMessage, droUpOpenSec);
-  if (dropdownContent) {
-    populateVariablesList(dropdownContent, variables);
-  }
+
   setupDaysDropdown(triggerdays, dropdowndays, itemsdays);
   if (dropdownHeader && dropdownContent) {
     setupDropdown(dropdownHeader, dropdownContent);
