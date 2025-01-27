@@ -17,8 +17,10 @@ function createSendButton() {
     } else {
       sendMails();
     }
+    setTimeout(() => {
+      document.querySelector(".og.T-I-J3").click();
+    }, 3000);
   });
-
   return sendButton;
 }
 
