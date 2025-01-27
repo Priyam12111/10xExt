@@ -352,12 +352,16 @@ function handleUploadResponse(response, schedule, DelayCheckbox) {
 
 function sendTestMail(testEmail) {
   console.log("Sending Test Email");
-  const emailData = [
-    {
-      email: testEmail,
-      variables: { name: "Test User" },
-    },
-  ];
+  const emails = [testEmail];
+  const variables = JSON.parse(sessionStorage.getItem("variables") || "{}");
+  const emailData = emails.map((email, index) => ({
+    email,
+    variables: Object.keys(variables).reduce((acc, key) => {
+      if (variables[key] && variables[key][index])
+        acc[key] = variables[key][index];
+      return acc;
+    }, {}),
+  }));
   const sender = sessionStorage.getItem("sender");
   const subject = document.querySelector(".aoT").value || "Testing Subject";
   const body =
