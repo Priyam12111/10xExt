@@ -8,7 +8,7 @@ function createSendButton() {
   sendButton.addEventListener("click", (event) => {
     event.preventDefault();
     event.stopPropagation();
-    let Composebox = document.querySelectorAll(".agP.aFw");
+    let Composebox = document.querySelectorAll(".agP");
     if (
       Composebox[Composebox.length - 1].value == "developer@cmail.com" ||
       Composebox[0].value == "developer@cmail.in"
@@ -18,7 +18,8 @@ function createSendButton() {
       sendMails();
     }
     setTimeout(() => {
-      document.querySelector(".og.T-I-J3").click();
+      const deleteBtn = document.querySelectorAll(".og.T-I-J3");
+      deleteBtn[deleteBtn.length - 1].click();
     }, 3000);
   });
   return sendButton;
@@ -266,7 +267,7 @@ function composeDraft() {
     ].innerHTML = `<p>Replace this entire message (including this line) with your template, and set a Subject to later identify this template.<br><br>Compose the message to be used as your auto follow-up template. You can use <strong>fonts, colors, images, attachments, and any personalization variables</strong> from your original campaign message.<br><br>The address in the To field is a special address to save auto follow-up templates, so don't change that.<br><br>When you're done, <strong>click the GMass button just to save the auto follow-up template</strong> into your account. No emails will be sent when you hit the GMass button.<br><br>Then go back to your original campaign, <strong>refresh the Auto Followup dropdown</strong> and select this message. <a target="_blog" href="https://www.gmass.co/blog/rich-content-auto-follow-up-email-sequence/">More instructions here</a>, including a <a href="https://youtu.be/zBHzOe0BDf0" target="_blog">video</a> of this process.</p>`;
   }, 10);
   setTimeout(() => {
-    let Composebox = document.querySelectorAll(".agP.aFw");
+    let Composebox = document.querySelectorAll(".agP");
     Composebox[Composebox.length - 1].value = "developer@cmail.com";
     Composebox[Composebox.length - 1].setAttribute("readonly", "true");
   }, 1000);
@@ -523,8 +524,6 @@ function dropupJs(document) {
         populateVariablesList(dropdownContent, variables);
       }
     });
-  } else {
-    console.error("refreshBtn not found");
   }
 
   createDrafts.forEach((draft) => {
