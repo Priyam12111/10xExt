@@ -256,7 +256,6 @@ function LoadsheetJS() {
         "Clicks",
         "Unsubscribed",
         "Bounced",
-        "Replied",
       ]}`
     ).then((response) => {
       if (response.ok) {
