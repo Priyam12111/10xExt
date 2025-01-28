@@ -269,13 +269,14 @@ function uploadMailData(
   const SendDaysOn = JSON.parse(sessionStorage.getItem("SendDaysOn") || false);
   const followuptime = sessionStorage.getItem("followuptime") || [];
   const range = sessionStorage.getItem("range") || false;
+  let MailConditions;
   try {
-    const MailConditions = JSON.parse(
+    MailConditions = JSON.parse(
       sessionStorage.getItem("MailConditions") || [false, false, false]
     );
   } catch (error) {
     console.log(error);
-    const MailConditions = [false, false, false];
+    MailConditions = [false, false, false];
   }
   const draftBodies = ["draftBody1", "draftBody2", "draftBody3"]
     .map((key) => sessionStorage.getItem(key) || "")
