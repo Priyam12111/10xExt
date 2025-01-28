@@ -269,6 +269,9 @@ function uploadMailData(
   const SendDaysOn = JSON.parse(sessionStorage.getItem("SendDaysOn") || false);
   const followuptime = sessionStorage.getItem("followuptime") || [];
   const range = sessionStorage.getItem("range") || false;
+  const MailConditions = JSON.parse(
+    sessionStorage.getItem("MailConditions") || [false, false, false]
+  );
   const draftBodies = ["draftBody1", "draftBody2", "draftBody3"]
     .map((key) => sessionStorage.getItem(key) || "")
     .filter((body) => body.trim() !== "");
@@ -320,6 +323,7 @@ function uploadMailData(
       range,
       draftBodies,
       emails: emailData,
+      MailConditions: MailConditions,
       date: "currentdate",
       status: "Ready",
       followuptime: followuptime,

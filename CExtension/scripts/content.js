@@ -686,6 +686,7 @@ function emailFunctionalities(document) {
   const OpenShowPiece = document.querySelector(".OpenShowPiece");
   const pauseShowPice = document.querySelector(".pauseShowPice");
 
+  const MailConditions = document.querySelectorAll(".norepselect");
   const stages = ["stage1", "stage2", "stage3"];
   const times = [".timeS1", ".timeS2", ".timeS3"];
   const stageContainers = [".S1", ".S2", ".S3"];
@@ -860,6 +861,16 @@ function emailFunctionalities(document) {
       });
     });
   }
+  MailConditions.forEach((condition, index) => {
+    condition.addEventListener("change", () => {
+      sessionStorage.setItem(
+        `MailConditions`,
+        JSON.stringify(
+          Array.from(MailConditions).map((condition) => condition.value)
+        )
+      );
+    });
+  });
 }
 sessionStorage.setItem("tracking", true);
 sessionStorage.removeItem("schedule");
