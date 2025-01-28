@@ -837,7 +837,11 @@ function emailFunctionalities(document) {
     checkbox.addEventListener("change", () => {
       sessionStorage.setItem(
         "stagetextarea-values",
-        stagetextarea[index].value
+        JSON.stringify(
+          sendTextConfirm[index].checked
+            ? new Array(stagetextarea.length).fill("")
+            : []
+        )
       );
     });
   });
