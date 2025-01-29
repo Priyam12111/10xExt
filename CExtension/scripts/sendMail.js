@@ -268,6 +268,14 @@ function uploadMailData(
   const spreadsheetId = sessionStorage.getItem("spreadsheetId") || false;
   const SendDaysOn = JSON.parse(sessionStorage.getItem("SendDaysOn") || false);
   const followuptime = sessionStorage.getItem("followuptime") || [];
+  let skipHolidays;
+  try {
+    skipHolidays = JSON.parse(sessionStorage.getItem("skipHolidays") || false);
+  } catch (error) {
+    console.log(error);
+    skipHolidays = false;
+  }
+
   const range = sessionStorage.getItem("range") || false;
   let MailConditions;
   try {
@@ -329,6 +337,7 @@ function uploadMailData(
       range,
       draftBodies,
       emails: emailData,
+      skipHolidays: skipHolidays,
       MailConditions: MailConditions,
       date: "currentdate",
       status: "Ready",

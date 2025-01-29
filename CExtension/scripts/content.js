@@ -503,6 +503,7 @@ function setupAccordionToggle(accordionTitles) {
 function dropupJs(document) {
   const accordionTitles = document.querySelectorAll(".g_accordian_title");
   const SendDaysOn = document.querySelector("#EUYaSSendDaysOn");
+  const skipHolidays = document.querySelector("#EUYaSSkipHolidays");
   const dropdowndays = document.getElementById("listsecOpenDays");
   const triggerdays = document.querySelector(".senddays");
   const itemsdays = document.querySelectorAll("label.form-check-label");
@@ -526,9 +527,16 @@ function dropupJs(document) {
     });
   }
 
-  createDrafts.forEach((draft) => {
-    draft.addEventListener("click", () => composeDraft());
-  });
+  if (skipHolidays) {
+    skipHolidays.addEventListener("change", () => {
+      sessionStorage.setItem("skipHolidays", skipHolidays.checked);
+    });
+  }
+  if (createDrafts) {
+    createDrafts.forEach((draft) => {
+      draft.addEventListener("click", () => composeDraft());
+    });
+  }
 
   draftButtons(document, listMessageShow, selectMessage, droUpOpenSec);
   showDraft(listMessageShow, selectMessage, droUpOpenSec);
