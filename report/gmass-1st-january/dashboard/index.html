@@ -69,5 +69,357 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+      integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <!-- Start js (Charts) -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+    <script>
+      $(function () {
+        Highcharts.setOptions({
+          chart: {
+            style: {
+              color: "#f00",
+            },
+          },
+        });
+        $("#main-campaign-report-one").highcharts({
+          chart: {
+            type: "column",
+            height: 244, // height to 240 pixels
+          },
+          colors: ["#FFA600"],
+          title: {
+            text: "",
+            style: {
+              color: "#72BE47",
+            },
+          },
+          legend: {
+            enabled: false, // Disable the legend completely
+          },
+          xAxis: {
+            categories: [
+              "Dec 19",
+              "Dec 20",
+              "Dec 21",
+              "Dec 22",
+              "Dec 23",
+              "Dec 24",
+              "Dec 25",
+              "Dec 26",
+              "Dec 27",
+              "Dec 28",
+            ],
+          },
+          yAxis: {
+            title: {
+              text: "",
+            },
+            min: 0, // Start from 0, or adjust as needed
+            max: 40, // Set max value to add more space at the top
+            tickInterval: 5, // Set interval for y-axis ticks
+            offset: 10, // Adds extra space at the top of the yAxis
+            labels: {
+              format: "{value}", // Add unit to the labels
+            },
+            gridLineWidth: 0, // Remove the grid lines
+          },
+          tooltip: {
+            shared: true, // Enable shared tooltip to avoid individual dots
+            valueSuffix: " points",
+            headerFormat: "", // Remove the tooltip header (series name)
+            pointFormat: "{point.y:.1f} points", // Show only the value
+            formatter: function () {
+              return this.points[0].y.toFixed(1) + " points"; // Custom formatter without the icon
+            },
+            backgroundColor: "rgba(255, 255, 255, 0.9)", // Make the background color more readable
+          },
+          credits: {
+            enabled: false,
+          },
+          exporting: {
+            enabled: false, // Disable the chart content menu (export options)
+          },
+          plotOptions: {
+            column: {
+              borderRadius: 0, // Use this for rounding column bars
+              dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: "#FFFFFF",
+                inside: true,
+                verticalAlign: "top",
+                format: "{point.y:.1f}", // one decimal
+                y: 10, // 10 pixels down from the top
+                style: {
+                  fontSize: "13px",
+                  textOutline: "none",
+                },
+              },
+            },
+            areaspline: {
+              fillOpacity: 0.1,
+            },
+            series: {
+              groupPadding: 0.32,
+            },
+          },
+          series: [
+            {
+              name: null, // Set the series name to null to remove the title from the tooltip
+              data: [25, 35, 20, 25, 22, 28, 25, 15, 12, 14],
+            },
+          ],
+        });
+      });
+
+      // Start Two Sec
+      $(function () {
+        Highcharts.setOptions({
+          chart: {
+            style: {
+              color: "#f00",
+            },
+          },
+        });
+        $("#main-campaign-report-two").highcharts({
+          chart: {
+            type: "column",
+            height: 244, // height to 240 pixels
+          },
+          colors: ["#72BE47"],
+          title: {
+            text: "",
+            style: {
+              color: "#72BE47",
+            },
+          },
+          legend: {
+            enabled: false, // Disable the legend completely
+          },
+          xAxis: {
+            categories: [
+              "Dec 19",
+              "Dec 20",
+              "Dec 21",
+              "Dec 22",
+              "Dec 23",
+              "Dec 24",
+              "Dec 25",
+              "Dec 26",
+              "Dec 27",
+              "Dec 28",
+            ],
+          },
+          yAxis: {
+            title: {
+              text: "",
+            },
+            min: 0, // Start from 0, or adjust as needed
+            max: 40, // Set max value to add more space at the top
+            tickInterval: 5, // Set interval for y-axis ticks
+            offset: 10, // Adds extra space at the top of the yAxis
+            labels: {
+              format: "{value}", // Add unit to the labels
+            },
+            gridLineWidth: 0, // Remove the grid lines
+          },
+          tooltip: {
+            shared: true, // Enable shared tooltip to avoid individual dots
+            valueSuffix: " points",
+            headerFormat: "", // Remove the tooltip header (series name)
+            pointFormat: "{point.y:.1f} points", // Show only the value
+            formatter: function () {
+              return this.points[0].y.toFixed(1) + " points"; // Custom formatter without the icon
+            },
+            backgroundColor: "rgba(255, 255, 255, 0.9)", // Make the background color more readable
+          },
+          credits: {
+            enabled: false,
+          },
+          exporting: {
+            enabled: false, // Disable the chart content menu (export options)
+          },
+          plotOptions: {
+            column: {
+              borderRadius: 0, // Use this for rounding column bars
+              dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: "#FFFFFF",
+                inside: true,
+                verticalAlign: "top",
+                format: "{point.y:.1f}", // one decimal
+                y: 10, // 10 pixels down from the top
+                style: {
+                  fontSize: "13px",
+                  textOutline: "none",
+                },
+              },
+            },
+            areaspline: {
+              fillOpacity: 0.1,
+            },
+            series: {
+              groupPadding: 0.32,
+            },
+          },
+          series: [
+            {
+              name: null, // Set the series name to null to remove the title from the tooltip
+              data: [25, 35, 20, 25, 22, 28, 25, 15, 12, 14],
+            },
+          ],
+        });
+      });
+    </script>
+
+    <!-- Start Table Bar Chart  -->
+    <script>
+      Highcharts.chart("tabChartclicksec", {
+        chart: {
+          type: "bar",
+          width: null, // Set width to null for responsiveness
+          // Optional: Adjust height if needed
+        },
+        colors: ["#72BE47"],
+        title: {
+          text: null,
+          align: "left",
+        },
+        xAxis: {
+          title: {
+            text: null,
+          },
+          gridLineWidth: 0, // Remove x-axis grid line
+          lineWidth: 0,
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: null,
+            align: "high",
+          },
+          labels: {
+            enabled: false, // Hide y-axis labels
+          },
+          gridLineWidth: 0, // Remove y-axis grid line
+          lineWidth: 0, // Remove y-axis line
+        },
+        tooltip: {
+          valueSuffix: " millions",
+        },
+        plotOptions: {
+          bar: {
+            dataLabels: {
+              enabled: true,
+              rotation: 0,
+              color: "#FFFFFF",
+              inside: true,
+              verticalAlign: "top",
+              format: "{point.y:.1f}", // one decimal
+              y: 0, // 10 pixels down from the top
+              x: 5,
+              style: {
+                fontSize: "13px",
+                textOutline: "none",
+              },
+            },
+            groupPadding: 0.08, // Decreased spacing between groups
+            pointPadding: 0.08, // Decreased spacing between bars
+            pointWidth: 24, // Decreased bar width
+          },
+        },
+        legend: {
+          enabled: false, // Disable the legend
+        },
+        credits: {
+          enabled: false,
+        },
+        exporting: {
+          enabled: false, // Disable the chart content menu (export options)
+        },
+        series: [
+          {
+            name: null,
+            data: [13, 10, 6, 6, 6, 4],
+            tooltip: {
+              enabled: false, // Disable the series tooltip
+            },
+          },
+        ],
+        responsive: {
+          rules: [
+            {
+              condition: {
+                maxWidth: 800, // You can set a max width for responsiveness
+                minWidth: 800, // You can set a max width for responsiveness
+              },
+              chartOptions: {
+                chart: {
+                  width: "100%", // Set width to 100% for responsiveness
+                },
+              },
+            },
+          ],
+        },
+      });
+    </script>
+    <!-- Start Table Bar Chart  -->
+
+    <script>
+      const resizableDivs = document.querySelectorAll(".resizable_div");
+      resizableDivs.forEach((resizableDiv) => {
+        const resizer = resizableDiv.querySelector(".resizer1");
+
+        let isResizing = false;
+        let startX, startWidth;
+
+        resizer.addEventListener("mousedown", (e) => {
+          isResizing = true;
+          startX = e.clientX; // Get the initial mouse position
+          startWidth = resizableDiv.offsetWidth; // Get the initial width of the resizable div
+
+          // Listen for mousemove and mouseup events on the document
+          document.addEventListener("mousemove", handleMouseMove);
+          document.addEventListener("mouseup", stopResizing);
+        });
+
+        function handleMouseMove(e) {
+          if (!isResizing) return;
+
+          const dx = startX - e.clientX; // Difference in X axis (mouse movement) reversed for right-to-left resizing
+          let newWidth = startWidth + dx; // Calculate the new width of the div
+
+          // Enforce min and max width constraints
+          if (newWidth >= 640 && newWidth <= window.innerWidth * 0.9) {
+            resizableDiv.style.width = newWidth + "px";
+          }
+        }
+
+        function stopResizing() {
+          isResizing = false;
+          document.removeEventListener("mousemove", handleMouseMove);
+          document.removeEventListener("mouseup", stopResizing);
+        }
+      });
+    </script>
   </body>
 </html>
