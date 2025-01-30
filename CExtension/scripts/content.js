@@ -369,6 +369,20 @@ function draftButtons(document, listMessageShow, selectMessage, droUpOpenSec) {
 function viewFollowup(document) {
   const followContainer = window.document.querySelector(".followUpContainer");
   if (followContainer) {
+    const seeButtons = document.querySelectorAll(".viewfollowup");
+    seeButtons.forEach((seeButton, index) => {
+      seeButton.addEventListener("click", () => {
+        followContainer.classList.remove("hidden");
+        const mainContainer = window.document.querySelector(
+          `.followUpContainer${index + 1}`
+        );
+
+        mainContainer.classList.toggle("hidden");
+        if (mainContainer) {
+          hideFollowUpSectionOnClickOutside(mainContainer);
+        }
+      });
+    });
     return;
   }
   const seeButtons = document.querySelectorAll(".viewfollowup");
