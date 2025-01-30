@@ -520,8 +520,9 @@ function dropupJs(document) {
   const skipHolidays = document.querySelector("#EUYaSSkipHolidays");
   const dropdowndays = document.getElementById("listsecOpenDays");
   const triggerdays = document.querySelector(".senddays");
+  const droPosisionDays = document.querySelector(".droPosisionDays");
   const itemsdays = document.querySelectorAll("label.form-check-label");
-  const checkboxes = document.querySelectorAll(".form-check-input");
+  const checkboxes = droPosisionDays.querySelectorAll(".form-check-input");
   const sendButton = document.getElementById("test-send");
   const testInput = document.getElementById("test-input");
   const dropdownHeader = document.querySelector(".dropdown-header");
@@ -905,6 +906,7 @@ sessionStorage.removeItem("draftBody2");
 sessionStorage.removeItem("draftBody3");
 sessionStorage.removeItem("followuptime");
 sessionStorage.removeItem("sender");
+sessionStorage.removeItem("checkedDays");
 
 function hideFollowUpSectionOnClickOutside(followUpSectionContainer) {
   const email_container =
