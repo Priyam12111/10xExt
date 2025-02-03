@@ -115,7 +115,7 @@ async function sendMails() {
 
   try {
     const sender = sessionStorage.getItem("sender");
-    const subject = document.querySelector(".aoT").value;
+    const subject = document.querySelector(".aoT").value + " - " + sender;
     const uploadId = await fetch(
       `https://acaderealty.com/latest_id?subject=${subject}`
     )

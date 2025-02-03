@@ -80,8 +80,11 @@ function createButton(id) {
   dropupMenu.style.position = "fixed";
   dropupMenu.style.display = "none";
   dropupMenu.style.zIndex = "9999";
-
-  fetchAndInjectDropupMenu(dropupMenu);
+  try {
+    fetchAndInjectDropupMenu(dropupMenu);
+  } catch (error) {
+    console.log("Error fetching and injecting dropup menu:", error);
+  }
 
   document.addEventListener("click", () => {
     if (dropupMenu.style.display === "block") {
@@ -859,15 +862,16 @@ function emailFunctionalities(document) {
   const sendTextConfirm = document.querySelectorAll(".sendoriginal");
   sendTextConfirm.forEach((checkbox, index) => {
     checkbox.addEventListener("change", () => {
-      sessionStorage.setItem(
-        "stagetextarea-values",
-        JSON.stringify(
-          sendTextConfirm[index].checked
-            ? new Array(stagetextarea.length).fill("")
-            : []
-        )
-      );
+      const textarea = document.querySelectorAll(".stagetextarea")[index];
+      console.log("Checkbox checked :", checkbox.checked);
+      textarea.disabled = !checkbox.checked;
     });
+    sessionStorage.setItem(
+      "stagetextarea-values",
+      JSON.stringify(
+        checkbox.checked ? new Array(stagetextarea.length).fill("") : []
+      )
+    );
   });
 
   if (stagetextarea) {
