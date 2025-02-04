@@ -20,7 +20,6 @@ function createSendButton() {
     setTimeout(() => {
       const deleteBtn = document.querySelectorAll(".og.T-I-J3");
       deleteBtn[deleteBtn.length - 1].click();
-      sessionStorage.clear();
     }, 2000);
   });
   return sendButton;
@@ -869,9 +868,7 @@ function emailFunctionalities(document) {
     });
     sessionStorage.setItem(
       "stagetextarea-values",
-      JSON.stringify(
-        checkbox.checked ? new Array(stagetextarea.length).fill("") : []
-      )
+      JSON.stringify(new Array(stagetextarea.length).fill(""))
     );
   });
 
