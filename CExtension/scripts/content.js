@@ -930,7 +930,7 @@ function hideFollowUpSectionOnClickOutside(followUpSectionContainer) {
 
 const observer = new MutationObserver(() => {
   const composeToolbars = document.querySelectorAll(".gU.Up");
-  let sender = document.querySelector(".gb_A.gb_Xa.gb_Z");
+  let sender = document.querySelector(".gb_B.gb_Za.gb_0");
 
   if (sender && !sessionStorage.getItem("sender")) {
     sender = sender.getAttribute("aria-label").split("\n");
