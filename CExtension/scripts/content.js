@@ -20,7 +20,8 @@ function createSendButton() {
     setTimeout(() => {
       const deleteBtn = document.querySelectorAll(".og.T-I-J3");
       deleteBtn[deleteBtn.length - 1].click();
-    }, 3000);
+      sessionStorage.clear();
+    }, 2000);
   });
   return sendButton;
 }

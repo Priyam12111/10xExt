@@ -43,24 +43,3 @@ function authenticateWithGoogle(sender) {
     interactive: true,
   });
 }
-
-function sendAuthCodeToBackend(authCode, sender) {
-  fetch("https://acaderealty.com/auth", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ code: authCode, sender: sender }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.error) {
-        console.log("Backend Error:", data.error);
-      } else {
-        console.log("Backend Response:", data.message);
-      }
-    })
-    .catch((error) => {
-      console.error("Error sending auth code to backend:", error);
-    });
-}
