@@ -876,13 +876,11 @@ function emailFunctionalities(document) {
     const valuesArray = new Array(stagetextarea.length).fill("");
     stagetextarea.forEach((textarea, index) => {
       textarea.addEventListener("change", () => {
-        if (sendTextConfirm[index].checked === true) {
-          valuesArray[index] = textarea.value;
-          sessionStorage.setItem(
-            "stagetextarea-values",
-            JSON.stringify(valuesArray)
-          );
-        }
+        valuesArray[index] = textarea.value;
+        sessionStorage.setItem(
+          "stagetextarea-values",
+          JSON.stringify(valuesArray)
+        );
       });
     });
   }

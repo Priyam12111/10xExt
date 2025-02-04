@@ -384,7 +384,7 @@ function sendTestMail(testEmail) {
   }));
   const sender = sessionStorage.getItem("sender");
   const subject = document.querySelector(".aoT").value || "Testing Subject";
-  const body =
+  const Testbody =
     document.querySelector(".Am.aiL.Al.editable.LW-avf.tS-tW").innerHTML ||
     "Testing Mail Body";
   const uploadId = fetch(`https://acaderealty.com/latest_id?subject=${subject}`)
@@ -397,7 +397,7 @@ function sendTestMail(testEmail) {
       sender,
       uploadId,
       subject: subject,
-      body: body,
+      body: Testbody,
       emails: emailData,
       tracking: false,
       DelayCheckbox: 0,
