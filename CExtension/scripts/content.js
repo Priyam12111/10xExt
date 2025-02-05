@@ -524,7 +524,9 @@ function dropupJs(document) {
   const dropdowndays = document.getElementById("listsecOpenDays");
   const triggerdays = document.querySelector(".senddays");
   const droPosisionDays = document.querySelector(".droPosisionDays");
-  const itemsdays = document.querySelectorAll("label.form-check-label");
+  const itemsdays = document.querySelectorAll(
+    ".listdaysShow label.form-check-label"
+  );
   const checkboxes = droPosisionDays.querySelectorAll(".form-check-input");
   const sendButton = document.getElementById("test-send");
   const testInput = document.getElementById("test-input");
