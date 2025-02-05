@@ -34,7 +34,7 @@ function autocorrectFirstName() {
 
       // Iterate through the words to find a match
       for (const word of Words) {
-        if (charsBeforeCursor === `{${word[0]}`) {
+        if (charsBeforeCursor.toLowerCase() === `{${word[0].toLowerCase()}`) {
           // Replace {f with {word}
           const replacement = `{${word}}`;
           const newText =
