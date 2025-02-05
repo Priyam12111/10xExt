@@ -1088,3 +1088,14 @@ select.norepselect:focus {
 .header {
   text-align: center;
 }
+#suggestion-dropdown {
+  font-family: Arial, sans-serif;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#suggestion-dropdown div:hover {
+  background-color: #f0f0f0;
+}
