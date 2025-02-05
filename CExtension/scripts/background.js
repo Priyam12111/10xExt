@@ -8,7 +8,7 @@ chrome.action.onClicked.addListener((tab) => {
 
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
-    files: ["content.js", "sendMail.js", "connectSheet.js"],
+    files: ["content.js", "sendMail.js", "connectSheet.js", "autoSuggest.js"],
   });
 });
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
