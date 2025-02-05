@@ -1,5 +1,15 @@
-// Function to replace {f with {FirstName} at cursor position
+// Utility: Remove any existing suggestion box
+function removeSuggestionBox() {
+  const existingBox = document.getElementById("suggestion-box");
+  if (existingBox) {
+    existingBox.remove();
+  }
+}
+
 function autocorrectFirstName() {
+  // Remove any existing suggestion box on new input
+  removeSuggestionBox();
+
   // Fetch variables from sessionStorage
   let variables;
   try {
@@ -13,36 +23,37 @@ function autocorrectFirstName() {
     return;
   }
 
-  const Words = Object.keys(variables);
+  const words = Object.keys(variables);
   const selection = window.getSelection();
   if (!selection.rangeCount) return;
-
   const range = selection.getRangeAt(0);
   const node = range.startContainer;
   const cursorPosition = range.startOffset;
 
-  // Check if the cursor is in a text node
+  // Only proceed if the cursor is in a text node
   if (node.nodeType === Node.TEXT_NODE) {
     const text = node.textContent;
-
-    // Check if the 2 characters before the cursor match a shortcut
+    // Ensure we have at least two characters before the cursor
     if (cursorPosition >= 2) {
-      const charsBeforeCursor = text.substring(
-        cursorPosition - 2,
-        cursorPosition
-      );
+      const shortcut = text.substring(cursorPosition - 2, cursorPosition);
+      // Check if shortcut starts with '{'
+      if (shortcut[0] === "{") {
+        const typedLetter = shortcut[1].toLowerCase();
 
-      // Iterate through the words to find a match
-      for (const word of Words) {
-        if (charsBeforeCursor.toLowerCase() === `{${word[0].toLowerCase()}`) {
-          // Replace {f with {word}
-          const replacement = `{${word}}`;
+        // Get all matching words that start with the typed letter
+        const matchingWords = words.filter(
+          (word) => word[0].toLowerCase() === typedLetter
+        );
+
+        if (matchingWords.length === 0) {
+          return; // no match found
+        } else if (matchingWords.length === 1) {
+          // Only one match: auto-correct it.
+          const replacement = `{${matchingWords[0]}}`;
           const newText =
             text.substring(0, cursorPosition - 2) +
             replacement +
             text.substring(cursorPosition);
-
-          // Update the text content
           node.textContent = newText;
 
           // Move the cursor to the end of the replacement
@@ -52,14 +63,70 @@ function autocorrectFirstName() {
           newRange.collapse(true);
           selection.removeAllRanges();
           selection.addRange(newRange);
-
-          // Exit the loop after the first match
-          break;
+        } else {
+          // Multiple matches: show suggestions.
+          showSuggestionBox(matchingWords, node, range, cursorPosition);
         }
       }
     }
   }
 }
 
-// Listen for input events (typing, pasting, etc.)
+function showSuggestionBox(suggestions, textNode, range, cursorPosition) {
+  // Create suggestion box element
+  const suggestionBox = document.createElement("div");
+  suggestionBox.id = "suggestion-box";
+  suggestionBox.style.position = "absolute";
+  suggestionBox.style.background = "#fff";
+  suggestionBox.style.border = "1px solid #ccc";
+  suggestionBox.style.padding = "5px";
+  suggestionBox.style.zIndex = 1000;
+  suggestionBox.style.fontSize = "14px";
+
+  // Position the box near the caret using the range's bounding rect
+  const rect = range.getBoundingClientRect();
+  suggestionBox.style.top = rect.bottom + window.scrollY + "px";
+  suggestionBox.style.left = rect.left + window.scrollX + "px";
+
+  // Create suggestion items
+  suggestions.forEach((word) => {
+    const item = document.createElement("div");
+    item.textContent = word;
+    item.style.cursor = "pointer";
+    item.style.padding = "2px 5px";
+    item.addEventListener("mouseover", () => {
+      item.style.backgroundColor = "#f0f0f0";
+    });
+    item.addEventListener("mouseout", () => {
+      item.style.backgroundColor = "#fff";
+    });
+    item.addEventListener("click", () => {
+      // Replace shortcut with chosen suggestion
+      const replacement = `{${word}}`;
+      const text = textNode.textContent;
+      const newText =
+        text.substring(0, cursorPosition - 2) +
+        replacement +
+        text.substring(cursorPosition);
+      textNode.textContent = newText;
+
+      // Move the cursor to the end of the replacement
+      const newCursorPosition = cursorPosition - 2 + replacement.length;
+      const newRange = document.createRange();
+      newRange.setStart(textNode, newCursorPosition);
+      newRange.collapse(true);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(newRange);
+
+      // Remove the suggestion box after selection
+      removeSuggestionBox();
+    });
+    suggestionBox.appendChild(item);
+  });
+
+  document.body.appendChild(suggestionBox);
+}
+
+// Listen for input events
 document.addEventListener("input", autocorrectFirstName);
