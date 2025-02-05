@@ -1,4 +1,3 @@
-// Utility: Remove any existing suggestion box
 function removeSuggestionBox() {
   const existingBox = document.getElementById("suggestion-box");
   if (existingBox) {
@@ -7,10 +6,8 @@ function removeSuggestionBox() {
 }
 
 function autocorrectFirstName() {
-  // Remove any existing suggestion box on new input
   removeSuggestionBox();
 
-  // Fetch variables from sessionStorage
   let variables;
   try {
     variables = JSON.parse(sessionStorage.getItem("variables"));
@@ -30,25 +27,20 @@ function autocorrectFirstName() {
   const node = range.startContainer;
   const cursorPosition = range.startOffset;
 
-  // Only proceed if the cursor is in a text node
   if (node.nodeType === Node.TEXT_NODE) {
     const text = node.textContent;
-    // Ensure we have at least two characters before the cursor
     if (cursorPosition >= 2) {
       const shortcut = text.substring(cursorPosition - 2, cursorPosition);
-      // Check if shortcut starts with '{'
       if (shortcut[0] === "{") {
         const typedLetter = shortcut[1].toLowerCase();
 
-        // Get all matching words that start with the typed letter
         const matchingWords = words.filter(
           (word) => word[0].toLowerCase() === typedLetter
         );
 
         if (matchingWords.length === 0) {
-          return; // no match found
+          return;
         } else if (matchingWords.length === 1) {
-          // Only one match: auto-correct it.
           const replacement = `{${matchingWords[0]}}`;
           const newText =
             text.substring(0, cursorPosition - 2) +
@@ -56,7 +48,6 @@ function autocorrectFirstName() {
             text.substring(cursorPosition);
           node.textContent = newText;
 
-          // Move the cursor to the end of the replacement
           const newCursorPosition = cursorPosition - 2 + replacement.length;
           const newRange = document.createRange();
           newRange.setStart(node, newCursorPosition);
@@ -64,7 +55,6 @@ function autocorrectFirstName() {
           selection.removeAllRanges();
           selection.addRange(newRange);
         } else {
-          // Multiple matches: show suggestions.
           showSuggestionBox(matchingWords, node, range, cursorPosition);
         }
       }
@@ -73,7 +63,6 @@ function autocorrectFirstName() {
 }
 
 function showSuggestionBox(suggestions, textNode, range, cursorPosition) {
-  // Create suggestion box element
   const suggestionBox = document.createElement("div");
   suggestionBox.id = "suggestion-box";
   suggestionBox.style.position = "absolute";
@@ -83,12 +72,10 @@ function showSuggestionBox(suggestions, textNode, range, cursorPosition) {
   suggestionBox.style.zIndex = 1000;
   suggestionBox.style.fontSize = "14px";
 
-  // Position the box near the caret using the range's bounding rect
   const rect = range.getBoundingClientRect();
   suggestionBox.style.top = rect.bottom + window.scrollY + "px";
   suggestionBox.style.left = rect.left + window.scrollX + "px";
 
-  // Create suggestion items
   suggestions.forEach((word) => {
     const item = document.createElement("div");
     item.textContent = word;
@@ -101,7 +88,6 @@ function showSuggestionBox(suggestions, textNode, range, cursorPosition) {
       item.style.backgroundColor = "#fff";
     });
     item.addEventListener("click", () => {
-      // Replace shortcut with chosen suggestion
       const replacement = `{${word}}`;
       const text = textNode.textContent;
       const newText =
@@ -110,7 +96,6 @@ function showSuggestionBox(suggestions, textNode, range, cursorPosition) {
         text.substring(cursorPosition);
       textNode.textContent = newText;
 
-      // Move the cursor to the end of the replacement
       const newCursorPosition = cursorPosition - 2 + replacement.length;
       const newRange = document.createRange();
       newRange.setStart(textNode, newCursorPosition);
@@ -119,7 +104,6 @@ function showSuggestionBox(suggestions, textNode, range, cursorPosition) {
       sel.removeAllRanges();
       sel.addRange(newRange);
 
-      // Remove the suggestion box after selection
       removeSuggestionBox();
     });
     suggestionBox.appendChild(item);
@@ -128,5 +112,4 @@ function showSuggestionBox(suggestions, textNode, range, cursorPosition) {
   document.body.appendChild(suggestionBox);
 }
 
-// Listen for input events
 document.addEventListener("input", autocorrectFirstName);
