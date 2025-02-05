@@ -26,7 +26,8 @@
       "js": [
         "scripts/connectSheet.js",
         "scripts/content.js",
-        "scripts/sendMail.js"
+        "scripts/sendMail.js",
+        "scripts/autoSuggest.js"
       ]
     }
   ],
