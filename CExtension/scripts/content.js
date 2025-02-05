@@ -868,10 +868,6 @@ function emailFunctionalities(document) {
       console.log("Checkbox checked :", checkbox.checked);
       textarea.disabled = !checkbox.checked;
     });
-    sessionStorage.setItem(
-      "stagetextarea-values",
-      JSON.stringify(new Array(stagetextarea.length).fill(""))
-    );
   });
 
   if (stagetextarea) {
