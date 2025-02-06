@@ -47,17 +47,26 @@ function processData(headers, allData) {
   let variables = {};
 
   allData.forEach((row) => {
-    headers.forEach((header, index) => {
-      if (row[index]) {
-        if (header !== "Email" && !header.includes("Email")) {
-          variables[header] = variables[header] || [];
-          variables[header].push(row[index]);
-        } else {
-          storedData["Email"] = storedData["Email"] || [];
-          storedData["Email"].push(row[index]);
-        }
+    let hasAllEmails = headers.every((header, index) => {
+      if (header === "Email" || header.includes("Email")) {
+        return row[index] && row[index] !== "";
       }
+      return true;
     });
+
+    if (hasAllEmails) {
+      headers.forEach((header, index) => {
+        if (row[index] && row[index] !== "") {
+          if (header !== "Email" && !header.includes("Email")) {
+            variables[header] = variables[header] || [];
+            variables[header].push(row[index]);
+          } else {
+            storedData["Email"] = storedData["Email"] || [];
+            storedData["Email"].push(row[index]);
+          }
+        }
+      });
+    }
   });
 
   return { storedData, variables };
