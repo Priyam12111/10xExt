@@ -277,6 +277,7 @@ function uploadMailData(
   const spreadsheetId = sessionStorage.getItem("spreadsheetId") || false;
   const SendDaysOn = JSON.parse(sessionStorage.getItem("SendDaysOn") || false);
   const followuptime = sessionStorage.getItem("followuptime") || [];
+  const fullName = sessionStorage.getItem("fullName") || "";
   let skipHolidays;
   try {
     skipHolidays = JSON.parse(sessionStorage.getItem("skipHolidays") || false);
@@ -344,6 +345,7 @@ function uploadMailData(
       checkedDays,
       spreadsheetId,
       range,
+      fullName,
       draftBodies,
       emails: emailData,
       skipHolidays: skipHolidays,
