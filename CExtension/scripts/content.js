@@ -20,6 +20,17 @@ function createSendButton() {
     setTimeout(() => {
       const deleteBtn = document.querySelectorAll(".og.T-I-J3");
       deleteBtn[deleteBtn.length - 1].click();
+      sessionStorage.removeItem("schedule");
+      sessionStorage.removeItem("stage1");
+      sessionStorage.removeItem("stage2");
+      sessionStorage.removeItem("stage3");
+      sessionStorage.removeItem("DelayCheckbox");
+      sessionStorage.removeItem("draftBody1");
+      sessionStorage.removeItem("draftBody2");
+      sessionStorage.removeItem("draftBody3");
+      sessionStorage.removeItem("followuptime");
+      sessionStorage.removeItem("sender");
+      sessionStorage.removeItem("checkedDays");
     }, 2000);
   });
   return sendButton;
