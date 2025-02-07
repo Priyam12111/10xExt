@@ -261,6 +261,8 @@ function LoadsheetJS() {
         "Follow 1",
         "Follow 2",
         "Follow 3",
+        "Follow 4",
+        "Follow 5",
       ]}`
     ).then((response) => {
       if (response.ok) {
