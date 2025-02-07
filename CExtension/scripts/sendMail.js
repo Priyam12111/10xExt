@@ -298,9 +298,14 @@ function uploadMailData(
     console.log(error);
     MailConditions = [false, false, false];
   }
-  const draftBodies = ["draftBody1", "draftBody2", "draftBody3"]
-    .map((key) => sessionStorage.getItem(key) || "")
-    .filter((body) => body.trim() !== "");
+  document.querySelectorAll(".form-check-input")[3];
+  const draftBodies = [
+    "draftBody1",
+    "draftBody2",
+    "draftBody3",
+    "draftBody4",
+    "draftBody5",
+  ].map((key) => sessionStorage.getItem(key) || "");
   let checkedDays, stageData;
   if (SendDaysOn) {
     checkedDays = JSON.parse(sessionStorage.getItem("checkedDays") || "[]");
