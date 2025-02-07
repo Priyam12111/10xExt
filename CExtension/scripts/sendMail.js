@@ -274,6 +274,8 @@ function uploadMailData(
   const stage1 = JSON.parse(sessionStorage.getItem("stage1") || false);
   const stage2 = JSON.parse(sessionStorage.getItem("stage2") || false);
   const stage3 = JSON.parse(sessionStorage.getItem("stage3") || false);
+  const stage4 = JSON.parse(sessionStorage.getItem("stage4") || false);
+  const stage5 = JSON.parse(sessionStorage.getItem("stage5") || false);
   const spreadsheetId = sessionStorage.getItem("spreadsheetId") || false;
   const SendDaysOn = JSON.parse(sessionStorage.getItem("SendDaysOn") || false);
   const followuptime = sessionStorage.getItem("followuptime") || [];
@@ -308,7 +310,9 @@ function uploadMailData(
   if (
     typeof stage1 === "number" ||
     typeof stage2 === "number" ||
-    typeof stage3 === "number"
+    typeof stage3 === "number" ||
+    typeof stage4 === "number" ||
+    typeof stage5 === "number"
   ) {
     console.log(
       "Getting Stage Value",
@@ -342,6 +346,8 @@ function uploadMailData(
       stage1,
       stage2,
       stage3,
+      stage4,
+      stage5,
       checkedDays,
       spreadsheetId,
       range,

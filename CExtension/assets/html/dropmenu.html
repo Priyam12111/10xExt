@@ -324,8 +324,18 @@
       }
       #listsecOpenMessageS3 {
         position: absolute;
-        top: 1138px;
-        left: 53px;
+        top: 1125px;
+        left: 65px;
+      }
+      #listsecOpenMessageS4 {
+        position: absolute;
+        top: 1485px;
+        left: 65px;
+      }
+      #listsecOpenMessageS5 {
+        position: absolute;
+        top: 1850px;
+        left: 65px;
       }
       .widhSetup {
         z-index: 2;
@@ -1927,6 +1937,8 @@
             <button class="showP hidden">Stage 1</button>
             <button class="showP hidden">Stage 2</button>
             <button class="showP hidden">Stage 3</button>
+            <button class="showP hidden">Stage 4</button>
+            <button class="showP hidden">Stage 5</button>
           </div>
           <div class="g_accordian_content">
             <div class="g_hide_on_collapse">
@@ -2403,6 +2415,334 @@
                             <div
                               class="droupOpenSec ms-4 hidden"
                               id="listsecOpenMessageS3"
+                            >
+                              <div class="droupSec">
+                                <span class="searchIcon"
+                                  ><i class="mdi mdi-magnify"></i
+                                ></span>
+                                <input type="text" placeholder="Search" />
+                              </div>
+                              <ul class="listWidIcons listmesaageshow"></ul>
+                            </div>
+                            <!-- == -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <div class="S4 hidden">
+                  <hr />
+                
+                  <div
+                    class="tackCheckLable"
+                    style="max-width: 400px; width: 398px"
+                  >
+                    <div class="satgeSec" style="width: 100%">
+                      <h5>Stage 4</h5>
+                      <div
+                        class="form-check"
+                        style="width: 50px; padding-top: 10px"
+                      >
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          id="stage4"
+                        />
+                        <label class="form-check-label"> If </label>
+                        <div class="iconArrowSelect">
+                          <select name="No Reply" id="No Reply" class="norepselect">
+                            <option value="No Reply">No Reply</option>
+                            <option value="No Open">No Open</option>
+                            <option value="No Click">No Click</option>
+                            <option value="No Reply or Click">
+                              No Reply or Click
+                            </option>
+                          </select>
+                        </div>
+  
+                        <label class="form-check-label" for="stage4"> after </label>
+                        <input
+                          type="number"
+                          name="quantity"
+                          min="1"
+                          max="1000"
+                          placeholder="0"
+                          class="stageNumberinputS4"
+                        />
+                        <span>days</span>
+                        <a href="#" class="settime">Set time</a>
+                      </div>
+                      <div class="timesec timeS4">
+                        <div class="form-check hidden">
+                          <label class="form-check-label" for="stage4"> at </label>
+                          <input
+                            class="inputTimeSec"
+                            type="time"
+                            id="daysS4"
+                            value="00:00"
+                          />
+                        </div>
+  
+                        <div class="form-check setmargn-org">
+                          <input
+                            class="form-check-input sendoriginal"
+                            type="radio"
+                            name="sendoris4"
+                            checked=""
+                          />
+                          <label
+                            class="form-check-label"
+                            id="sendoriginalS4"
+                            name="sendoris4"
+                          >
+                            Send text above original
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <textarea
+                            id="w3reviewS4"
+                            name="w3review"
+                            rows="4"
+                            cols="50"
+                            placeholder="A gentle reminder to:"
+                            class="stagetextarea"
+                            disabled
+                          ></textarea>
+                        </div>
+                        <div class="form-check setmargn">
+                          <div style="display: flex; gap: 10px; margin: 5px">
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              name="sendoris4"
+                              id="sendrich"
+                              checked=""
+                            />
+                            <label
+                              class="form-check-label"
+                              id="sendrich"
+                              name="sendoris4"
+                            >
+                              Send rich-text email in same thread &nbsp;
+                              <span class="plusIcon"
+                                ><img
+                                  src="https://drkcrypt.github.io/Dropmenu/assets/images/plus-icon.svg"
+                                  alt=""
+                                  width="28"
+                                  height="28"
+                                  class="CreateDrafts"
+                                />
+                              </span>
+                            </label>
+                          </div>
+                          <div class="droPosision mesagePosi">
+                            <div class="messageDiv">
+                              <div class="droupSec slectMessage">
+                                <span>Select Message</span>
+                                <!-- <input type="" placeholder=""> -->
+                                <span><i class="mdi mdi-menu-down"></i></span>
+                              </div>
+                              <div class="folloupBut">
+                                <div class="refresIcon" role="button">
+                                  <a href="#">
+                                    <img
+                                      src="https://drkcrypt.github.io/Dropmenu/assets/images/refresh-icon.svg"
+                                      alt=""
+                                      width="14"
+                                      height="14"
+                                    />
+                                  </a>
+                                </div>
+    
+                                <div class="editIcon" role="button">
+                                  <img
+                                    src="https://www.svgrepo.com/show/42233/pencil-edit-button.svg"
+                                    alt=""
+                                    width="14"
+                                    height="14"
+                                  />
+                                </div>
+                                <div class="viewfollowup" role="button">
+                                  <img
+                                    src="https://www.svgrepo.com/show/12044/eye.svg"
+                                    alt=""
+                                    width="14"
+                                    height="14"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+    
+                            </div>
+                            <!-- = Dropdown = -->
+                            <div
+                              class="droupOpenSec ms-4 hidden"
+                              id="listsecOpenMessageS4"
+                            >
+                              <div class="droupSec">
+                                <span class="searchIcon"
+                                  ><i class="mdi mdi-magnify"></i
+                                ></span>
+                                <input type="text" placeholder="Search" />
+                              </div>
+                              <ul class="listWidIcons listmesaageshow"></ul>
+                            </div>
+                            <!-- == -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <div class="S5 hidden">
+                  <hr />
+                
+                  <div
+                    class="tackCheckLable"
+                    style="max-width: 400px; width: 398px"
+                  >
+                    <div class="satgeSec" style="width: 100%">
+                      <h5>Stage 5</h5>
+                      <div
+                        class="form-check"
+                        style="width: 50px; padding-top: 10px"
+                      >
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          id="stage5"
+                        />
+                        <label class="form-check-label"> If </label>
+                        <div class="iconArrowSelect">
+                          <select name="No Reply" id="No Reply" class="norepselect">
+                            <option value="No Reply">No Reply</option>
+                            <option value="No Open">No Open</option>
+                            <option value="No Click">No Click</option>
+                            <option value="No Reply or Click">
+                              No Reply or Click
+                            </option>
+                          </select>
+                        </div>
+  
+                        <label class="form-check-label" for="stage5"> after </label>
+                        <input
+                          type="number"
+                          name="quantity"
+                          min="1"
+                          max="1000"
+                          placeholder="0"
+                          class="stageNumberinputS5"
+                        />
+                        <span>days</span>
+                        <a href="#" class="settime">Set time</a>
+                      </div>
+                      <div class="timesec timeS5">
+                        <div class="form-check hidden">
+                          <label class="form-check-label" for="stage5"> at </label>
+                          <input
+                            class="inputTimeSec"
+                            type="time"
+                            id="daysS5"
+                            value="00:00"
+                          />
+                        </div>
+  
+                        <div class="form-check setmargn-org">
+                          <input
+                            class="form-check-input sendoriginal"
+                            type="radio"
+                            name="sendoris5"
+                            checked=""
+                          />
+                          <label
+                            class="form-check-label"
+                            id="sendoriginalS5"
+                            name="sendoris5"
+                          >
+                            Send text above original
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <textarea
+                            id="w3reviewS5"
+                            name="w3review"
+                            rows="4"
+                            cols="50"
+                            placeholder="A gentle reminder to:"
+                            class="stagetextarea"
+                            disabled
+                          ></textarea>
+                        </div>
+                        <div class="form-check setmargn">
+                          <div style="display: flex; gap: 10px; margin: 5px">
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              name="sendoris5"
+                              id="sendrich"
+                              checked=""
+                            />
+                            <label
+                              class="form-check-label"
+                              id="sendrich"
+                              name="sendoris5"
+                            >
+                              Send rich-text email in same thread &nbsp;
+                              <span class="plusIcon"
+                                ><img
+                                  src="https://drkcrypt.github.io/Dropmenu/assets/images/plus-icon.svg"
+                                  alt=""
+                                  width="28"
+                                  height="28"
+                                  class="CreateDrafts"
+                                />
+                              </span>
+                            </label>
+                          </div>
+                          <div class="droPosision mesagePosi">
+                            <div class="messageDiv">
+                              <div class="droupSec slectMessage">
+                                <span>Select Message</span>
+                                <!-- <input type="" placeholder=""> -->
+                                <span><i class="mdi mdi-menu-down"></i></span>
+                              </div>
+                              <div class="folloupBut">
+                                <div class="refresIcon" role="button">
+                                  <a href="#">
+                                    <img
+                                      src="https://drkcrypt.github.io/Dropmenu/assets/images/refresh-icon.svg"
+                                      alt=""
+                                      width="14"
+                                      height="14"
+                                    />
+                                  </a>
+                                </div>
+    
+                                <div class="editIcon" role="button">
+                                  <img
+                                    src="https://www.svgrepo.com/show/42233/pencil-edit-button.svg"
+                                    alt=""
+                                    width="14"
+                                    height="14"
+                                  />
+                                </div>
+                                <div class="viewfollowup" role="button">
+                                  <img
+                                    src="https://www.svgrepo.com/show/12044/eye.svg"
+                                    alt=""
+                                    width="14"
+                                    height="14"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+    
+                            </div>
+                            <!-- = Dropdown = -->
+                            <div
+                              class="droupOpenSec ms-4 hidden"
+                              id="listsecOpenMessageS5"
                             >
                               <div class="droupSec">
                                 <span class="searchIcon"

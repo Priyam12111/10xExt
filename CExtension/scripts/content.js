@@ -428,6 +428,20 @@ function viewFollowup(document) {
           </div>
         </div>
       </div>
+      <div class="followUpContainer4 hidden">
+        <div class="email-container">
+          <div class="email-header"></div>
+            <div class="email-body"></div>
+          </div>
+        </div>
+      </div>
+      <div class="followUpContainer5 hidden">
+        <div class="email-container">
+          <div class="email-header"></div>
+            <div class="email-body"></div>
+          </div>
+        </div>
+      </div>
   `;
   followUpSectionContainer.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -721,6 +735,8 @@ function emailFunctionalities(document) {
   const followuptime1 = document.querySelector("#daysS1");
   const followuptime2 = document.querySelector("#daysS2");
   const followuptime3 = document.querySelector("#daysS3");
+  const followuptime4 = document.querySelector("#daysS4");
+  const followuptime5 = document.querySelector("#daysS5");
 
   const showButtons = document.querySelectorAll(".showP");
   const ClickShowPiece = document.querySelector(".ClickShowPiece");
@@ -728,9 +744,17 @@ function emailFunctionalities(document) {
   const pauseShowPice = document.querySelector(".pauseShowPice");
 
   const MailConditions = document.querySelectorAll(".norepselect");
-  const stages = ["stage1", "stage2", "stage3"];
-  const times = [".timeS1", ".timeS2", ".timeS3"];
-  const stageContainers = [".S1", ".S2", ".S3"];
+  const stages = [];
+  const times = [];
+  const stageContainers = [];
+  const stageInputs = [];
+
+  for (let i = 1; i <= 5; i++) {
+    stages.push(`stage${i}`);
+    times.push(`.timeS${i}`);
+    stageContainers.push(`.S${i}`);
+    stageInputs.push(`.stageNumberinputS${i}`);
+  }
   const stagetextarea = document.querySelectorAll(".stagetextarea");
 
   copyunsub.addEventListener("click", () => {
@@ -739,30 +763,29 @@ function emailFunctionalities(document) {
       "https://acaderealty.com/unsubscribe?Email=#&userID=#"
     );
   });
-  followuptime1.addEventListener("change", () => {
-    const followuptime = [followuptime1.value, "", ""] || '["", "", ""]';
-    sessionStorage.setItem("followuptime", JSON.stringify(followuptime));
-  });
-  followuptime2.addEventListener("change", () => {
+  const setFollowUpTime = (index, value) => {
     const followuptime = JSON.parse(
       sessionStorage.getItem("followuptime") || '["", "", ""]'
     );
-    followuptime[1] = followuptime2.value;
+    followuptime[index] = value;
     sessionStorage.setItem("followuptime", JSON.stringify(followuptime));
-  });
-  followuptime3.addEventListener("change", () => {
-    const followuptime = JSON.parse(
-      sessionStorage.getItem("followuptime") || '["", "", ""]'
-    );
-    followuptime[2] = followuptime3.value;
-    sessionStorage.setItem("followuptime", JSON.stringify(followuptime));
-  });
+  };
 
-  const stageInputs = [
-    ".stageNumberinputS1",
-    ".stageNumberinputS2",
-    ".stageNumberinputS3",
-  ];
+  followuptime1.addEventListener("change", () =>
+    setFollowUpTime(0, followuptime1.value)
+  );
+  followuptime2.addEventListener("change", () =>
+    setFollowUpTime(1, followuptime2.value)
+  );
+  followuptime3.addEventListener("change", () =>
+    setFollowUpTime(2, followuptime3.value)
+  );
+  followuptime4.addEventListener("change", () =>
+    setFollowUpTime(3, followuptime4.value)
+  );
+  followuptime5.addEventListener("change", () =>
+    setFollowUpTime(4, followuptime5.value)
+  );
 
   const setTime = document.querySelectorAll(".settime");
   setTime.forEach((time, index) => {
@@ -846,7 +869,7 @@ function emailFunctionalities(document) {
     const stage = document.querySelector(`#${stageId}`);
     const timeSelector = document.querySelector(times[index]);
     const stageInput = document.querySelector(stageInputs[index]);
-    if (index < 2) {
+    if (index < stages.length - 1) {
       var nextStageContainer = document.querySelector(
         stageContainers[index + 1]
       );
