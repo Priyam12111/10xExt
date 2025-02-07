@@ -661,7 +661,7 @@ function updateSchedule(value, scheduleinput) {
 
   switch (value) {
     case "Now":
-      datetime = new Date(now.getTime() + 1 * 60 * 1000);
+      datetime = new Date(now.getTime() + 10 * 1000);
       break;
     case "FiveMinutes":
       datetime = new Date(now.getTime() + 5 * 60 * 1000);

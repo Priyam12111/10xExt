@@ -134,25 +134,6 @@ async function sendMails() {
       ".Am.aiL.Al.editable.LW-avf.tS-tW"
     ).innerHTML;
 
-    // if (schedule === "" || schedule === "Now") {
-    //   const sendMailResponse = await sendEmailRequest(
-    //     sender,
-    //     uploadId,
-    //     subject,
-    //     body,
-    //     track
-    //   );
-    //   console.log(sendMailResponse);
-    //   if (sendingAnimation) {
-    //     sendingAnimation.remove();
-    //   }
-    //   if ("error" in sendMailResponse["results"][0]) {
-    //     await handleSendMailResponse({ status: "error" });
-    //   } else {
-    //     await handleSendMailResponse({ status: "success" });
-    //   }
-    // }
-
     console.log("Uploading Mail Data...");
     const formatIST = (date) => {
       return new Intl.DateTimeFormat("en-IN", {
