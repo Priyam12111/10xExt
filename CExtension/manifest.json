@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "CMail",
-  "version": "2.0",
-  "description": "A Chrome extension handle Gmail",
+  "version": "3.1.2",
+  "description": "An advanced Chrome extension for scheduling emails and managing follow-ups efficiently",
   "permissions": ["activeTab", "scripting", "identity"],
   "oauth2": {
     "client_id": "196149102149-bncutk5her237nmbikbiuhp72enlfilr.apps.googleusercontent.com",
@@ -22,7 +22,7 @@
   "content_scripts": [
     {
       "matches": ["https://mail.google.com/*"],
-      "css": ["assets/css/style.css", "assets/css/styles.css"],
+      "css": ["assets/css/custom.css", "assets/css/Cmail.css"],
       "js": [
         "scripts/connectSheet.js",
         "scripts/content.js",
