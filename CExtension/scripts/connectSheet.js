@@ -118,8 +118,16 @@ async function sheetListJs() {
   try {
     const response = await fetch(
       "https://acaderealty.com/list-sheets?sender=" +
-        encodeURIComponent(sessionStorage.getItem("sender"))
+        encodeURIComponent(sessionStorage.getItem("sender")),
+      {
+        method: "GET",
+        headers: {
+          "x-api-key": "priyam",
+          "Content-Type": "application/json",
+        },
+      }
     );
+
     if (!response.ok) {
       throw new Error("Network response was not ok " + response.statusText);
     }
@@ -263,7 +271,14 @@ function LoadsheetJS() {
         "Follow 3",
         "Follow 4",
         "Follow 5",
-      ]}`
+      ]}`,
+      {
+        method: "GET",
+        headers: {
+          "x-api-key": "priyam",
+          "Content-Type": "application/json",
+        },
+      }
     ).then((response) => {
       if (response.ok) {
         console.log("Headers created successfully.");
@@ -374,7 +389,14 @@ async function CheckSignedIn() {
   try {
     const sender = sessionStorage.getItem("sender");
     const response = await fetch(
-      "https://acaderealty.com/isUserSigned?user=" + sender
+      "https://acaderealty.com/isUserSigned?user=" + encodeURIComponent(sender),
+      {
+        method: "GET",
+        headers: {
+          "x-api-key": "priyam",
+          "Content-Type": "application/json",
+        },
+      }
     );
     const data = await response.json();
     const isSignedIn = data["isSignedIn"];
