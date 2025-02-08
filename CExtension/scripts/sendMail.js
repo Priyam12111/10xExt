@@ -199,10 +199,22 @@ async function createMsgBox(msg, duration = 3000) {
       <p class="msg-text">${msg || "Unknown Message"}</p>
     `;
     document.body.appendChild(msgBox);
-    setTimeout(() => {
+
+    let removeTimeout = setTimeout(() => {
       msgBox.remove();
       resolve();
     }, duration);
+
+    msgBox.addEventListener("mouseenter", () => {
+      clearTimeout(removeTimeout);
+    });
+
+    msgBox.addEventListener("mouseleave", () => {
+      removeTimeout = setTimeout(() => {
+        msgBox.remove();
+        resolve();
+      }, 500);
+    });
   });
 }
 
@@ -370,7 +382,7 @@ function handleUploadResponse(response, schedule, DelayCheckbox) {
     var msg = `Mail has not been Scheduled`;
     console.log("Upload Failed:", response);
   }
-  createMsgBox(msg);
+  createMsgBox(msg, 5000);
 }
 
 function sendTestMail(testEmail) {
