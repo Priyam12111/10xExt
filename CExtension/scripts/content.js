@@ -33,6 +33,7 @@ function createSendButton() {
       sessionStorage.removeItem("draftBody4");
       sessionStorage.removeItem("draftBody5");
       sessionStorage.removeItem("followuptime");
+      sessionStorage.removeItem("stagetextarea-values");
       sessionStorage.removeItem("sender");
       sessionStorage.removeItem("checkedDays");
     }, 5000);
@@ -720,6 +721,24 @@ function updateSchedule(value, scheduleinput) {
   scheduleinput.disabled = true;
 }
 
+const lockOriginalBox = (document, stageBody, valuesArray) => {
+  stageBody.forEach((stage, index) => {
+    document.querySelector(stage).addEventListener("change", () => {
+      setTimeout(() => {
+        const orgTextBox = document.querySelector(`#w3reviewS${index + 1}`);
+        orgTextBox.value = "";
+        const storedValues = valuesArray;
+        storedValues[index] = "";
+        sessionStorage.setItem(
+          `stagetextarea-values`,
+          JSON.stringify(storedValues)
+        );
+        orgTextBox.disabled = true;
+        orgTextBox.classList.add("disabletextarea");
+      }, 0);
+    });
+  });
+};
 function emailFunctionalities(document) {
   const schedule = document.querySelector("#EUYaSGMassDateDropdown");
   const followUpElement = document.querySelector("#followup");
@@ -746,19 +765,27 @@ function emailFunctionalities(document) {
   const pauseShowPice = document.querySelector(".pauseShowPice");
 
   const MailConditions = document.querySelectorAll(".norepselect");
+  const stagetextarea = document.querySelectorAll(".stagetextarea");
+  const valuesArray = Array(stagetextarea.length).fill("");
+
   const stages = [];
   const times = [];
   const stageContainers = [];
   const stageInputs = [];
-
+  const stagebody = [];
   for (let i = 1; i <= 5; i++) {
     stages.push(`stage${i}`);
     times.push(`.timeS${i}`);
     stageContainers.push(`.S${i}`);
     stageInputs.push(`.stageNumberinputS${i}`);
+    stagebody.push(`.sendoris${i}`);
   }
-  const stagetextarea = document.querySelectorAll(".stagetextarea");
 
+  try {
+    lockOriginalBox(document, stagebody, valuesArray);
+  } catch (error) {
+    console.log("Error locking original boxes:", error);
+  }
   copyunsub.addEventListener("click", () => {
     createMsgBox("Copied to clipboard");
     navigator.clipboard.writeText(
@@ -769,25 +796,49 @@ function emailFunctionalities(document) {
     const followuptime = JSON.parse(
       sessionStorage.getItem("followuptime") || '["", "", ""]'
     );
-    followuptime[index] = value;
-    sessionStorage.setItem("followuptime", JSON.stringify(followuptime));
+    const time = value.split(":");
+    const now = new Date();
+    const settime = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      time[0],
+      time[1]
+    );
+    if (settime.getTime() / 1000 < now.getTime() / 1000) {
+      createMsgBox("Followup time cannot be set in the past");
+      return;
+    } else {
+      followuptime[index] = value;
+      sessionStorage.setItem("followuptime", JSON.stringify(followuptime));
+    }
   };
 
-  followuptime1.addEventListener("change", () =>
-    setFollowUpTime(0, followuptime1.value)
-  );
-  followuptime2.addEventListener("change", () =>
-    setFollowUpTime(1, followuptime2.value)
-  );
-  followuptime3.addEventListener("change", () =>
-    setFollowUpTime(2, followuptime3.value)
-  );
-  followuptime4.addEventListener("change", () =>
-    setFollowUpTime(3, followuptime4.value)
-  );
-  followuptime5.addEventListener("change", () =>
-    setFollowUpTime(4, followuptime5.value)
-  );
+  followuptime1.addEventListener("change", () => {
+    setTimeout(() => {
+      setFollowUpTime(0, followuptime1.value);
+    }, 5000);
+  });
+  followuptime2.addEventListener("change", () => {
+    setTimeout(() => {
+      setFollowUpTime(1, followuptime2.value);
+    }, 5000);
+  });
+  followuptime3.addEventListener("change", () => {
+    setTimeout(() => {
+      setFollowUpTime(2, followuptime3.value);
+    }, 5000);
+  });
+  followuptime4.addEventListener("change", () => {
+    setTimeout(() => {
+      setFollowUpTime(3, followuptime4.value);
+    }, 5000);
+  });
+  followuptime5.addEventListener("change", () => {
+    setTimeout(() => {
+      setFollowUpTime(4, followuptime5.value);
+    }, 5000);
+  });
 
   const setTime = document.querySelectorAll(".settime");
   setTime.forEach((time, index) => {
@@ -903,15 +954,16 @@ function emailFunctionalities(document) {
   sendTextConfirm.forEach((checkbox, index) => {
     checkbox.addEventListener("change", () => {
       const textarea = document.querySelectorAll(".stagetextarea")[index];
+
       console.log("Checkbox checked :", checkbox.checked);
       textarea.disabled = !checkbox.checked;
+      textarea.classList.toggle("disabletextarea", !checkbox.checked);
     });
   });
 
   if (stagetextarea) {
-    const valuesArray = new Array(stagetextarea.length).fill("");
     stagetextarea.forEach((textarea, index) => {
-      textarea.addEventListener("change", () => {
+      textarea.addEventListener("input", () => {
         valuesArray[index] = textarea.value;
         sessionStorage.setItem(
           "stagetextarea-values",
@@ -945,6 +997,7 @@ sessionStorage.removeItem("draftBody3");
 sessionStorage.removeItem("draftBody4");
 sessionStorage.removeItem("draftBody5");
 sessionStorage.removeItem("followuptime");
+sessionStorage.removeItem("stagetextarea-values");
 sessionStorage.removeItem("sender");
 sessionStorage.removeItem("checkedDays");
 

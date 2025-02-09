@@ -603,8 +603,17 @@
         padding: 12px;
         border-radius: 4px;
         width: 100%;
-      }
+        transition: all 0.6s ease-out;
 
+      }
+      .disabletextarea {
+        background-color: #f0f0f0; 
+        color: #888; 
+        border: 1px solid #ccc;
+        cursor: not-allowed; 
+        pointer-events: none;
+        transition: all 0.6s ease-in;
+      }
       .setmargn {
         margin: 12px 22px 12px;
         display: flex;
@@ -2015,14 +2024,14 @@
                         rows="4"
                         cols="50"
                         placeholder="Just making sure you saw this."
-                        class="stagetextarea"
+                        class="stagetextarea disabletextarea"
                         disabled
                       ></textarea>
                     </div>
                     <div class="form-check setmargn" style="display: flex">
                       <div style="display: flex; gap: 10px; margin: 5px">
                         <input
-                          class="form-check-input"
+                          class="form-check-input sendoris1"
                           type="radio"
                           name="sendoris1"
                           id="sendrich"
@@ -2177,14 +2186,14 @@
                           rows="4"
                           cols="50"
                           placeholder="Maybe a friendly nudge or a witty remark?"
-                          class="stagetextarea"
+                          class="stagetextarea disabletextarea"
                           disabled
                         ></textarea>
                       </div>
                       <div class="form-check setmargn">
                         <div style="display: flex; gap: 10px; margin: 5px">
                           <input
-                            class="form-check-input"
+                            class="form-check-input sendoris2"
                             type="radio"
                             name="sendoris2"
                             id="sendrich"
@@ -2342,14 +2351,14 @@
                             rows="4"
                             cols="50"
                             placeholder="A gentle reminder to:"
-                            class="stagetextarea"
+                            class="stagetextarea disabletextarea"
                             disabled
                           ></textarea>
                         </div>
                         <div class="form-check setmargn">
                           <div style="display: flex; gap: 10px; margin: 5px">
                             <input
-                              class="form-check-input"
+                              class="form-check-input sendoris3"
                               type="radio"
                               name="sendoris3"
                               id="sendrich"
@@ -2505,15 +2514,15 @@
                             name="w3review"
                             rows="4"
                             cols="50"
-                            placeholder="A gentle reminder to:"
-                            class="stagetextarea"
+                            placeholder="Write a follow-up message that will make them smile:"
+                            class="stagetextarea disabletextarea"
                             disabled
                           ></textarea>
                         </div>
                         <div class="form-check setmargn">
                           <div style="display: flex; gap: 10px; margin: 5px">
                             <input
-                              class="form-check-input"
+                              class="form-check-input sendoris4"
                               type="radio"
                               name="sendoris4"
                               id="sendrich"
@@ -2669,15 +2678,15 @@
                             name="w3review"
                             rows="4"
                             cols="50"
-                            placeholder="A gentle reminder to:"
-                            class="stagetextarea"
+                            placeholder="A friendly follow-up:"
+                            class="stagetextarea disabletextarea"
                             disabled
                           ></textarea>
                         </div>
                         <div class="form-check setmargn">
                           <div style="display: flex; gap: 10px; margin: 5px">
                             <input
-                              class="form-check-input"
+                              class="form-check-input sendoris5"
                               type="radio"
                               name="sendoris5"
                               id="sendrich"
