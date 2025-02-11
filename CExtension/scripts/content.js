@@ -2,7 +2,7 @@ console.log("Executing Content Script");
 function createSendButton() {
   const sendButton = document.createElement("div");
   sendButton.setAttribute("role", "button");
-  sendButton.textContent = "Cmail";
+  sendButton.textContent = "10x";
   sendButton.id = "send-button";
 
   sendButton.addEventListener("click", (event) => {
@@ -10,8 +10,8 @@ function createSendButton() {
     event.stopPropagation();
     let Composebox = document.querySelectorAll(".agP");
     if (
-      Composebox[Composebox.length - 1].value == "developer@cmail.com" ||
-      Composebox[0].value == "developer@cmail.in"
+      Composebox[Composebox.length - 1].value == "developer@10x.com" ||
+      Composebox[0].value == "developer@10x.in"
     ) {
       createDraft();
     } else {
@@ -50,7 +50,7 @@ function createDraft() {
     );
     const draftData = {
       sender: sessionStorage.getItem("sender"),
-      recipient: "developer@cmail.com",
+      recipient: "developer@10x.com",
       subject: subject[subject.length - 1]?.value + " True" || "",
       body: emailBody[emailBody.length - 1]?.innerHTML || "",
     };
@@ -287,7 +287,7 @@ function composeDraft() {
   }, 10);
   setTimeout(() => {
     let Composebox = document.querySelectorAll(".agP");
-    Composebox[Composebox.length - 1].value = "developer@cmail.com";
+    Composebox[Composebox.length - 1].value = "developer@10x.com";
     Composebox[Composebox.length - 1].setAttribute("readonly", "true");
   }, 1000);
 }

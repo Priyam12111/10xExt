@@ -82,7 +82,7 @@ function setEmailDetails(emails, subject, body) {
     senderField.textContent == ""
   ) {
     emailField.focus();
-    emailField.value = `${emails.length}-recipients@cmail.in`;
+    emailField.value = `${emails.length}-recipients@10x.in`;
     emailField.dispatchEvent(new Event("input", { bubbles: true }));
     try {
       document.querySelector(".agJ.aFw").click();
@@ -104,7 +104,7 @@ function setEmailDetails(emails, subject, body) {
       if (subjectField) {
         subjectField.value +=
           subjectField.getAttribute("aria-label") === "To recipients"
-            ? `${emails.length}-recipients@cmail.in`
+            ? `${emails.length}-recipients@10x.in`
             : subject;
       }
     }
