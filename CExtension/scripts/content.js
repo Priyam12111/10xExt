@@ -2,7 +2,7 @@ console.log("Executing Content Script");
 function createSendButton() {
   const sendButton = document.createElement("div");
   sendButton.setAttribute("role", "button");
-  sendButton.textContent = "10x";
+  sendButton.textContent = "10xSend";
   sendButton.id = "send-button";
 
   sendButton.addEventListener("click", (event) => {

@@ -342,9 +342,9 @@ async function createSignUp() {
         <div class="modal-body">
           <div class="gmas-sign">
             <div>
-              <img src="https://drkcrypt.github.io/Dropmenu/assets/images/gmass-mailer-logo.svg" alt="gmass mailer" width="288" height="72">
+              <img src="https://www.10xsend.in/fav.png" alt="gmass mailer" >
             </div>
-            <h3>You must connect MassMailer to your Google account for this to work.</h3>
+            <h3>You must connect 10xsend to your Google account for this to work.</h3>
             <div class="signGoogLink">
               <div class="googleSignsec">
                 <img src="https://drkcrypt.github.io/Dropmenu/assets/images/google.svg" alt="gmass mailer" width="48" height="48">
@@ -401,13 +401,9 @@ async function CheckSignedIn() {
     const data = await response.json();
     const isSignedIn = data["isSignedIn"];
 
-    if (!isSignedIn && sender.toLowerCase().includes("acadecraft")) {
+    if (!isSignedIn && sender.toLowerCase().includes("")) {
       document.querySelector("#signGmass").style.display = "flex";
       console.log("Please sign-in with your authorized email.");
-    } else if (!sender.toLowerCase().includes("acadecraft")) {
-      console.log(
-        "Your email is not authorized to use this feature. Please contact the administrator."
-      );
     }
     return isSignedIn;
   } catch (error) {
@@ -426,9 +422,7 @@ const sheetObserver = new MutationObserver(() => {
     const buttonContainer = document.createElement("div");
     const sheetButton = document.createElement("div");
     const report = document.createElement("a");
-    report.href = `https://dashboard-9qu2jfsxr-priyam12111s-projects.vercel.app/:${sessionStorage.getItem(
-      "sender"
-    )}`;
+    report.href = `https://10xsend.in/:${sessionStorage.getItem("sender")}`;
     report.target = "_blank"; // Open link in a new tab
     report.id = "reportdata";
 
@@ -452,8 +446,6 @@ const sheetObserver = new MutationObserver(() => {
           document
             .querySelector(".sheet-list-container")
             .classList.toggle("hidden");
-        } else {
-          createMsgBox("Your email is not authorized to use this feature.");
         }
       } catch (error) {
         console.error("Error handling sheet button click:", error);
