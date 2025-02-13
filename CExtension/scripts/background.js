@@ -18,7 +18,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 function authenticateWithGoogle(sender) {
   const clientId =
-    "196149102149-bncutk5her237nmbikbiuhp72enlfilr.apps.googleusercontent.com";
+    "1028647389622-ae8028g4n8det2fcd32q8qlq4368oqc0.apps.googleusercontent.com";
   const redirectUri = "https://acaderealty.com/oauth/callback";
 
   const scopes = [

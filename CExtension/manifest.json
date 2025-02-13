@@ -5,7 +5,7 @@
   "description": "An advanced Chrome extension for scheduling emails and managing follow-ups efficiently",
   "permissions": ["activeTab", "scripting", "identity"],
   "oauth2": {
-    "client_id": "196149102149-bncutk5her237nmbikbiuhp72enlfilr.apps.googleusercontent.com",
+    "client_id": "1028647389622-ae8028g4n8det2fcd32q8qlq4368oqc0.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/drive.metadata.readonly",
       "https://www.googleapis.com/auth/gmail.modify",
