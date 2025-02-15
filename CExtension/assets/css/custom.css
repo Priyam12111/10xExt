@@ -548,7 +548,6 @@
   width: 100%;
 }
 
-
 .setmargn {
   margin: 12px 22px 12px;
 }
@@ -1050,7 +1049,7 @@ select.norepselect:focus {
 #dropdown-list,
 #sheet-dropdown-list {
   position: absolute;
-  top: 270px;
+  top: 200px;
   height: 50%;
   width: 100%;
   background: white;
@@ -1065,7 +1064,7 @@ select.norepselect:focus {
 }
 #sheet-dropdown-list {
   cursor: pointer;
-  top: 308px;
+  top: 250px;
 }
 #dropdown-list li {
   padding: 10px;

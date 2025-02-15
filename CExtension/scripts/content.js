@@ -43,7 +43,7 @@ function createSendButton() {
 
 function createDraft() {
   const createDraft = async () => {
-    const url = "https://acaderealty.com/create_draft";
+    const url = "https://10xsend.in/api/create_draft";
     const subject = document.querySelectorAll(".aoT");
     const emailBody = window.document.querySelectorAll(
       ".Am.aiL.Al.editable.LW-avf.tS-tW"
@@ -306,7 +306,7 @@ function fetchDrafts(
   reload = false
 ) {
   fetch(
-    `https://acaderealty.com/drafts?sender=${sessionStorage.getItem("sender")}`,
+    `https://10xsend.in/api/drafts?sender=${sessionStorage.getItem("sender")}`,
     {
       method: "GET",
       headers: {
@@ -789,7 +789,7 @@ function emailFunctionalities(document) {
   copyunsub.addEventListener("click", () => {
     createMsgBox("Copied to clipboard");
     navigator.clipboard.writeText(
-      "https://acaderealty.com/unsubscribe?Email=#&userID=#"
+      "https://10xsend.in/api/unsubscribe?Email=#&userID=#"
     );
   });
   const setFollowUpTime = (index, value) => {
@@ -874,7 +874,7 @@ function emailFunctionalities(document) {
     if (emailBody) {
       emailBody[
         emailBody.length - 1
-      ].innerHTML += `\n\n<a href="https://acaderealty.com/unsubscribe?Email=#&userID=#">Unsubscribe</a>`;
+      ].innerHTML += `\n\n<a href="https://10xsend.in/api/unsubscribe?Email=#&userID=#">Unsubscribe</a>`;
       sessionStorage.setItem("unsubscribed", true);
       createMsgBox("Unsubscribe link added");
     } else {

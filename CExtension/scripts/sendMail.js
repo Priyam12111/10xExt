@@ -7,7 +7,7 @@ function fetchDataFromSheet() {
   const sender = sessionStorage.getItem("sender");
   const sheetName = sessionStorage.getItem("range") || "Sheet1";
   const range = `${sheetName}!A:Z`;
-  const endpoint = `https://acaderealty.com/sheet-data?sender=${sender}&spreadsheetId=${spreadsheetId}&range=${range}`;
+  const endpoint = `https://10xsend.in/api/sheet-data?sender=${sender}&spreadsheetId=${spreadsheetId}&range=${range}`;
   if (!spreadsheetId) {
     sheetList.classList.remove("hidden");
     return;
@@ -126,7 +126,7 @@ async function sendMails() {
     const sender = sessionStorage.getItem("sender");
     const subject = document.querySelector(".aoT").value + " - " + sender;
     const uploadId = await fetch(
-      `https://acaderealty.com/latest_id?subject=${subject}`
+      `https://10xsend.in/api/latest_id?subject=${subject}`
     )
       .then((res) => res.text())
       .then((id) => JSON.parse(id).Latest_id + 1);
@@ -231,7 +231,7 @@ async function sendEmailRequest(sender, uploadId, subject, body, track) {
     }, {}),
   }));
 
-  return fetch("https://acaderealty.com/send-mails", {
+  return fetch("https://10xsend.in/api/send-mails", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -331,7 +331,7 @@ function uploadMailData(
     }, {}),
   }));
 
-  return fetch("https://acaderealty.com/upload", {
+  return fetch("https://10xsend.in/api/upload", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -402,10 +402,10 @@ function sendTestMail(testEmail) {
   const Testbody =
     document.querySelector(".Am.aiL.Al.editable.LW-avf.tS-tW").innerHTML ||
     "Testing Mail Body";
-  const uploadId = fetch(`https://acaderealty.com/latest_id?subject=${subject}`)
+  const uploadId = fetch(`https://10xsend.in/api/latest_id?subject=${subject}`)
     .then((res) => res.text())
     .then((id) => JSON.parse(id).Latest_id + 1);
-  fetch("https://acaderealty.com/send-mails", {
+  fetch("https://10xsend.in/api/send-mails", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
