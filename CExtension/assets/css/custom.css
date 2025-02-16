@@ -1049,7 +1049,7 @@ select.norepselect:focus {
 #dropdown-list,
 #sheet-dropdown-list {
   position: absolute;
-  top: 200px;
+  top: 196px;
   height: 50%;
   width: 100%;
   background: white;
@@ -1064,7 +1064,7 @@ select.norepselect:focus {
 }
 #sheet-dropdown-list {
   cursor: pointer;
-  top: 250px;
+  top: 240px;
 }
 #dropdown-list li {
   padding: 10px;
