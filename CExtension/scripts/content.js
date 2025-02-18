@@ -20,7 +20,7 @@ function createSendButton() {
     setTimeout(() => {
       const deleteBtn = document.querySelectorAll(".og.T-I-J3");
       deleteBtn[deleteBtn.length - 1].click();
-    }, 2000);
+    }, 5000);
     setTimeout(() => {
       sessionStorage.removeItem("schedule");
       sessionStorage.removeItem("stage1");
@@ -36,7 +36,7 @@ function createSendButton() {
       sessionStorage.removeItem("stagetextarea-values");
       sessionStorage.removeItem("sender");
       sessionStorage.removeItem("checkedDays");
-    }, 5000);
+    }, 10000);
   });
   return sendButton;
 }

@@ -62,7 +62,9 @@ function processData(headers, allData) {
             variables[header].push(row[index]);
           } else {
             storedData["Email"] = storedData["Email"] || [];
-            storedData["Email"].push(row[index]);
+            if (!storedData["Email"].includes(row[index])) {
+                storedData["Email"].push(row[index]);
+            }
           }
         }
       });
