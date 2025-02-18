@@ -16,27 +16,27 @@ function createSendButton() {
       createDraft();
     } else {
       sendMails();
+      setTimeout(() => {
+        sessionStorage.removeItem("schedule");
+        sessionStorage.removeItem("stage1");
+        sessionStorage.removeItem("stage2");
+        sessionStorage.removeItem("stage3");
+        sessionStorage.removeItem("DelayCheckbox");
+        sessionStorage.removeItem("draftBody1");
+        sessionStorage.removeItem("draftBody2");
+        sessionStorage.removeItem("draftBody3");
+        sessionStorage.removeItem("draftBody4");
+        sessionStorage.removeItem("draftBody5");
+        sessionStorage.removeItem("followuptime");
+        sessionStorage.removeItem("stagetextarea-values");
+        sessionStorage.removeItem("sender");
+        sessionStorage.removeItem("checkedDays");
+      }, 10000);
     }
     setTimeout(() => {
       const deleteBtn = document.querySelectorAll(".og.T-I-J3");
       deleteBtn[deleteBtn.length - 1].click();
     }, 5000);
-    setTimeout(() => {
-      sessionStorage.removeItem("schedule");
-      sessionStorage.removeItem("stage1");
-      sessionStorage.removeItem("stage2");
-      sessionStorage.removeItem("stage3");
-      sessionStorage.removeItem("DelayCheckbox");
-      sessionStorage.removeItem("draftBody1");
-      sessionStorage.removeItem("draftBody2");
-      sessionStorage.removeItem("draftBody3");
-      sessionStorage.removeItem("draftBody4");
-      sessionStorage.removeItem("draftBody5");
-      sessionStorage.removeItem("followuptime");
-      sessionStorage.removeItem("stagetextarea-values");
-      sessionStorage.removeItem("sender");
-      sessionStorage.removeItem("checkedDays");
-    }, 10000);
   });
   return sendButton;
 }
