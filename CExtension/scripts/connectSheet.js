@@ -260,6 +260,8 @@ function LoadsheetJS() {
       )}&range=${sessionStorage.getItem(
         "range"
       )}&spreadsheetId=${sessionStorage.getItem("spreadsheetId")}&newHeaders=${[
+        "Start Date",
+        "End Date",
         "Opens",
         "Clicks",
         "Unsubscribed",
