@@ -15,20 +15,26 @@ function createSendButton() {
     ) {
       createDraft();
     } else {
+      // try {
+      //   const arr = JSON.parse(sessionStorage.getItem("followuptime"));
+      //   const reversedIndex = arr
+      //     .slice()
+      //     .reverse()
+      //     .findIndex((item) => item !== "");
+      //   const latestIndex =
+      //     reversedIndex === -1 ? -1 : arr.length - 1 - reversedIndex;
+      //   JSON.parse(sessionStorage.getItem("followuptime"))[latestIndex];
+      // } catch (error) {}
       sendMails();
       setTimeout(() => {
         sessionStorage.removeItem("schedule");
-        sessionStorage.removeItem("stage1");
-        sessionStorage.removeItem("stage2");
-        sessionStorage.removeItem("stage3");
-        sessionStorage.removeItem("stage4");
-        sessionStorage.removeItem("stage5");
+        ["stage1", "stage2", "stage3", "stage4", "stage5"].forEach(
+          (stage, index) => {
+            sessionStorage.removeItem(stage);
+            sessionStorage.removeItem(`draftBody${index + 1}`);
+          }
+        );
         sessionStorage.removeItem("DelayCheckbox");
-        sessionStorage.removeItem("draftBody1");
-        sessionStorage.removeItem("draftBody2");
-        sessionStorage.removeItem("draftBody3");
-        sessionStorage.removeItem("draftBody4");
-        sessionStorage.removeItem("draftBody5");
         sessionStorage.removeItem("followuptime");
         sessionStorage.removeItem("stagetextarea-values");
         sessionStorage.removeItem("sender");
@@ -796,7 +802,7 @@ function emailFunctionalities(document) {
   });
   const setFollowUpTime = (index, value) => {
     const followuptime = JSON.parse(
-      sessionStorage.getItem("followuptime") || '["", "", ""]'
+      sessionStorage.getItem("followuptime") || '["", "", "", "", ""]'
     );
     followuptime[index] = value;
     sessionStorage.setItem("followuptime", JSON.stringify(followuptime));
@@ -1003,19 +1009,18 @@ function emailFunctionalities(document) {
     });
   });
 }
+["stage1", "stage2", "stage3", "stage4", "stage5"].forEach((stage, index) => {
+  sessionStorage.removeItem(stage);
+  sessionStorage.removeItem(`draftBody${index + 1}`);
+});
 sessionStorage.setItem("tracking", true);
 sessionStorage.removeItem("schedule");
-sessionStorage.removeItem("stage1");
-sessionStorage.removeItem("stage2");
-sessionStorage.removeItem("stage3");
-sessionStorage.removeItem("stage4");
-sessionStorage.removeItem("stage5");
 sessionStorage.removeItem("DelayCheckbox");
-sessionStorage.removeItem("draftBody1");
-sessionStorage.removeItem("draftBody2");
-sessionStorage.removeItem("draftBody3");
-sessionStorage.removeItem("draftBody4");
-sessionStorage.removeItem("draftBody5");
+sessionStorage.removeItem("DelayCheckbox");
+sessionStorage.removeItem("followuptime");
+sessionStorage.removeItem("stagetextarea-values");
+sessionStorage.removeItem("sender");
+sessionStorage.removeItem("checkedDays");
 sessionStorage.removeItem("followuptime");
 sessionStorage.removeItem("stagetextarea-values");
 sessionStorage.removeItem("sender");
