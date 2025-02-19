@@ -21,6 +21,8 @@ function createSendButton() {
         sessionStorage.removeItem("stage1");
         sessionStorage.removeItem("stage2");
         sessionStorage.removeItem("stage3");
+        sessionStorage.removeItem("stage4");
+        sessionStorage.removeItem("stage5");
         sessionStorage.removeItem("DelayCheckbox");
         sessionStorage.removeItem("draftBody1");
         sessionStorage.removeItem("draftBody2");
@@ -796,48 +798,21 @@ function emailFunctionalities(document) {
     const followuptime = JSON.parse(
       sessionStorage.getItem("followuptime") || '["", "", ""]'
     );
-    const time = value.split(":");
-    const now = new Date();
-    const settime = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-      time[0],
-      time[1]
-    );
-    if (settime.getTime() / 1000 < now.getTime() / 1000) {
-      createMsgBox("Followup time cannot be set in the past");
-      return;
-    } else {
-      followuptime[index] = value;
-      sessionStorage.setItem("followuptime", JSON.stringify(followuptime));
-    }
+    followuptime[index] = value;
+    sessionStorage.setItem("followuptime", JSON.stringify(followuptime));
   };
 
-  followuptime1.addEventListener("change", () => {
-    setTimeout(() => {
-      setFollowUpTime(0, followuptime1.value);
-    }, 5000);
-  });
-  followuptime2.addEventListener("change", () => {
-    setTimeout(() => {
-      setFollowUpTime(1, followuptime2.value);
-    }, 5000);
-  });
-  followuptime3.addEventListener("change", () => {
-    setTimeout(() => {
-      setFollowUpTime(2, followuptime3.value);
-    }, 5000);
-  });
-  followuptime4.addEventListener("change", () => {
-    setTimeout(() => {
-      setFollowUpTime(3, followuptime4.value);
-    }, 5000);
-  });
-  followuptime5.addEventListener("change", () => {
-    setTimeout(() => {
-      setFollowUpTime(4, followuptime5.value);
-    }, 5000);
+  // Event listeners for Followups
+  [
+    followuptime1,
+    followuptime2,
+    followuptime3,
+    followuptime4,
+    followuptime5,
+  ].forEach((followuptime, index) => {
+    followuptime.addEventListener("change", () => {
+      setFollowUpTime(index, followuptime.value);
+    });
   });
 
   const setTime = document.querySelectorAll(".settime");
@@ -930,6 +905,42 @@ function emailFunctionalities(document) {
 
     if (stage) {
       stage.addEventListener("change", () => {
+        console.log(`Index: ${index}`);
+        if (stage.checked && index > 0) {
+          const stageTextareaValues = JSON.parse(
+            sessionStorage.getItem("stagetextarea-values") || "[]"
+          );
+          const followupTimes = JSON.parse(
+            sessionStorage.getItem("followuptime") || false
+          );
+
+          if (
+            !sessionStorage.getItem(`draftBody${index}`) &&
+            !stageTextareaValues[index - 1]
+          ) {
+            stage.checked = false;
+            createMsgBox("You need to select the previous stage's body");
+            return;
+          } else if (
+            !sessionStorage.getItem(`draftBody${index}`) &&
+            stageTextareaValues[index - 1] === ""
+          ) {
+            stage.checked = false;
+            createMsgBox("You need to fill the previous stage's body text");
+            return;
+          }
+          try {
+            if (
+              sessionStorage.getItem(stages[index - 1]) === "0" &&
+              (!followupTimes || followupTimes[index - 1] === "")
+            ) {
+              stage.checked = false;
+              createMsgBox("You need to fill the time for the previous stage");
+              return;
+            }
+          } catch (error) {}
+        }
+
         timeSelector.style.display = stage.checked ? "block" : "none";
         showButtons[index].classList.toggle("hidden", !stage.checked);
 
@@ -958,6 +969,15 @@ function emailFunctionalities(document) {
       console.log("Checkbox checked :", checkbox.checked);
       textarea.disabled = !checkbox.checked;
       textarea.classList.toggle("disabletextarea", !checkbox.checked);
+      stageValues = sessionStorage.getItem(`stagetextarea-values`);
+      if (stageValues) {
+        stageValues = JSON.parse(stageValues);
+        stageValues[index] = textarea.value;
+        sessionStorage.setItem(
+          `stagetextarea-values`,
+          JSON.stringify(stageValues)
+        );
+      }
     });
   });
 

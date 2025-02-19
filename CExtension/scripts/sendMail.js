@@ -63,7 +63,7 @@ function processData(headers, allData) {
           } else {
             storedData["Email"] = storedData["Email"] || [];
             if (!storedData["Email"].includes(row[index])) {
-                storedData["Email"].push(row[index]);
+              storedData["Email"].push(row[index]);
             }
           }
         }
@@ -85,7 +85,7 @@ function setEmailDetails(emails, subject, body) {
   ) {
     emailField.focus();
     emailField.value = `${emails.length}-recipients@10x.in`;
-    emailField.dispatchEvent(new Event("input", { bubbles: true }));
+    // emailField.dispatchEvent(new Event("input", { bubbles: true }));
     try {
       document.querySelector(".agJ.aFw").click();
     } catch (error) {
