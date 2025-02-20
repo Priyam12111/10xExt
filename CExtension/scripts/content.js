@@ -38,7 +38,7 @@ function createSendButton() {
         sessionStorage.removeItem("followuptime");
         sessionStorage.removeItem("stagetextarea-values");
         sessionStorage.removeItem("sender");
-        sessionStorage.removeItem("checkedDays");
+        sessionStorage.removeItem("MaxEmails");
       }, 10000);
     }
     setTimeout(() => {
@@ -1025,6 +1025,7 @@ sessionStorage.removeItem("followuptime");
 sessionStorage.removeItem("stagetextarea-values");
 sessionStorage.removeItem("sender");
 sessionStorage.removeItem("checkedDays");
+sessionStorage.removeItem("MaxEmails");
 
 function hideFollowUpSectionOnClickOutside(followUpSectionContainer) {
   const email_container =

@@ -307,9 +307,15 @@
         height: auto;
         max-height: 300px;
         min-height: 150px;
-        overflow: hidden;
+        overflow: scroll;
         z-index: 40;
         width: 50%;
+        overflow-y: scroll;
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+      }
+      .droupOpenSec::-webkit-scrollbar {
+        display: none;
       }
 
       #listsecOpenMessageS1{
@@ -1155,7 +1161,8 @@
       }
       input[type="text"] + .gmass-calendar-icon {
         cursor: pointer;
-        position: absolute;
+        position: relative;
+        top: 10px;
         width: 32px;
         height: 16px;
         background: transparent
