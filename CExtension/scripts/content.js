@@ -715,7 +715,15 @@ function updateSchedule(value, scheduleinput) {
       scheduleinput.disabled = false;
       scheduleinput.value = formatIST(datetime);
       scheduleinput.addEventListener("change", () => {
-        sessionStorage.setItem("schedule", scheduleinput.value);
+        const datetime = new Date(scheduleinput.value);
+        const formattedDatetime = `${datetime.getDate()}/${
+          datetime.getMonth() + 1
+        }/${datetime.getFullYear()}, ${datetime.toLocaleTimeString("en-IN", {
+          hour12: true,
+          hour: "2-digit",
+          minute: "2-digit",
+        })}`;
+        sessionStorage.setItem("schedule", formattedDatetime);
       });
       return;
     default:
