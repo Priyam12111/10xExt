@@ -45,32 +45,53 @@ function fetchDataFromSheet() {
 function processData(headers, allData) {
   let storedData = { Email: [] };
   let variables = {};
+  const emailColumns = headers.reduce((acc, header, index) => {
+    if (header.toLowerCase().includes("email")) {
+      acc.push(index);
+    }
+    return acc;
+  }, []);
+
+  const emailColumnIndices = new Set(emailColumns);
+  const emailSet = new Set();
+  storedData["Email"] = storedData["Email"] || [];
 
   allData.forEach((row) => {
-    let hasAllEmails = headers.every((header, index) => {
-      if (header === "Email" || header.includes("Email")) {
-        return row[index] && row[index] !== "";
-      }
-      return true;
+    const isMissingEmail = emailColumns.some((index) => {
+      const value = row[index];
+      return typeof value !== "string" || value.trim() === "";
     });
 
-    if (hasAllEmails) {
-      headers.forEach((header, index) => {
-        if (row[index] && row[index] !== "") {
-          if (header !== "Email" && !header.includes("Email")) {
-            variables[header] = variables[header] || [];
-            variables[header].push(row[index]);
-          } else {
-            storedData["Email"] = storedData["Email"] || [];
-            if (!storedData["Email"].includes(row[index])) {
-              storedData["Email"].push(row[index]);
-            }
-          }
-        }
-      });
-    }
-  });
+    if (isMissingEmail) return;
 
+    const hasDuplicateEmail = emailColumns.some((index) => {
+      const email = row[index]?.trim().toLowerCase();
+      return email && emailSet.has(email);
+    });
+
+    if (hasDuplicateEmail) return;
+
+    emailColumns.forEach((index) => {
+      const email = row[index]?.trim().toLowerCase();
+      if (email) {
+        storedData["Email"].push(email);
+        emailSet.add(email);
+      }
+    });
+
+    headers.forEach((header, index) => {
+      if (!emailColumnIndices.has(index)) {
+        const value = row[index];
+        if (typeof value === "string" && value.trim() !== "") {
+          variables[header] = variables[header] || [];
+          variables[header].push(value);
+        } else if (value.trim() === "") {
+          variables[header] = variables[header] || [];
+          variables[header].push("User");
+        }
+      }
+    });
+  });
   return { storedData, variables };
 }
 
@@ -246,14 +267,6 @@ async function sendEmailRequest(sender, uploadId, subject, body, track) {
       DelayCheckbox: parseInt(sessionStorage.getItem("DelayCheckbox") || 0),
     }),
   }).then((res) => res.json());
-}
-async function handleSendMailResponse(response) {
-  let msg =
-    response.status === "success"
-      ? "Mail has been sent successfully."
-      : "Mail has not been sent. Please try again.";
-
-  await createMsgBox(msg);
 }
 
 function uploadMailData(
