@@ -783,12 +783,14 @@ function emailFunctionalities(document) {
   const MailConditions = document.querySelectorAll(".norepselect");
   const stagetextarea = document.querySelectorAll(".stagetextarea");
   const valuesArray = Array(stagetextarea.length).fill("");
-
+  const unsubMarker = document.querySelector("#unsubMarker")?.checked || false;
+  sessionStorage.setItem("unsubMarker", JSON.stringify(unsubMarker));
   const stages = [];
   const times = [];
   const stageContainers = [];
   const stageInputs = [];
   const stagebody = [];
+
   for (let i = 1; i <= 5; i++) {
     stages.push(`stage${i}`);
     times.push(`.timeS${i}`);
@@ -840,6 +842,18 @@ function emailFunctionalities(document) {
           `Element not found for selector: ${times[index]} .form-check`
         );
       }
+      try {
+        const currentTime = new Date();
+        document.querySelectorAll('input[type="time"]').forEach((x, i) => {
+          if (i === index) {
+            const hours = String(currentTime.getHours()).padStart(2, "0"); // Ensures two digits
+            const minutes = String(currentTime.getMinutes()).padStart(2, "0"); // Ensures two digits
+            x.value = `${hours}:${minutes}`;
+          }
+        });
+      } catch (error) {
+        console.log("Error in setting default times:", error);
+      }
     });
   });
   MaxEmails.addEventListener("change", () => {
@@ -855,21 +869,6 @@ function emailFunctionalities(document) {
   };
   DelayCheckbox.addEventListener("change", updateDelaySetting);
   PauseSeconds.addEventListener("change", updateDelaySetting);
-
-  unsubLink.addEventListener("click", () => {
-    const emailBody = window.document.querySelectorAll(
-      ".Am.aiL.Al.editable.LW-avf.tS-tW"
-    );
-    if (emailBody) {
-      emailBody[
-        emailBody.length - 1
-      ].innerHTML += `\n\n<a href="https://10xsend.in/api/unsubscribe?Email=#&userID=#">Unsubscribe</a>`;
-      sessionStorage.setItem("unsubscribed", true);
-      createMsgBox("Unsubscribe link added");
-    } else {
-      console.error("Email body element not found.");
-    }
-  });
 
   if (schedule) {
     schedule.addEventListener("change", (e) => {
@@ -933,14 +932,18 @@ function emailFunctionalities(document) {
             !stageTextareaValues[index - 1]
           ) {
             stage.checked = false;
-            createMsgBox("You need to select the previous stage's body");
+            createMsgBox(
+              "You need to select the previous stage's body or fill the previous stage's body text"
+            );
             return;
           } else if (
             !sessionStorage.getItem(`draftBody${index}`) &&
             stageTextareaValues[index - 1] === ""
           ) {
             stage.checked = false;
-            createMsgBox("You need to fill the previous stage's body text");
+            createMsgBox(
+              "You need to fill the previous stage's body text or select the previous stage's body"
+            );
             return;
           }
           try {
@@ -949,7 +952,9 @@ function emailFunctionalities(document) {
               (!followupTimes || followupTimes[index - 1] === "")
             ) {
               stage.checked = false;
-              createMsgBox("You need to fill the time for the previous stage");
+              createMsgBox(
+                "You need to select a valid time for the previous stage"
+              );
               return;
             }
           } catch (error) {}

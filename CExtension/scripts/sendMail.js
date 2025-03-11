@@ -288,6 +288,9 @@ function uploadMailData(
   const SendDaysOn = JSON.parse(sessionStorage.getItem("SendDaysOn") || false);
   const followuptime = sessionStorage.getItem("followuptime") || [];
   const fullName = sessionStorage.getItem("fullName") || "";
+  const unsubMarker = JSON.parse(
+    sessionStorage.getItem("unsubMarker") || false
+  );
   let skipHolidays;
   try {
     skipHolidays = JSON.parse(sessionStorage.getItem("skipHolidays") || false);
@@ -366,6 +369,7 @@ function uploadMailData(
       range,
       fullName,
       draftBodies,
+      unsubMarker,
       emails: emailData,
       skipHolidays: skipHolidays,
       MailConditions: MailConditions,
@@ -383,10 +387,12 @@ function handleUploadResponse(response, schedule, DelayCheckbox) {
   if (response.ok) {
     console.log("Upload Success:", response);
     followuptime = JSON.parse(sessionStorage.getItem("followuptime") || "[]");
-    var msg = `Mail has been scheduled for ${schedule} ${
+    var msg = `Mail has been scheduled ${
+      schedule ? `on ${schedule}` : "immediately"
+    } ${
       DelayCheckbox
         ? `with a delay of ${parseInt(DelayCheckbox, 0) * 5} seconds`
-        : "immediately"
+        : ""
     }`;
     followuptime.forEach((time, index) => {
       if (time !== "") {
