@@ -277,7 +277,7 @@ function LoadsheetJS() {
     const newHeaders = [
       "Start Date",
       "End Date",
-      "Email Status",
+      "Status",
       "Opens",
       "Clicks",
       "Unsubscribed",
