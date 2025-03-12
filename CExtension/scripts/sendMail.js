@@ -42,6 +42,7 @@ function fetchDataFromSheet() {
       console.log("Error fetching data:", error);
     });
 }
+
 function processData(headers, allData) {
   let storedData = { Email: [] };
   let variables = {};
@@ -292,6 +293,18 @@ function uploadMailData(
     sessionStorage.getItem("unsubMarker") || false
   );
   let skipHolidays;
+  let followUpTime2 = JSON.parse(sessionStorage.getItem("followuptime")) || [];
+  let nonEmptyCount = followUpTime2.filter((item) => item !== "").length;
+  let headers = [
+    "Start Date",
+    "End Date",
+    "Opens",
+    "Clicks",
+    "Unsubscribed",
+    "Bounced",
+    "Sent",
+    "Replied",
+  ];
   try {
     skipHolidays = JSON.parse(sessionStorage.getItem("skipHolidays") || false);
   } catch (error) {
@@ -349,6 +362,12 @@ function uploadMailData(
     }, {}),
   }));
 
+  for (let i = 0; i < nonEmptyCount; i++) {
+    headers.push(`Follow ${i + 1}`);
+  }
+  if (headers.length > 0) {
+    create_headers(headers);
+  }
   return fetch("https://10xsend.in/api/upload", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

@@ -141,6 +141,26 @@ async function sheetListJs() {
     console.error("Error fetching sheet list:", error);
   }
 }
+
+function create_headers(newHeaders) {
+  fetch(
+    `https://10xsend.in/api/create-headers?sender=${encodeURIComponent(
+      sessionStorage.getItem("sender")
+    )}&range=${encodeURIComponent(
+      sessionStorage.getItem("range")
+    )}&spreadsheetId=${encodeURIComponent(
+      sessionStorage.getItem("spreadsheetId")
+    )}&newHeaders=${newHeaders}`,
+    {
+      method: "GET",
+      headers: {
+        "x-api-key": "priyam",
+        "Content-Type": "application/json",
+      },
+    }
+  );
+}
+
 function LoadsheetJS() {
   const dropdown = document.getElementById("dropdown");
   const placeholder = document.getElementById("dropdown-placeholder");
@@ -254,41 +274,18 @@ function LoadsheetJS() {
 
   SpreadsheetSave.addEventListener("click", () => {
     console.log("Saving...");
-    fetch(
-      `https://10xsend.in/api/create-headers?sender=${sessionStorage.getItem(
-        "sender"
-      )}&range=${sessionStorage.getItem(
-        "range"
-      )}&spreadsheetId=${sessionStorage.getItem("spreadsheetId")}&newHeaders=${[
-        "Start Date",
-        "End Date",
-        "Opens",
-        "Clicks",
-        "Unsubscribed",
-        "Bounced",
-        "Sent",
-        "Replied",
-        "Follow 1",
-        "Follow 2",
-        "Follow 3",
-        "Follow 4",
-        "Follow 5",
-      ]}`,
-      {
-        method: "GET",
-        headers: {
-          "x-api-key": "priyam",
-          "Content-Type": "application/json",
-        },
-      }
-    ).then((response) => {
-      if (response.ok) {
-        console.log("Headers created successfully.");
-      } else {
-        console.error("Failed to create headers:", response.statusText);
-      }
-    });
-
+    const newHeaders = [
+      "Start Date",
+      "End Date",
+      "Email Status",
+      "Opens",
+      "Clicks",
+      "Unsubscribed",
+      "Bounced",
+      "Sent",
+      "Replied",
+    ];
+    create_headers(newHeaders);
     sheetListContainer.classList.add("hidden");
 
     try {
