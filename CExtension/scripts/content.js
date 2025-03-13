@@ -15,18 +15,13 @@ function createSendButton() {
     ) {
       createDraft();
     } else {
-      // try {
-      //   const arr = JSON.parse(sessionStorage.getItem("followuptime"));
-      //   const reversedIndex = arr
-      //     .slice()
-      //     .reverse()
-      //     .findIndex((item) => item !== "");
-      //   const latestIndex =
-      //     reversedIndex === -1 ? -1 : arr.length - 1 - reversedIndex;
-      //   JSON.parse(sessionStorage.getItem("followuptime"))[latestIndex];
-      // } catch (error) {}
       sendMails();
       setTimeout(() => {
+        sessionStorage.removeItem("DelayCheckbox");
+        sessionStorage.removeItem("followuptime");
+        sessionStorage.removeItem("stagetextarea-values");
+        sessionStorage.removeItem("sender");
+        sessionStorage.removeItem("MaxEmails");
         sessionStorage.removeItem("schedule");
         ["stage1", "stage2", "stage3", "stage4", "stage5"].forEach(
           (stage, index) => {
@@ -34,12 +29,7 @@ function createSendButton() {
             sessionStorage.removeItem(`draftBody${index + 1}`);
           }
         );
-        sessionStorage.removeItem("DelayCheckbox");
-        sessionStorage.removeItem("followuptime");
-        sessionStorage.removeItem("stagetextarea-values");
-        sessionStorage.removeItem("sender");
-        sessionStorage.removeItem("MaxEmails");
-      }, 10000);
+      }, 20000);
     }
     setTimeout(() => {
       const deleteBtn = document.querySelectorAll(".og.T-I-J3");
@@ -1029,11 +1019,6 @@ function emailFunctionalities(document) {
 sessionStorage.setItem("tracking", true);
 sessionStorage.removeItem("schedule");
 sessionStorage.removeItem("DelayCheckbox");
-sessionStorage.removeItem("DelayCheckbox");
-sessionStorage.removeItem("followuptime");
-sessionStorage.removeItem("stagetextarea-values");
-sessionStorage.removeItem("sender");
-sessionStorage.removeItem("checkedDays");
 sessionStorage.removeItem("followuptime");
 sessionStorage.removeItem("stagetextarea-values");
 sessionStorage.removeItem("sender");
